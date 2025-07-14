@@ -4,8 +4,12 @@ import QuestionAnswer from './questionAnswer'
 import { motion } from 'framer-motion'
 import { publicRequest } from '../../api/config'
 import { ClipLoader } from 'react-spinners'
+import Button from '../../components/Button'
+import { useNavigate } from 'react-router-dom'
 
 export default function QuestionsFlow() {
+    const navigate = useNavigate();
+
     const [currentIndex, setCurrentIndex] = useState(0)
     const [answers, setAnswers] = useState([])
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -67,7 +71,7 @@ export default function QuestionsFlow() {
                         <button
                             onClick={handleSubmit}
                             disabled={isSubmitting}
-                            className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-xl transition-all flex items-center justify-center gap-3 min-w-[180px]"
+                            className="bg-blue-700 mx-auto hover:bg-blue-800 text-white px-6 py-3 rounded-xl transition-all flex items-center justify-center gap-3 min-w-[180px] mx-auto"
                         >
                             {isSubmitting ? (
                                 <>
@@ -90,16 +94,27 @@ export default function QuestionsFlow() {
                                 </span>
                             </div>
 
-                            <button
-                                onClick={() => {
-                                    setAnswers([])
-                                    setCurrentIndex(0)
-                                    setSubmitted(false)
-                                }}
-                                className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-xl transition-all"
-                            >
-                                Retake Assessment
-                            </button>
+                            <div className="flex flex-wrap gap-4 justify-center mt-6">
+                                <Button
+                                    onClick={() => {
+                                        setAnswers([])
+                                        setCurrentIndex(0)
+                                        setSubmitted(false)
+                                    }}
+                                    variant="secondary"
+                                >
+                                    Retake Assessment
+                                </Button>
+
+                                <Button
+                                    onClick={() => {
+                                        navigate("/signup")
+                                    }}
+                                    variant="primary"
+                                >
+                                    Roadmap Analysis
+                                </Button>
+                            </div>
                         </>
                     )}
                 </motion.div>
