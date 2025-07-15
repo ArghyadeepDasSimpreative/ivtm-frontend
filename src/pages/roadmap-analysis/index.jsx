@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { FaShieldAlt, FaLock, FaNetworkWired } from "react-icons/fa"
 import Button from "../../components/Button"
 
@@ -28,6 +29,11 @@ const standards = [
 
 export default function RoadmapAnalysis() {
   const [selected, setSelected] = useState("nist")
+  const navigate = useNavigate()
+
+  const handleProceed = () => {
+    navigate(`/questionnaire/${selected}`)
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-white px-6 py-10 flex flex-col items-center">
@@ -47,7 +53,7 @@ export default function RoadmapAnalysis() {
             <button
               key={std.key}
               onClick={() => setSelected(std.key)}
-              className={`flex flex-col items-start gap-4 p-6 rounded-xl border transition-all text-left h-full ${
+              className={`cursor-pointer flex flex-col items-start gap-4 p-6 rounded-xl border transition-all text-left h-full ${
                 isActive
                   ? "border-sky-500 bg-slate-800 shadow-lg scale-[1.02]"
                   : "border-white/10 bg-slate-900 hover:border-white/20"
@@ -65,7 +71,7 @@ export default function RoadmapAnalysis() {
         })}
       </div>
 
-      <Button variant="primary" onClick={() => console.log("Selected:", selected)}>
+      <Button variant="primary" onClick={handleProceed}>
         Proceed to Questionnaire
       </Button>
     </div>
