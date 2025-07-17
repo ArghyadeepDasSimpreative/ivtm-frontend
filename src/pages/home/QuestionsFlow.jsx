@@ -71,7 +71,7 @@ export default function QuestionsFlow() {
                         <button
                             onClick={handleSubmit}
                             disabled={isSubmitting}
-                            className="bg-blue-700 mx-auto hover:bg-blue-800 text-white px-6 py-3 rounded-xl transition-all flex items-center justify-center gap-3 min-w-[180px] mx-auto"
+                            className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-xl transition-all flex items-center justify-center gap-3 min-w-[180px] mx-auto"
                         >
                             {isSubmitting ? (
                                 <>

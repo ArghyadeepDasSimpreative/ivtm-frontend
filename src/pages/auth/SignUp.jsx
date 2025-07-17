@@ -69,10 +69,13 @@ export default function SignUp() {
     setOtpLoading(true)
     setOtpError("")
     try {
-      await publicRequest.post("/organisation-user/verify-otp", {
+      let response = await publicRequest.post("/organisation-user/verify-otp", {
         email: form.businessEmail,
         otp,
       })
+      if(response.status == 200) {
+        localStorage.setItem("userToken", response.data.token);
+      }
       setOtpSuccess(true)
     } catch (err) {
       setOtpError(err?.response?.data?.message || "Invalid OTP")

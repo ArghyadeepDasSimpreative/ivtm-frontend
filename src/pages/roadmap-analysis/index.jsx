@@ -2,6 +2,8 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { FaShieldAlt, FaLock, FaNetworkWired } from "react-icons/fa"
 import Button from "../../components/Button"
+import TreeDisplay from "../../components/TreeDisplay"
+import MaturityLevelBarChart from "../../components/MaturityLevelBarChart"
 
 const standards = [
   {
@@ -26,6 +28,18 @@ const standards = [
       "The Cybersecurity Capability Maturity Model (C2M2) helps organizations evaluate and improve cybersecurity capabilities.",
   },
 ]
+
+const treeData = {
+    function: "GOVERN",
+    subcategories: [
+        "GV.OC",
+        "GV.RM",
+        "GV.RR",
+        "GV.PO",
+        "GV.OV",
+        "GV.SC"
+    ]
+}
 
 export default function RoadmapAnalysis() {
   const [selected, setSelected] = useState("nist")
@@ -74,6 +88,8 @@ export default function RoadmapAnalysis() {
       <Button variant="primary" onClick={handleProceed}>
         Proceed to Questionnaire
       </Button>
+
+      <MaturityLevelBarChart position={3} />
     </div>
   )
 }

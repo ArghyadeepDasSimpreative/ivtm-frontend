@@ -3,3 +3,159 @@
 * {
   font-family: 'Manrope', sans-serif;
 }
+
+.tree-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.tree,
+.tree ul {
+  padding-top: 20px;
+  position: relative;
+  list-style-type: none;
+  text-align: center;
+}
+
+.tree li {
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  padding: 20px 5px 0 5px;
+}
+
+.tree li::before,
+.tree li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  border-top: 2px solid #ccc;
+  width: 50%;
+  height: 20px;
+}
+
+.tree li::before {
+  right: 50%;
+}
+
+.tree li::after {
+  left: 50%;
+}
+
+.tree li:only-child::before,
+.tree li:only-child::after {
+  display: none;
+}
+
+.tree li:only-child {
+  padding-top: 0;
+}
+
+.tree li:first-child::before,
+.tree li:last-child::after {
+  border: 0 none;
+}
+
+.tree li:last-child::before {
+  border-right: 2px solid #ccc;
+  border-radius: 0 5px 0 0;
+}
+
+.tree li:first-child::after {
+  border-left: 2px solid #ccc;
+  border-radius: 5px 0 0 0;
+}
+
+.node {
+  display: inline-block;
+  background: #1e293b;
+  color: #60a5fa;
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  font-weight: bold;
+}
+
+.tree-container {
+  overflow-x: auto;
+  padding: 40px;
+}
+
+.tree {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  list-style-type: none;
+  padding-left: 0;
+  position: relative;
+}
+
+.tree > li {
+  position: relative;
+  padding-left: 0;
+}
+
+.tree > li > .node {
+  text-align: center;
+  padding: 10px 16px;
+  background: #1e293b;
+  color: white;
+  border: 1px solid #38bdf8;
+  border-radius: 6px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.tree > li > ul {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  list-style: none;
+  padding-top: 40px;
+  position: relative;
+}
+
+.tree > li > ul::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 40px;
+  background: #38bdf8;
+}
+
+.tree > li > ul > li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.tree > li > ul > li::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  width: 2px;
+  height: 40px;
+  background: #38bdf8;
+}
+
+.tree > li > ul > li > .node {
+  text-align: center;
+  padding: 8px 12px;
+  background: #0f172a;
+  color: white;
+  border: 1px solid #64748b;
+  border-radius: 4px;
+}
+
+/* Place this in your global CSS or add a scoped <style> tag if using CSS Modules */
+.tree-container text {
+  fill: #ffffff !important;
+  font-weight: 500;
+}
+
+
