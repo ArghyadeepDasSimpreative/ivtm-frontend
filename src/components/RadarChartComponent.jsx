@@ -1,31 +1,54 @@
-// components/RadarChartComponent.jsx
 import React from "react";
 import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Legend, ResponsiveContainer
 } from "recharts";
 
-const RadarChartComponent = ({ data, maxScore = 5, label = "Function-wise Score", notation }) => {
-  const chartData = data.map((item) => ({
-    subject: item.functionName,
-    score: parseFloat(item.averageScore),
-    fullMark: maxScore,
-  }));
+const colors = [
+  "#38bdf8", // sky-400
+  "#f97316", // green-400
+  "#facc15", // yellow-400
+  "#f472b6", // pink-400
+  "#a78bfa", // purple-400
+];
+
+const RadarChartComponent = ({ dataSets = [], maxScore = 5, label = "Function-wise Score", notation }) => {
+  // Prepare merged data for all sets
+  const mergedData = [];
+  const allSubjects = new Set();
+
+  // Collect all unique function names (subjects)
+  dataSets.forEach(set => {
+    set.data.forEach(item => allSubjects.add(item.functionName));
+  });
+
+  // Create data object per subject
+  allSubjects.forEach(subject => {
+    const obj = { subject };
+    dataSets.forEach(set => {
+      const found = set.data.find(item => item.functionName === subject);
+      obj[set.name] = found ? parseFloat(found.averageScore) : 0;
+    });
+    mergedData.push(obj);
+  });
 
   return (
-    <div className="bg-slate-900 text-white p-4 rounded-md w-full max-w-3xl mx-auto">
-      <h3 className="text-center text-lg font-semibold mb-4">{label}</h3>
+    <div className="bg-slate-900 text-white p-4 rounded-md w-full max-w-3xl h-[500px]">
+      <h3 className="text-center text-xl font-semibold mb-4">{label}</h3>
       <ResponsiveContainer width="100%" height={400}>
-        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
+        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={mergedData}>
           <PolarGrid stroke="#334155" />
           <PolarAngleAxis dataKey="subject" stroke="#94a3b8" />
           <PolarRadiusAxis angle={30} domain={[0, maxScore]} stroke="#64748b" />
-          <Radar
-            name="Score"
-            dataKey="score"
-            stroke="#38bdf8"
-            fill="#38bdf8"
-            fillOpacity={0.6}
-          />
+          {dataSets.map((set, index) => (
+            <Radar
+              key={set.name}
+              name={set.name}
+              dataKey={set.name}
+              stroke={colors[index % colors.length]}
+              fill={colors[index % colors.length]}
+              fillOpacity={0.4}
+            />
+          ))}
           <Legend />
         </RadarChart>
       </ResponsiveContainer>

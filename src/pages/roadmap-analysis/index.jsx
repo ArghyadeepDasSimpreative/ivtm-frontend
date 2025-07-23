@@ -88,8 +88,6 @@ export default function RoadmapAnalysis() {
       <Button variant="primary" onClick={handleProceed}>
         Proceed to Questionnaire
       </Button>
-
-      <MaturityLevelBarChart position={3} />
     </div>
   )
 }

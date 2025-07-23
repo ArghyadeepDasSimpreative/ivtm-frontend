@@ -7,31 +7,41 @@ import {
   CartesianGrid,
   ResponsiveContainer,
   LabelList,
-  Cell
+  Legend,
 } from "recharts";
 
-const blueShades = [
-  "#3b82f6", // blue-500
-  "#2563eb", // blue-600
-  "#1d4ed8", // blue-700
-  "#1e40af", // blue-800
-  "#1e3a8a", // blue-900
-  "#60a5fa", // blue-400
-];
+const FunctionWiseBarChart = ({ datasets, title, note, handleClick }) => {
+  console.log("dtasets are ", datasets)
+  // Merge all datasets by functionName
+  const mergedData = [];
 
-const FunctionWiseBarChart = ({ data }) => {
-  const parsedData = data.map((item, idx) => ({
-    ...item,
-    averageScore: parseFloat(item.averageScore),
-    fill: blueShades[idx % blueShades.length],
-  }));
+  datasets.forEach((dataset, datasetIndex) => {
+    dataset.data.forEach((item) => {
+      const existing = mergedData.find((d) => d.functionName === item.functionName);
+      if (existing) {
+        existing[`score${datasetIndex}`] = parseFloat(item.averageScore);
+      } else {
+        mergedData.push({
+          functionName: item.functionName,
+          [`score${datasetIndex}`]: parseFloat(item.averageScore),
+        });
+      }
+    });
+  });
+
+  const handleBarClick = (data) => {
+    if (data && data.functionName) {
+      handleClick(data.functionName.toUpperCase());
+    }
+  };
 
   return (
-    <div className="bg-slate-900 p-4 rounded-md shadow-md text-white w-full max-w-3xl mx-auto">
-      <h2 className="text-center text-xl font-semibold mb-4">Function-wise Scores</h2>
-      <ResponsiveContainer width="100%" height={300}>
+    <div className="bg-slate-900 p-4 rounded-md shadow-md text-white w-full max-w-5xl h-[500px]">
+      <h2 className="text-center text-xl font-semibold mb-1">{title}</h2>
+      {note && <p className="text-center text-sm text-slate-400 mb-4">{note}</p>}
+      <ResponsiveContainer width="100%" height={350}>
         <BarChart
-          data={parsedData}
+          data={mergedData}
           margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
@@ -41,12 +51,18 @@ const FunctionWiseBarChart = ({ data }) => {
             contentStyle={{ backgroundColor: "#1e293b", border: "none" }}
             itemStyle={{ color: "#93c5fd" }}
           />
-          <Bar dataKey="averageScore">
-            <LabelList dataKey="averageScore" position="top" fill="#fff" />
-            {parsedData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.fill} />
-            ))}
-          </Bar>
+          <Legend />
+          {datasets.map((dataset, i) => (
+            <Bar
+              key={i}
+              dataKey={`score${i}`}
+              fill={dataset.color}
+              onClick={handleBarClick}
+              name={dataset.name}
+            >
+              <LabelList dataKey={`score${i}`} position="top" fill="#fff" />
+            </Bar>
+          ))}
         </BarChart>
       </ResponsiveContainer>
     </div>

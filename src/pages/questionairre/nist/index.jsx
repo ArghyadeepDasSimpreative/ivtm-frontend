@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { privateRequest } from "../../api/config";
+import { privateRequest } from "../../../api/config";
 import QuestionCard from "./QuestionCard";
 import SidebarInfo from "./SidebarInfo";
-import { showToast } from "../../lib/toast";
+import { showToast } from "../../../lib/toast";
 
 const NIST_FUNCTIONS = [
   "IDENTIFY",

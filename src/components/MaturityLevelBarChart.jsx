@@ -1,4 +1,4 @@
-import { FaMapMarkerAlt } from "react-icons/fa";
+import { FaMapMarkerAlt, FaFlag } from "react-icons/fa";
 
 const levels = [
   { label: "Adhoc" },
@@ -16,26 +16,39 @@ const barColors = [
   "bg-blue-700",
 ];
 
-export default function MaturityLevelBarChart({ position = 0 }) {
+export default function MaturityLevelBarChart({ position = 0, target = null }) {
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="w-full h-full flex flex-col items-center p-8 bg-slate-900 rounded-[20px] m-0">
       {/* Bars and markers */}
-      <div className="flex items-end justify-center gap-0">
+      <div className="flex items-end justify-center gap-4">
         {levels.map((_, index) => {
-          const isActive = position === index;
-          const height = (index + 1) * 48; // bar height scaling
-          const barWidth = 80; // updated width
+          const isPosition = position === index;
+          const isTarget = target === index;
+          const height = (index + 1) * 60 + 50;
+          const barWidth = 100;
 
           return (
-            <div key={index} className="flex flex-col items-center" style={{ width: `${barWidth}px` }}>
-              {isActive && (
-                <FaMapMarkerAlt className="text-red-500 text-xl mb-1" />
+            <div
+              key={index}
+              className="flex flex-col items-center relative"
+              style={{ width: `${barWidth}px` }}
+            >
+              {/* Target marker (green flag) */}
+              {isTarget && (
+                <FaFlag className="text-green-500 text-xl mb-1 absolute -top-7" />
               )}
+
+              {/* Current position marker (red pointer) */}
+              {isPosition && (
+                <FaMapMarkerAlt className="text-red-500 text-3xl mb-2 z-10" />
+              )}
+
+              {/* Bar */}
               <div
                 className={`w-full ${barColors[index]}`}
                 style={{
                   height: `${height}px`,
-                  borderRadius: "0px",
+                  borderRadius: "6px",
                 }}
               />
             </div>
@@ -44,14 +57,16 @@ export default function MaturityLevelBarChart({ position = 0 }) {
       </div>
 
       {/* Labels below bars */}
-      <div className="flex justify-center mt-4">
+      <div className="flex justify-center mt-6 gap-4">
         {levels.map((level, index) => (
           <div
             key={index}
             className="text-center px-1"
-            style={{ width: "80px" }}
+            style={{ width: "100px" }}
           >
-            <div className="text-sm text-gray-300 font-medium">{level.label}</div>
+            <div className="text-base text-gray-200 font-semibold">
+              {level.label}
+            </div>
             {level.subtitle && (
               <div className="text-sm text-gray-400">{level.subtitle}</div>
             )}

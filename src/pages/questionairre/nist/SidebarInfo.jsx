@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { privateRequest } from "../../api/config";
-import TreeDisplay from "../../components/TreeDisplay";
+import { privateRequest } from "../../../api/config";
+import TreeDisplay from "../../../components/TreeDisplay";
 import { ClipLoader } from "react-spinners";
 
 const descriptions = {

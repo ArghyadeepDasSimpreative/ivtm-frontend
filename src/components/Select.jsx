@@ -24,7 +24,7 @@ const CustomSelect = ({
   return (
     <div className="my-3" style={{ width, maxWidth: '600px' }}>
       {label && (
-        <label className="block text-white font-medium mb-2 text-sm">{label}</label>
+        <label className="block text-white font-medium mb-5 text-xl">{label}</label>
       )}
       <Select
         isMulti={isMulti}
@@ -32,7 +32,7 @@ const CustomSelect = ({
         options={options}
         onChange={onSelect}
         menuPortalTarget={document.body}
-        className="text-sm"
+        className="!text-xl"
         styles={{
           control: (base, state) => ({
             ...base,
