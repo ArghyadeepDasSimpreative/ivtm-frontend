@@ -10,12 +10,13 @@ import {
   Legend,
 } from "recharts";
 
-const FunctionWiseBarChart = ({ datasets, title, note, handleClick }) => {
+const CategorisedBarChart = ({ datasets, title, note, handleClick }) => {
   console.log("dtasets are ", datasets)
   // Merge all datasets by functionName
   const mergedData = [];
 
   datasets.forEach((dataset, datasetIndex) => {
+    console.log("dataset is ", dataset)
     dataset.data.forEach((item) => {
       const existing = mergedData.find((d) => d.functionName === item.functionName);
       if (existing) {
@@ -69,4 +70,4 @@ const FunctionWiseBarChart = ({ datasets, title, note, handleClick }) => {
   );
 };
 
-export default FunctionWiseBarChart;
+export default CategorisedBarChart;

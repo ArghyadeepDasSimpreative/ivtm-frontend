@@ -5,10 +5,11 @@ import HomePage from './pages/home'
 import SignUp from './pages/auth/SignUp'
 import RoadmapAnalysis from './pages/roadmap-analysis'
 import Questionairre from './pages/questionairre/nist'
-import AnalysisPreview from './pages/analysis-preview'
-import TargetMaturityPage from './pages/target-maturity'
-import TargetComparissonPage from './pages/target-comparison'
+import NistAnalysisPreview from './pages/analysis-preview/nist'
+import TargetMaturityPage from './pages/target-maturity/nist'
+import TargetComparissonPage from './pages/target-comparison/nist'
 import HipaaQuestionsPage from './pages/questionairre/hipaa'
+import HipaaAnalysisPreview from './pages/analysis-preview/hipaa'
 
 function App() {
   return (
@@ -30,9 +31,10 @@ function App() {
         <Route path="/roadmap-analysis" element={<RoadmapAnalysis />} />
         <Route path="/questionnaire/:type" element={<Questionairre />} />
         <Route path="/hipaa-questionnaire" element={<HipaaQuestionsPage />} />
-        <Route path="/analysis-preview" element={<AnalysisPreview />} />
+        <Route path="/analysis-preview/nist" element={<NistAnalysisPreview />} />
+        <Route path="/analysis-preview/hipaa" element={<HipaaAnalysisPreview />} />
         <Route path="/target-maturity" element={<TargetMaturityPage />} />
-        <Route path="/target-comparison" element={<TargetComparissonPage />} />
+        <Route path="/target-comparison/nist" element={<TargetComparissonPage />} />
       </Routes>
     </>
   )

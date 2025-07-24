@@ -26,7 +26,6 @@ export default function Button({
       {loading ? (
         <div className="flex items-center gap-2">
           <ClipLoader size={18} color="#ffffff" />
-          
         </div>
       ) : (
         children

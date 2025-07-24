@@ -12,6 +12,7 @@ const colors = [
 ];
 
 const RadarChartComponent = ({ dataSets = [], maxScore = 5, label = "Function-wise Score", notation }) => {
+  console.log("radar datasets ", dataSets)
   // Prepare merged data for all sets
   const mergedData = [];
   const allSubjects = new Set();

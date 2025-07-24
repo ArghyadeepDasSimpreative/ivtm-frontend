@@ -1,21 +1,20 @@
 import { useEffect, useState, useRef } from "react";
 import { format } from "date-fns";
-import { privateRequest } from "../../api/config";
-import { useTargetMaturity } from "../../context/TargetMaturityContext";
+import { privateRequest } from "../../../api/config";
 
-import CustomSelect from "../../components/Select";
-import MaturityLevelBarChart from "../../components/MaturityLevelBarChart";
-import RadarChartComponent from "../../components/RadarChartComponent";
-import FunctionWiseBarChart from "../../components/FunctionWiseBarChart";
-import MultiLineChart from "../../components/MultiLineChart";
-import MaturityLevelLegend from "../../components/MaturityLevelLegend";
-import FunctionAnswerTable from "../../components/FunctionAnswerTable";
-import { showToast } from "../../lib/toast";
+import CustomSelect from "../../../components/Select";
+import MaturityLevelBarChart from "../../../components/MaturityLevelBarChart";
+import RadarChartComponent from "../../../components/RadarChartComponent";
+import CategorisedBarChart from "../../../components/CategorisedBarChart";
+import MultiLineChart from "../../../components/MultiLineChart";
+import MaturityLevelLegend from "../../../components/MaturityLevelLegend";
+import FunctionAnswerTable from "../../../components/FunctionAnswerTable";
+import { showToast } from "../../../lib/toast";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import Button from "../../components/Button";
+import Button from "../../../components/Button";
 
-const TargetComparison = () => {
+const NistAnalysisPreview = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [assessmentsList, setAssessmentsList] = useState([]);
@@ -23,43 +22,7 @@ const TargetComparison = () => {
     const [evaluationStats, setEvaluationStats] = useState(null);
     const [functionWiseMarks, setFunctionWiseMarks] = useState([]);
     const [selectedFunctionName, setSelectedFunctionName] = useState("");
-    const [targetData, setTargetData] = useState([])
     const exportRef = useRef();
-
-    const {
-        targetLevelName,
-        targetFunctionMarks,
-        setTargetAssessment,
-    } = useTargetMaturity();
-
-    useEffect(function () {
-        setTargetData([
-            {
-                functionName: "GOVERN",
-                averageScore: targetLevelName
-            },
-            {
-                functionName: "IDENTIFY",
-                averageScore: targetLevelName
-            },
-            {
-                functionName: "PROTECT",
-                averageScore: targetLevelName
-            },
-            {
-                functionName: "DETECT",
-                averageScore: targetLevelName
-            },
-            {
-                functionName: "RESPOND",
-                averageScore: targetLevelName
-            },
-            {
-                functionName: "RECOVER",
-                averageScore: targetLevelName
-            }
-        ])
-    }, [targetLevelName])
 
     useEffect(() => {
         const fetchAssessments = async () => {
@@ -95,8 +58,7 @@ const TargetComparison = () => {
         setSelectedId(id);
         setEvaluationStats(null);
         setFunctionWiseMarks([]);
-        setSelectedFunctionName("");
-        setTargetAssessment(option); // push to context
+        setSelectedFunctionName(""); // Reset on new selection
 
         if (!id) return;
 
@@ -122,14 +84,18 @@ const TargetComparison = () => {
     const handleDownloadPdf = async () => {
         try {
             showToast.info("PDF generation started...");
+
             const canvas = await html2canvas(exportRef.current, {
                 useCORS: true,
                 scale: 2,
-                backgroundColor: "#0f172a",
+                backgroundColor: "#0f172a", // Same as bg-slate-950
             });
+
+            console.log("canvas is ")
 
             const imgData = canvas.toDataURL("image/png");
             const pdf = new jsPDF("p", "mm", "a4");
+            console.log("pdf is ", pdf)
 
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
@@ -152,6 +118,7 @@ const TargetComparison = () => {
                 <p className="text-red-500">{error}</p>
             ) : (
                 <div className="flex flex-col gap-10">
+                    {/* Dropdown */}
                     <div className="flex justify-between items-center">
                         <CustomSelect
                             label="Select Assessment"
@@ -168,18 +135,17 @@ const TargetComparison = () => {
                     <div ref={exportRef}>
                         {evaluationStats && (
                             <div className="flex flex-col gap-10 mt-7">
-                                {/* Top Row */}
+                                {/* Top Row: Score, Maturity Bar, Legend */}
                                 <div className="flex flex-col lg:flex-row justify-between items-start gap-6">
+                                    {/* Overall Score */}
                                     <div className="bg-slate-900 border border-blue-400 rounded-md w-[300px] h-[130px] flex flex-col justify-center items-center shadow-lg shadow-blue-700/30">
                                         <h2 className="text-xl font-semibold text-blue-300">Overall Score</h2>
                                         <p className="text-4xl font-bold mt-4 text-blue-100">{evaluationStats.average}</p>
                                     </div>
 
+                                    {/* Maturity Bar and Legend */}
                                     <div className="flex gap-10 justify-end items-center">
-                                        <MaturityLevelBarChart
-                                            position={parseInt(evaluationStats.average)}
-                                            target={parseInt(targetLevelName)}
-                                        />
+                                        <MaturityLevelBarChart position={parseInt(evaluationStats.average)} />
                                         <MaturityLevelLegend />
                                     </div>
                                 </div>
@@ -189,45 +155,35 @@ const TargetComparison = () => {
                                     {functionWiseMarks?.length > 0 && (
                                         <div className="flex-1 bg-slate-900 p-4 rounded-md">
                                             <MultiLineChart
-                                                dataSets={[
-                                                    { label: "Actual", data: functionWiseMarks },
-                                                    { label: "Target", data: targetData }
-                                                ]}
+                                                dataSets={[{ label: "Score", data: functionWiseMarks }]}
                                             />
                                         </div>
                                     )}
 
                                     <div className="flex-1 bg-slate-900 p-4 rounded-md">
                                         <RadarChartComponent
-                                            dataSets={[
-                                                { name: "Current", data: functionWiseMarks },
-                                                { name: "Target", data: targetData }
-                                            ]}
+                                            dataSets={
+                                                [{name: "Function wise average",data: functionWiseMarks}]
+                                        }
                                             label="Function-wise Maturity Radar"
                                             notation="Each axis represents a function's average score (Max: 5)"
                                         />
-
                                     </div>
 
                                     <div className="flex-1 bg-slate-900 p-4 rounded-md">
-                                        <FunctionWiseBarChart
-                                            datasets={[
-                                                { name: "Actual", data: functionWiseMarks, color: "#3b82f6" },
-                                                { name: "Target", data: targetData, color: "#f97316" }
-                                            ]}
+                                        <CategorisedBarChart
+                                            datasets={[{name: "", data:functionWiseMarks, color: "#22d3ee"}]}
                                             title="Function-Wise Scores"
                                             note="Average scores per function (0 to 5)"
                                             handleClick={handleBarClick}
                                         />
-
                                     </div>
                                 </div>
 
-                                {/* Table */}
+                                {/* Function Table */}
                                 <FunctionAnswerTable
                                     evaluationId={evaluationStats?.evaluationId}
                                     functionName={selectedFunctionName}
-                                    target={targetLevelName}
                                 />
                             </div>
                         )}
@@ -238,4 +194,4 @@ const TargetComparison = () => {
     );
 };
 
-export default TargetComparison;
+export default NistAnalysisPreview;

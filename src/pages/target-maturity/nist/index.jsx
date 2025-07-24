@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { privateRequest } from "../../api/config";
-import CustomSelect from "../../components/Select";
+import { privateRequest } from "../../../api/config";
+import CustomSelect from "../../../components/Select";
 import {
     FaShieldAlt,
     FaEye,
@@ -9,11 +9,11 @@ import {
     FaLock,
     FaBalanceScale
 } from "react-icons/fa";
-import { showToast } from "../../lib/toast";
+import { showToast } from "../../../lib/toast";
 import { format } from "date-fns";
-import Button from "../../components/Button";
+import Button from "../../../components/Button";
 import { VscDebugStart } from "react-icons/vsc";
-import { useTargetMaturity } from "../../context/TargetMaturityContext"; // adjust path if needed
+import { useTargetMaturity } from "../../../context/TargetMaturityContext"; // adjust path if needed
 import { useNavigate } from "react-router-dom";
 
 
@@ -112,7 +112,7 @@ const TargetMaturityPage = () => {
     );
 
     function navigateToComparisonPage() {
-          navigate("/target-comparison")
+          navigate("/target-comparison/nist")
     }
 
     return (

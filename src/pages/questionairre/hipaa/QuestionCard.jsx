@@ -8,13 +8,11 @@ const QuestionCard = ({ questionData, onSelect }) => {
     const [subOption, setSubOption] = useState(null);
 
     useEffect(() => {
-        // Default to "No"
         setPrimary("No");
         handleSelection("No");
     }, [_id]);
 
     const handlePrimary = (value) => {
-        console.log("primary is ", value)
         setPrimary(value);
 
         if (value === "Yes") {
@@ -32,14 +30,11 @@ const QuestionCard = ({ questionData, onSelect }) => {
     };
 
     const handleSelection = (selectedValue, primaryParam) => {
-        console.log("selected value is ", selectedValue, " and the equality is ", selectedValue == "None of the below")
         let marks = 0;
 
         if (primaryParam === "No" || selectedValue === "No") {
-            console.log("enetring ")
             marks = 1;
         } else if (primaryParam == "Yes" || selectedValue === "None of the below") {
-            console.log("enetring none of the below")
             marks = 2;
         } else {
             const index = score.indexOf(selectedValue);
