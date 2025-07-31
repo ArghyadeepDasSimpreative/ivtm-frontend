@@ -9,7 +9,7 @@ import {
     ResponsiveContainer,
 } from "recharts";
 
-const SeverityRadarChart = ({ data }) => {
+const PriorityRadarChart = ({ data }) => {
     if (!data || data.length === 0) {
         return (
             <div className="w-full h-[40vh] shadow-md border border-zinc-200 rounded flex items-center justify-center text-gray-500">
@@ -18,17 +18,17 @@ const SeverityRadarChart = ({ data }) => {
         );
     }
 
-    const severityCount = data.reduce((acc, item) => {
-        const severity =
-            item.severity?.charAt(0).toUpperCase() +
-            item.severity?.slice(1).toLowerCase();
-        acc[severity] = (acc[severity] || 0) + 1;
+    const priorityCount = data.reduce((acc, item) => {
+        const priority =
+            item.priority?.charAt(0).toUpperCase() +
+            item.priority?.slice(1).toLowerCase();
+        acc[priority] = (acc[priority] || 0) + 1;
         return acc;
     }, {});
 
-    const chartData = ["Critical", "High", "Medium", "Low"].map((severity) => ({
-        severity,
-        count: severityCount[severity] || 0,
+    const chartData = ["Critical", "High", "Medium", "Low"].map((priority) => ({
+        priority,
+        count: priorityCount[priority] || 0,
     }));
 
     return (
@@ -37,7 +37,7 @@ const SeverityRadarChart = ({ data }) => {
             <ResponsiveContainer width="100%" height="100%">
                 <RadarChart outerRadius={120} data={chartData}>
                     <PolarGrid />
-                    <PolarAngleAxis dataKey="severity" />
+                    <PolarAngleAxis dataKey="priority" />
                     <PolarRadiusAxis
                         angle={30}
                         domain={[0, Math.max(...chartData.map((d) => d.count)) || 1]}
@@ -56,4 +56,4 @@ const SeverityRadarChart = ({ data }) => {
     );
 };
 
-export default SeverityRadarChart;
+export default PriorityRadarChart;

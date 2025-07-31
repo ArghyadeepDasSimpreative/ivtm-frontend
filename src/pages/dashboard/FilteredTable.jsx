@@ -86,7 +86,7 @@ export default function FilteredTable({ data, setUpdates }) {
               >
                 <td className="px-4 py-2 border border-transparent">{item.serialNumber || idx + 1}</td>
                 <td className="px-4 py-2 border border-transparent">{item.assessmentArea}</td>
-                <td className="px-4 py-2 border border-transparent whitespace-pre-line">
+                <td className="px-4 py-2 border border-transparent w-[25%] whitespace-pre-line">
                   {item.description}
                 </td>
                 <td className="px-4 py-2 border border-transparent">

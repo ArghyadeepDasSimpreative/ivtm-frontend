@@ -12,7 +12,7 @@ import HipaaQuestionsPage from './pages/questionairre/hipaa'
 import HipaaAnalysisPreview from './pages/analysis-preview/hipaa'
 import TargetMaturityPageHipaa from './pages/target-maturity/hipaa'
 import TargetComparisonHipaa from './pages/target-comparison/hipaa'
-import Signin from './pages/auth/Signin'
+import Signin from './pages/auth/SignIn'
 import VulnerabilityManagementLayout from './layout/VulnerabilityManagementLayout'
 import VulnerabilityDashboard from './pages/dashboard'
 

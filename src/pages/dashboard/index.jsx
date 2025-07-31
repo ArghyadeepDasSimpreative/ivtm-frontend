@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import FilteredTable from "./FilteredTable";
 import ReportLoading from "./ReportLoading";
-import SeverityRadarChart from "./SeverityRadarChart";
+import PriorityRadarChart from "./PriorityRadarChart";
 import SeverityIndex from "./SeverityIndex";
 import { MdSystemUpdateAlt } from "react-icons/md";
 
@@ -367,7 +367,7 @@ const VulnerabilityDashboard = () => {
                                 </div>
                             </div>
                             <div className="w-[25%] h-full flex flex-col gap-3 justify-start">
-                                <SeverityRadarChart data={filteredData} />
+                                <PriorityRadarChart data={filteredData} />
                                 <SeverityIndex />
                                 <div className="flex w-full items-center justify-end">
                                     <button
