@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { FaRocket } from 'react-icons/fa'
 import QuestionsFlow from './QuestionsFlow'
+const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 const HomePage = () => {
+  console.log('BASE_URL:', BASE_URL)
   const [started, setStarted] = useState(false)
 
   const handleGetStarted = () => {
