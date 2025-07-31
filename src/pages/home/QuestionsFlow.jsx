@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { initialQuestions } from '../../constants/initialQuestions'
-import QuestionAnswer from './questionAnswer'
+import QuestionAnswer from './QuestionAnswer'
 import { motion } from 'framer-motion'
 import { publicRequest } from '../../api/config'
 import { ClipLoader } from 'react-spinners'
