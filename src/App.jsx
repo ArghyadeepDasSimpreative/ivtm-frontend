@@ -6,10 +6,15 @@ import SignUp from './pages/auth/SignUp'
 import RoadmapAnalysis from './pages/roadmap-analysis'
 import Questionairre from './pages/questionairre/nist'
 import NistAnalysisPreview from './pages/analysis-preview/nist'
-import TargetMaturityPage from './pages/target-maturity/nist'
-import TargetComparissonPage from './pages/target-comparison/nist'
+import TargetMaturityPageNist from './pages/target-maturity/nist'
+import TargetComparissonNist from './pages/target-comparison/nist'
 import HipaaQuestionsPage from './pages/questionairre/hipaa'
 import HipaaAnalysisPreview from './pages/analysis-preview/hipaa'
+import TargetMaturityPageHipaa from './pages/target-maturity/hipaa'
+import TargetComparisonHipaa from './pages/target-comparison/hipaa'
+import Signin from './pages/auth/Signin'
+import VulnerabilityManagementLayout from './layout/VulnerabilityManagementLayout'
+import VulnerabilityDashboard from './pages/dashboard'
 
 function App() {
   return (
@@ -24,17 +29,24 @@ function App() {
           },
         }}
       />
-      
+
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/signin" element={<Signin />} />
         <Route path="/roadmap-analysis" element={<RoadmapAnalysis />} />
-        <Route path="/questionnaire/:type" element={<Questionairre />} />
-        <Route path="/hipaa-questionnaire" element={<HipaaQuestionsPage />} />
+        <Route path="/questionnaire/nist" element={<Questionairre />} />
+        <Route path="/questionnaire/hipaa" element={<HipaaQuestionsPage />} />
         <Route path="/analysis-preview/nist" element={<NistAnalysisPreview />} />
         <Route path="/analysis-preview/hipaa" element={<HipaaAnalysisPreview />} />
-        <Route path="/target-maturity" element={<TargetMaturityPage />} />
-        <Route path="/target-comparison/nist" element={<TargetComparissonPage />} />
+        <Route path="/target-maturity/nist" element={<TargetMaturityPageNist />} />
+        <Route path="/target-maturity/hipaa" element={<TargetMaturityPageHipaa />} />
+        <Route path="/target-comparison/nist" element={<TargetComparissonNist />} />
+        <Route path="/target-comparison/hipaa" element={<TargetComparisonHipaa />} />
+        <Route path="/vulnerability-management" element={<VulnerabilityManagementLayout />}>
+          <Route index element={<VulnerabilityDashboard />} />
+          {/* Add more routes for vulnerability management here */}
+        </Route>
       </Routes>
     </>
   )

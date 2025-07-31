@@ -30,20 +30,20 @@ const HipaaAnswerTable = ({ data, target = null, category }) => {
   return (
     <div className="bg-slate-900 p-4 rounded-md shadow-md text-white w-full overflow-x-auto">
       <h2 className="text-lg font-semibold mb-4">
-        {target !== null ? `Target Comparison (Target: ${target})` : "All Questions"}
+        {target !== null ? `Summary of assessment - Target Comparison (Target: ${target})` : "Summary of assessment"}
       </h2>
       <table className="w-full table-auto border-collapse">
         <thead>
           <tr className="bg-slate-700 text-left">
             <th className="p-2">#</th>
             <th className="p-2">Category</th>
-            <th className="p-2">Task</th>
-            <th className="p-2">Answer</th>
+            <th className="p-2">Description</th>
+            <th className="p-2">Response</th>
             <th className="p-2">Score</th>
             {target !== null && (
               <>
                 <th className="p-2">Target Value</th>
-                <th className="p-2">Target Answer</th>
+                <th className="p-2">Target Solution</th>
               </>
             )}
           </tr>
@@ -62,7 +62,7 @@ const HipaaAnswerTable = ({ data, target = null, category }) => {
               >
                 <td className="p-2">{index + 1}</td>
                 <td className="p-2">{q.category || "N/A"}</td>
-                <td className="p-2">{q.questionText || "N/A"}</td>
+                <td className="p-2">{q.description || "N/A"}</td>
                 <td className="p-2">
                   {q.selectedAnswer === "None of the below" ? "Yes" : q.selectedAnswer || "No"}
                 </td>

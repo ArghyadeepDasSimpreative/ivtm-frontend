@@ -19,11 +19,26 @@ export const privateRequest = axios.create({
 privateRequest.interceptors.request.use(
   async (config) => {
     const token = localStorage.getItem('userToken');
-
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
+// ✅ FormData version of privateRequest (for file uploads)
+export const PrivateRequestFormData = axios.create({
+  baseURL: BASE_URL,
+});
+
+PrivateRequestFormData.interceptors.request.use(
+  async (config) => {
+    const token = localStorage.getItem('userToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    // Do NOT set Content-Type manually here
     return config;
   },
   (error) => Promise.reject(error)

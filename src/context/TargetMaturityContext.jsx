@@ -10,13 +10,28 @@ export const TargetMaturityProvider = ({ children }) => {
     const [targetAverages, setTargetAverages] = useState([]);
     const [targetFunctionMarks, setTargetFunctionMarks] = useState([]);
 
-    useEffect(() => {
-        console.log("🔁 Target Maturity Context State Changed:");
-        console.log("targetAssessment:", targetAssessment);
-        console.log("targetLevelName:", targetLevelName);
-        console.log("targetAverages:", targetAverages);
-        console.log("targetFunctionMarks:", targetFunctionMarks);
-    }, [targetAssessment, targetLevelName, targetAverages, targetFunctionMarks]);
+    // 🆕 HIPAA specific context variables
+    const [hipaaTargetAssessment, setHipaaTargetAssessment] = useState([]);
+    const [hipaaTargetScore, setHipaaTargetScore] = useState("");
+    
+    
+
+    // useEffect(() => {
+    //     console.log("🔁 Target Maturity Context State Changed:");
+    //     console.log("targetAssessment:", targetAssessment);
+    //     console.log("targetLevelName:", targetLevelName);
+    //     console.log("targetAverages:", targetAverages);
+    //     console.log("targetFunctionMarks:", targetFunctionMarks);
+        
+
+    // }, [
+    //     targetAssessment,
+    //     targetLevelName,
+    //     targetAverages,
+    //     targetFunctionMarks,
+    //     hipaaTargetAssessment
+
+    // ]);
 
     return (
         <TargetMaturityContext.Provider
@@ -29,6 +44,12 @@ export const TargetMaturityProvider = ({ children }) => {
                 setTargetAverages,
                 targetFunctionMarks,
                 setTargetFunctionMarks,
+
+                // 🆕 HIPAA-related values
+                hipaaTargetAssessment,
+                setHipaaTargetAssessment,
+                hipaaTargetScore,
+                setHipaaTargetScore,
                 debugMessage: "🧪 Target Maturity Context ready ✅"
             }}
         >

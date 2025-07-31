@@ -26,14 +26,14 @@ const functionIcons = {
     GOVERN: <FaBalanceScale size={28} />,
 };
 
-const TargetMaturityPage = () => {
+const TargetMaturityPageNist = () => {
     const navigate = useNavigate();
 
     const [assessments, setAssessments] = useState([]);
-    const [selectedAssessment, setSelectedAssessment] = useState(null);
+    // const [selectedAssessment, setSelectedAssessment] = useState(null);
     const [currentLevel, setCurrentLevel] = useState(null);
-    const [targetLevel, setTargetLevel] = useState(null);
-    const [functionMarks, setFunctionMarks] = useState({});
+    // const [targetLevel, setTargetLevel] = useState(null);
+    // const [functionMarks, setFunctionMarks] = useState({});
     const [targetOptions, setTargetOptions] = useState([]);
     const [averages, setAverages] = useState([]);
 
@@ -192,4 +192,4 @@ const TargetMaturityPage = () => {
     );
 };
 
-export default TargetMaturityPage;
+export default TargetMaturityPageNist;

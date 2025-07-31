@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import App from './App.jsx';
 import { TargetMaturityProvider } from './context/TargetMaturityContext.jsx';
+import 'react-loading-skeleton/dist/skeleton.css'
 import './index.css';
 
 createRoot(document.getElementById('root')).render(

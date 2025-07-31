@@ -31,7 +31,7 @@ const FunctionAnswerTable = ({ evaluationId, functionName, target = null }) => {
   return (
     <div className="bg-slate-900 p-4 rounded-md shadow-md text-white w-full overflow-x-auto">
       <h2 className="text-lg font-semibold mb-4">
-        {functionName ? `Function: ${functionName}` : "All Questions"}
+        {functionName ? `Summary of assessment - Function: ${functionName}` : "Summary of assessment"}
       </h2>
       <table className="w-full table-auto border-collapse">
         <thead>

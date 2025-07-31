@@ -2,8 +2,6 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { FaShieldAlt, FaLock, FaNetworkWired } from "react-icons/fa"
 import Button from "../../components/Button"
-import TreeDisplay from "../../components/TreeDisplay"
-import MaturityLevelBarChart from "../../components/MaturityLevelBarChart"
 
 const standards = [
   {

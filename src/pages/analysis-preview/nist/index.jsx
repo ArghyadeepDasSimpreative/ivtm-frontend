@@ -7,7 +7,7 @@ import MaturityLevelBarChart from "../../../components/MaturityLevelBarChart";
 import RadarChartComponent from "../../../components/RadarChartComponent";
 import CategorisedBarChart from "../../../components/CategorisedBarChart";
 import MultiLineChart from "../../../components/MultiLineChart";
-import MaturityLevelLegend from "../../../components/MaturityLevelLegend";
+import MaturityLevelLegendNist from "../../../components/MaturityLevelLegendNist";
 import FunctionAnswerTable from "../../../components/FunctionAnswerTable";
 import { showToast } from "../../../lib/toast";
 import html2canvas from "html2canvas";
@@ -118,6 +118,7 @@ const NistAnalysisPreview = () => {
                 <p className="text-red-500">{error}</p>
             ) : (
                 <div className="flex flex-col gap-10">
+                    <p className="w-full text-center text-3xl font-semibold text-blue-200">Assessment result based on <strong className="text-blue-400">NIST CSF</strong></p>
                     {/* Dropdown */}
                     <div className="flex justify-between items-center">
                         <CustomSelect
@@ -145,8 +146,14 @@ const NistAnalysisPreview = () => {
 
                                     {/* Maturity Bar and Legend */}
                                     <div className="flex gap-10 justify-end items-center">
-                                        <MaturityLevelBarChart position={parseInt(evaluationStats.average)} />
-                                        <MaturityLevelLegend />
+                                        <MaturityLevelBarChart position={parseInt(evaluationStats.average)}
+                                            levels={[
+                                                { label: "Physical" },
+                                                { label: "Administrative" },
+                                                { label: "Technical" },
+                                                { label: "Policy , Procedure and Documentation" }
+                                            ]} />
+                                        <MaturityLevelLegendNist />
                                     </div>
                                 </div>
 
@@ -163,8 +170,8 @@ const NistAnalysisPreview = () => {
                                     <div className="flex-1 bg-slate-900 p-4 rounded-md">
                                         <RadarChartComponent
                                             dataSets={
-                                                [{name: "Function wise average",data: functionWiseMarks}]
-                                        }
+                                                [{ name: "Function wise average", data: functionWiseMarks }]
+                                            }
                                             label="Function-wise Maturity Radar"
                                             notation="Each axis represents a function's average score (Max: 5)"
                                         />
@@ -172,7 +179,7 @@ const NistAnalysisPreview = () => {
 
                                     <div className="flex-1 bg-slate-900 p-4 rounded-md">
                                         <CategorisedBarChart
-                                            datasets={[{name: "", data:functionWiseMarks, color: "#22d3ee"}]}
+                                            datasets={[{ name: "", data: functionWiseMarks, color: "#22d3ee" }]}
                                             title="Function-Wise Scores"
                                             note="Average scores per function (0 to 5)"
                                             handleClick={handleBarClick}

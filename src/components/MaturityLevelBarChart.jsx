@@ -1,30 +1,27 @@
 import { FaMapMarkerAlt, FaFlag } from "react-icons/fa";
 
-const levels = [
-  { label: "Adhoc" },
-  { label: "Define" },
-  { label: "Manage" },
-  { label: "Proactive detection" },
-  { label: "Optimised" },
-];
-
 const barColors = [
   "bg-blue-300",
   "bg-blue-400",
   "bg-blue-500",
   "bg-blue-600",
   "bg-blue-700",
+  "bg-blue-800"
 ];
 
-export default function MaturityLevelBarChart({ position = 0, target = null }) {
+export default function MaturityLevelBarChart({ position = 0, target = null, levels = [] }) {
+  const maxHeight = 400; // For consistent scaling if levels length changes
+  const maxLevels = Math.max(levels.length, 1);
+
   return (
     <div className="w-full h-full flex flex-col items-center p-8 bg-slate-900 rounded-[20px] m-0">
       {/* Bars and markers */}
       <div className="flex items-end justify-center gap-4">
-        {levels.map((_, index) => {
+        {levels.map((level, index) => {
+          console.log("index is ", index)
           const isPosition = position === index;
           const isTarget = target === index;
-          const height = (index + 1) * 60 + 50;
+          const height = ((index + 1) / maxLevels) * maxHeight;
           const barWidth = 100;
 
           return (
@@ -45,7 +42,7 @@ export default function MaturityLevelBarChart({ position = 0, target = null }) {
 
               {/* Bar */}
               <div
-                className={`w-full ${barColors[index]}`}
+                className={`w-full ${barColors[index] || "bg-blue-900"}`}
                 style={{
                   height: `${height}px`,
                   borderRadius: "6px",

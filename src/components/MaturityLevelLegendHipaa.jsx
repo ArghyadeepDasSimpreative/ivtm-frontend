@@ -1,38 +1,33 @@
 import { FaRegCircle } from "react-icons/fa";
 
-const maturityLevels = [
+const hipaaLevels = [
   {
-    label: "Adhoc",
+    label: "Physical",
     color: "text-blue-300",
-    description: "Unstructured, reactive approach. No formal process.",
+    description: "Safeguards that protect physical access to ePHI and related facilities.",
   },
   {
-    label: "Define",
+    label: "Administrative",
     color: "text-blue-400",
-    description: "Basic policies and processes are defined.",
+    description: "Policies and procedures to manage security measures and staff responsibilities.",
   },
   {
-    label: "Manage",
+    label: "Technical",
     color: "text-blue-500",
-    description: "Processes are implemented and repeatable.",
+    description: "Technology and related policies to protect and control access to ePHI.",
   },
   {
-    label: "Proactive",
+    label: "Policy, Procedure and Documentation",
     color: "text-blue-600",
-    description: "Threats are detected and responded to in real time.",
-  },
-  {
-    label: "Optimised",
-    color: "text-blue-700",
-    description: "Continuously improving and fully integrated approach.",
+    description: "Documented processes for implementing and maintaining compliance effectively.",
   },
 ];
 
-export default function MaturityLevelLegend() {
+export default function MaturityLevelLegendHipaa() {
   return (
     <div className="bg-slate-900 rounded-[15px] p-6 w-full h-full">
       <div className="flex flex-col gap-6">
-        {maturityLevels.map((level, idx) => (
+        {hipaaLevels.map((level, idx) => (
           <div key={idx} className="flex items-start gap-4">
             <FaRegCircle className={`${level.color} mt-1 text-xl`} />
             <div>

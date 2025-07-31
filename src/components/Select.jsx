@@ -9,6 +9,7 @@ const CustomSelect = ({
   defaultValue,
   width = "300px",
   isMulti = false,
+  style = "dark"
 }) => {
   const options = data.map((item) => ({
     value: item[config.key],
@@ -21,10 +22,18 @@ const CustomSelect = ({
     setSelectedValue(defaultValue);
   }, [defaultValue]);
 
+  const isDark = style === "dark";
+
   return (
     <div className="my-3" style={{ width, maxWidth: '600px' }}>
       {label && (
-        <label className="block text-white font-medium mb-5 text-xl">{label}</label>
+        <label
+          className={`block font-medium mb-5 text-xl ${
+            isDark ? 'text-white' : 'text-gray-800'
+          }`}
+        >
+          {label}
+        </label>
       )}
       <Select
         isMulti={isMulti}
@@ -36,39 +45,50 @@ const CustomSelect = ({
         styles={{
           control: (base, state) => ({
             ...base,
-            backgroundColor: '#1f2937', // slate-800
-            borderColor: state.isFocused ? '#3b82f6' : '#4b5563', // blue-500 or gray-600
+            backgroundColor: isDark ? '#1f2937' : '#ffffff',
+            borderColor: state.isFocused
+              ? '#3b82f6'
+              : isDark
+              ? '#4b5563'
+              : '#d1d5db',
             borderWidth: '1px',
             borderRadius: '0.5rem',
             minHeight: '44px',
             boxShadow: state.isFocused ? '0 0 0 1px #3b82f6' : 'none',
-            color: '#f9fafb', // text-gray-100
+            color: isDark ? '#f9fafb' : '#111827',
             '&:hover': {
               borderColor: '#3b82f6',
             },
           }),
           singleValue: (base) => ({
             ...base,
-            color: '#f9fafb',
+            color: isDark ? '#f9fafb' : '#111827',
           }),
           input: (base) => ({
             ...base,
-            color: '#f9fafb',
+            color: isDark ? '#f9fafb' : '#111827',
           }),
           option: (base, state) => ({
             ...base,
             backgroundColor: state.isFocused
-              ? '#3b82f6' // blue-500
+              ? '#3b82f6'
               : state.isSelected
-              ? '#2563eb' // blue-600
-              : '#1f2937', // slate-800
-            color: state.isFocused || state.isSelected ? '#ffffff' : '#d1d5db', // gray-300
+              ? '#2563eb'
+              : isDark
+              ? '#1f2937'
+              : '#ffffff',
+            color:
+              state.isFocused || state.isSelected
+                ? '#ffffff'
+                : isDark
+                ? '#d1d5db'
+                : '#111827',
             padding: '8px 12px',
             cursor: 'pointer',
           }),
           menu: (base) => ({
             ...base,
-            backgroundColor: '#1f2937',
+            backgroundColor: isDark ? '#1f2937' : '#ffffff',
             borderRadius: '0.5rem',
             zIndex: 9999,
           }),
@@ -78,23 +98,23 @@ const CustomSelect = ({
           }),
           placeholder: (base) => ({
             ...base,
-            color: '#9ca3af', // gray-400
+            color: isDark ? '#9ca3af' : '#6b7280',
           }),
           multiValue: (base) => ({
             ...base,
-            backgroundColor: '#374151', // slate-700
-            color: '#f9fafb',
+            backgroundColor: isDark ? '#374151' : '#e5e7eb',
+            color: isDark ? '#f9fafb' : '#111827',
           }),
           multiValueLabel: (base) => ({
             ...base,
-            color: '#f9fafb',
+            color: isDark ? '#f9fafb' : '#111827',
           }),
           multiValueRemove: (base) => ({
             ...base,
-            color: '#f87171', // red-400
+            color: isDark ? '#f87171' : '#dc2626',
             ':hover': {
-              backgroundColor: '#b91c1c', // red-700
-              color: 'white',
+              backgroundColor: isDark ? '#b91c1c' : '#fecaca',
+              color: isDark ? '#ffffff' : '#7f1d1d',
             },
           }),
         }}

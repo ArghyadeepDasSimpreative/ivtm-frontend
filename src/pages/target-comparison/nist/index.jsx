@@ -8,55 +8,64 @@ import MaturityLevelBarChart from "../../../components/MaturityLevelBarChart";
 import RadarChartComponent from "../../../components/RadarChartComponent";
 import CategorisedBarChart from "../../../components/CategorisedBarChart";
 import MultiLineChart from "../../../components/MultiLineChart";
-import MaturityLevelLegend from "../../../components/MaturityLevelLegend";
+import MaturityLevelLegendNist from "../../../components/MaturityLevelLegendNist";
 import FunctionAnswerTable from "../../../components/FunctionAnswerTable";
 import { showToast } from "../../../lib/toast";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Button from "../../../components/Button";
+import { useNavigate } from "react-router-dom";
 
-const TargetComparison = () => {
+const TargetComparisonNist = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [assessmentsList, setAssessmentsList] = useState([]);
-    const [selectedId, setSelectedId] = useState("");
+    // const [selectedId, setSelectedId] = useState("");
     const [evaluationStats, setEvaluationStats] = useState(null);
     const [functionWiseMarks, setFunctionWiseMarks] = useState([]);
     const [selectedFunctionName, setSelectedFunctionName] = useState("");
     const [targetData, setTargetData] = useState([])
     const exportRef = useRef();
 
+    const navigate = useNavigate();
+
     const {
         targetLevelName,
-        targetFunctionMarks,
+        // targetFunctionMarks,
         setTargetAssessment,
     } = useTargetMaturity();
 
+    console.log("target function name is ", targetLevelName);
+
     useEffect(function () {
+        if(!targetLevelName){
+            showToast.info("Please select you target maturity level first.")
+            navigate("/target-maturity/nist");
+        }
         setTargetData([
             {
                 functionName: "GOVERN",
-                averageScore: targetLevelName
+                averageScore: targetLevelName + 1
             },
             {
                 functionName: "IDENTIFY",
-                averageScore: targetLevelName
+                averageScore: targetLevelName + 1
             },
             {
                 functionName: "PROTECT",
-                averageScore: targetLevelName
+                averageScore: targetLevelName + 1
             },
             {
                 functionName: "DETECT",
-                averageScore: targetLevelName
+                averageScore: targetLevelName + 1
             },
             {
                 functionName: "RESPOND",
-                averageScore: targetLevelName
+                averageScore: targetLevelName + 1
             },
             {
                 functionName: "RECOVER",
-                averageScore: targetLevelName
+                averageScore: targetLevelName + 1
             }
         ])
     }, [targetLevelName])
@@ -92,7 +101,7 @@ const TargetComparison = () => {
 
     const handleAssessmentChange = async (option) => {
         const id = option?.value;
-        setSelectedId(id);
+        // setSelectedId(id);
         setEvaluationStats(null);
         setFunctionWiseMarks([]);
         setSelectedFunctionName("");
@@ -175,9 +184,9 @@ const TargetComparison = () => {
                                             <h2 className="text-xl font-semibold text-blue-300">Overall Score</h2>
                                             <p className="text-4xl font-bold mt-4 text-blue-100">{evaluationStats.average}</p>
                                         </div>
-                                        <div className="bg-slate-900 border border-blue-400 rounded-md w-[300px] h-[130px] flex flex-col justify-center items-center shadow-lg shadow-blue-700/30">
+                                        <div className="bg-slate-900 border border-orange-400 rounded-md w-[300px] h-[130px] flex flex-col justify-center items-center shadow-lg shadow-orange-700/30">
                                             <h2 className="text-xl font-semibold text-blue-300">Target Score</h2>
-                                            <p className="text-4xl font-bold mt-4 text-orange-300">{targetLevelName}</p>
+                                            <p className="text-4xl font-bold mt-4 text-orange-300">{targetLevelName + 1}</p>
                                         </div>
                                     </div>
 
@@ -185,8 +194,15 @@ const TargetComparison = () => {
                                         <MaturityLevelBarChart
                                             position={parseInt(evaluationStats.average)}
                                             target={parseInt(targetLevelName)}
+                                            levels={[
+                                                { label: "Adhoc" },
+                                                { label: "Define" },
+                                                { label: "Manage" },
+                                                { label: "Proactive detection" },
+                                                { label: "Optimised" }
+                                            ]}
                                         />
-                                        <MaturityLevelLegend />
+                                        <MaturityLevelLegendNist />
                                     </div>
                                 </div>
 
@@ -233,7 +249,7 @@ const TargetComparison = () => {
                                 <FunctionAnswerTable
                                     evaluationId={evaluationStats?.evaluationId}
                                     functionName={selectedFunctionName}
-                                    target={targetLevelName}
+                                    target={targetLevelName + 1}
                                 />
                             </div>
                         )}
@@ -244,4 +260,4 @@ const TargetComparison = () => {
     );
 };
 
-export default TargetComparison;
+export default TargetComparisonNist;

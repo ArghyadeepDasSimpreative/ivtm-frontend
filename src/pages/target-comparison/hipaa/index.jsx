@@ -7,27 +7,43 @@ import MaturityLevelBarChart from "../../../components/MaturityLevelBarChart";
 import RadarChartComponent from "../../../components/RadarChartComponent";
 import CategorisedBarChart from "../../../components/CategorisedBarChart";
 import MultiLineChart from "../../../components/MultiLineChart";
-import MaturityLevelLegendNist from "../../../components/MaturityLevelLegendNist";
-import FunctionAnswerTable from "../../../components/FunctionAnswerTable";
 import { showToast } from "../../../lib/toast";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Button from "../../../components/Button";
 import HipaaAnswerTable from "../../../components/HipaaAnswerTable";
+import { useTargetMaturity } from "../../../context/TargetMaturityContext";
 import MaturityLevelLegendHipaa from "../../../components/MaturityLevelLegendHipaa";
+import { useNavigate } from "react-router-dom";
 
-const HipaaAnalysisPreview = () => {
+const TargetComparisonHipaa = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [assessmentsList, setAssessmentsList] = useState([]);
     const [selectedId, setSelectedId] = useState("");
     const [evaluationStats, setEvaluationStats] = useState(null);
-    const [functionWiseMarks, setFunctionWiseMarks] = useState([]);
-    const [maturityDistribution, setMaturityDistribution] = useState([]);
+    const [categoryWiseScore, setCategoryWiseScore] = useState([]);
+    const [categoryWiseTargetScore, setCategoryWiseTargetScore] = useState([]);
+    //   const [maturityDistribution, setMaturityDistribution] = useState([]);
     const [selectedCategoryName, setSelectedCategoryName] = useState("");
     const [answersGiven, setAnswersGiven] = useState([]);
 
+    const navigate = useNavigate()
+
     const exportRef = useRef();
+
+    const {
+        hipaaTargetScore
+    } = useTargetMaturity();
+
+    useEffect(function() {
+    console.log("hipaa target assessment is ", hipaaTargetScore)
+    console.log("hipaa target assessment changed ", hipaaTargetScore)
+    if(!hipaaTargetScore){
+      showToast.info("Please select you target maturity level first.")
+      navigate("/target-maturity/hipaa")
+    }
+  }, [])
 
     useEffect(() => {
         const fetchAssessments = async () => {
@@ -62,8 +78,8 @@ const HipaaAnalysisPreview = () => {
         const id = option?.value;
         setSelectedId(id);
         setEvaluationStats(null);
-        setFunctionWiseMarks([]);
-        setMaturityDistribution([]);
+        setCategoryWiseScore([]);
+        // setMaturityDistribution([]);
         setSelectedCategoryName("");
 
         if (!id) return;
@@ -73,24 +89,33 @@ const HipaaAnalysisPreview = () => {
             if (res.status === 200) {
                 const data = res.data;
 
-                const functionWise = (data.categoryAverages || []).map((item) => ({
+                const categoryWise = (data.categoryAverages || []).map((item) => ({
                     functionName: item.category,
                     averageScore: parseFloat(item.average),
                 }));
+
+                const categoryWiseTarget = (data.categoryAverages || []).map((item) => ({
+                    functionName: item.category,
+                    averageScore: hipaaTargetScore + 1,
+                }));
+
+                setCategoryWiseTargetScore(categoryWiseTarget);
+
+
 
                 const maturityData = Object.entries(data.maturityDistribution || {}).map(
                     ([level, count]) => ({ level, count })
                 );
 
                 setEvaluationStats({ average: data.totalAverage, evaluationId: id });
-                setFunctionWiseMarks(functionWise);
-                setMaturityDistribution(maturityData);
+                setCategoryWiseScore(categoryWise);
+                // setMaturityDistribution(maturityData);
                 setAnswersGiven(data.answers)
             }
         } catch (err) {
             setEvaluationStats(null);
-            setFunctionWiseMarks([]);
-            setMaturityDistribution([]);
+            setCategoryWiseScore([]);
+            //   setMaturityDistribution([]);
             showToast.error("Failed to load evaluation details.");
         }
     };
@@ -150,33 +175,41 @@ const HipaaAnalysisPreview = () => {
                                 {/* Top Row */}
                                 <div className="flex flex-col lg:flex-row justify-between items-start gap-6">
                                     {/* Overall Score */}
-                                    <div className="bg-slate-900 border border-blue-400 rounded-md w-[300px] h-[130px] flex flex-col justify-center items-center shadow-lg shadow-blue-700/30">
-                                        <h2 className="text-xl font-semibold text-blue-300">Overall Score</h2>
-                                        <p className="text-4xl font-bold mt-4 text-blue-100">{evaluationStats.average}</p>
+                                    <div className="flex flex-col justify-between items-center w-auto gap-10">
+                                        <div className="bg-slate-900 border border-blue-400 rounded-md w-[300px] h-[130px] flex flex-col justify-center items-center shadow-lg shadow-blue-700/30">
+                                            <h2 className="text-xl font-semibold text-blue-300">Overall Score</h2>
+                                            <p className="text-4xl font-bold mt-4 text-blue-100">{evaluationStats.average}</p>
+                                        </div>
+                                        <div className="bg-slate-900 border border-orange-400 rounded-md w-[300px] h-[130px] flex flex-col justify-center items-center shadow-lg shadow-orange-700/30">
+                                            <h2 className="text-xl font-semibold text-blue-300">Target Score</h2>
+                                            <p className="text-4xl font-bold mt-4 text-orange-300">{hipaaTargetScore + 1}</p>
+                                        </div>
                                     </div>
 
                                     {/* Maturity Chart */}
                                     <div className="flex gap-10 justify-end items-center">
-                                        <MaturityLevelBarChart
-                                            position={parseInt(evaluationStats.average)}
+                                        <MaturityLevelBarChart position={parseInt(evaluationStats.average)}
                                             levels={[
                                                 { label: "Physical" },
                                                 { label: "Administrative" },
                                                 { label: "Technical" },
                                                 { label: "Policy , Procedure and Documentation" }
-                                            ]}
-                                        />
 
+                                            ]}
+
+                                            target={hipaaTargetScore} />
                                         <MaturityLevelLegendHipaa />
                                     </div>
                                 </div>
 
                                 {/* Chart Row */}
                                 <div className="flex flex-col lg:flex-row justify-between gap-6 mt-6">
-                                    {functionWiseMarks.length > 0 && (
+                                    {categoryWiseScore.length > 0 && (
                                         <div className="flex-1 bg-slate-900 p-4 rounded-md">
                                             <MultiLineChart
-                                                dataSets={[{ label: "Maturity score", data: functionWiseMarks }]}
+                                                dataSets={[{ label: "Maturity score", data: categoryWiseScore },
+                                                { label: "Target score", data: categoryWiseTargetScore }
+                                                ]}
                                                 title="Function-wise HIPAA score"
                                             />
                                         </div>
@@ -184,7 +217,9 @@ const HipaaAnalysisPreview = () => {
 
                                     <div className="flex-1 bg-slate-900 p-4 rounded-md">
                                         <RadarChartComponent
-                                            dataSets={[{ name: "Maturity score", data: functionWiseMarks }]}
+                                            dataSets={[{ name: "Maturity score", data: categoryWiseScore },
+                                            { name: "Target score", data: categoryWiseTargetScore }
+                                            ]}
                                             label="Function-wise HIPAA score"
                                             notation="Each axis shows a function's average score (Max: 5)"
                                         />
@@ -196,8 +231,9 @@ const HipaaAnalysisPreview = () => {
                                                 {
                                                     name: "Maturity score",
                                                     color: "#22d3ee",
-                                                    data: functionWiseMarks,
+                                                    data: categoryWiseScore,
                                                 },
+                                                { name: "Target score", data: categoryWiseTargetScore, color: "orange" }
                                             ]}
                                             title="Function-Wise HIPAA score"
                                             note="Average score per function (range 0 to 5)"
@@ -210,6 +246,7 @@ const HipaaAnalysisPreview = () => {
                                 <HipaaAnswerTable
                                     data={answersGiven}
                                     category={selectedCategoryName}
+                                    target={hipaaTargetScore + 1}
                                 />
                             </div>
                         )}
@@ -220,4 +257,4 @@ const HipaaAnalysisPreview = () => {
     );
 };
 
-export default HipaaAnalysisPreview;
+export default TargetComparisonHipaa;

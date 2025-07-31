@@ -1,0 +1,59 @@
+import React from "react";
+import {
+    Radar,
+    RadarChart,
+    PolarGrid,
+    PolarAngleAxis,
+    PolarRadiusAxis,
+    Tooltip,
+    ResponsiveContainer,
+} from "recharts";
+
+const SeverityRadarChart = ({ data }) => {
+    if (!data || data.length === 0) {
+        return (
+            <div className="w-full h-[40vh] shadow-md border border-zinc-200 rounded flex items-center justify-center text-gray-500">
+                No data available to display.
+            </div>
+        );
+    }
+
+    const severityCount = data.reduce((acc, item) => {
+        const severity =
+            item.severity?.charAt(0).toUpperCase() +
+            item.severity?.slice(1).toLowerCase();
+        acc[severity] = (acc[severity] || 0) + 1;
+        return acc;
+    }, {});
+
+    const chartData = ["Critical", "High", "Medium", "Low"].map((severity) => ({
+        severity,
+        count: severityCount[severity] || 0,
+    }));
+
+    return (
+        <div className="w-full h-[55vh] shadow-md border border-zinc-200 rounded p-4 bg-white">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">Priority Wise Distribution</h2>
+            <ResponsiveContainer width="100%" height="100%">
+                <RadarChart outerRadius={120} data={chartData}>
+                    <PolarGrid />
+                    <PolarAngleAxis dataKey="severity" />
+                    <PolarRadiusAxis
+                        angle={30}
+                        domain={[0, Math.max(...chartData.map((d) => d.count)) || 1]}
+                    />
+                    <Tooltip />
+                    <Radar
+                        name="Vulnerabilities"
+                        dataKey="count"
+                        stroke="#8884d8"
+                        fill="#8884d8"
+                        fillOpacity={0.6}
+                    />
+                </RadarChart>
+            </ResponsiveContainer>
+        </div>
+    );
+};
+
+export default SeverityRadarChart;
