@@ -16,7 +16,7 @@ const InputField = ({
 
   return (
     <div className="w-full !max-w-[600px]">
-      {label && <label className="block text-lg text-gray-600 mb-2">{label}</label>}
+      {label && <label className="block text-md text-gray-600 mb-2">{label}</label>}
       <div className="relative w-full">
         {leftItem && (
           <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
@@ -28,7 +28,7 @@ const InputField = ({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className={`w-full px-3 py-3 border ${error ? "border-red-500" : "border-gray-300"} rounded-md text-lg focus:outline-none focus:ring-0 focus:border-gray-300
+          className={`w-full px-3 py-3 border ${error ? "border-red-500" : "border-gray-300"} rounded-md text-md focus:outline-none focus:ring-0 focus:border-gray-300
             ${leftItem ? "pl-10" : ""} ${type === "password" ? "pr-10" : ""}
           `}
           {...rest}

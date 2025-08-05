@@ -36,19 +36,35 @@ const PriorityRadarChart = ({ data }) => {
             <h2 className="text-xl font-semibold mb-4 text-gray-800">Priority Wise Distribution</h2>
             <ResponsiveContainer width="100%" height="100%">
                 <RadarChart outerRadius={120} data={chartData}>
-                    <PolarGrid />
-                    <PolarAngleAxis dataKey="priority" />
+                    <PolarGrid stroke="#e2e8f0" /> {/* Light grid lines */}
+                    <PolarAngleAxis
+                        dataKey="priority"
+                        stroke="#475569" // Blue-gray text
+                        tick={{ fontSize: 14, fontWeight: 500 }}
+                    />
                     <PolarRadiusAxis
                         angle={30}
                         domain={[0, Math.max(...chartData.map((d) => d.count)) || 1]}
+                        stroke="#94a3b8" // Muted cyan
+                        tick={{ fill: "#64748b" }} // Slightly lighter than axis
+                        tickLine={false}
                     />
-                    <Tooltip />
+                    <Tooltip
+                        contentStyle={{
+                            backgroundColor: "#0f172a",
+                            border: "none",
+                            color: "#f1f5f9",
+                            borderRadius: "8px",
+                            fontSize: "14px",
+                        }}
+                        cursor={{ stroke: "#94a3b8", strokeWidth: 1 }}
+                    />
                     <Radar
                         name="Vulnerabilities"
                         dataKey="count"
-                        stroke="#8884d8"
-                        fill="#8884d8"
-                        fillOpacity={0.6}
+                        stroke="#0ea5e9" // Sky blue stroke
+                        fill="#0ea5e9"
+                        fillOpacity={0.5}
                     />
                 </RadarChart>
             </ResponsiveContainer>

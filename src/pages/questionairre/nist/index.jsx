@@ -15,7 +15,7 @@ const NIST_FUNCTIONS = [
 ];
 
 export default function Questionnaire() {
-  const { type } = useParams();
+
   const [currentFunctionIndex, setCurrentFunctionIndex] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -98,7 +98,6 @@ export default function Questionnaire() {
     }
     );
 
-    console.log("final answers are ", transformedAnswers);
     let totalScore = 0;
     let totalQuestions = transformedAnswers.length; // Use the length of the transformed array
 

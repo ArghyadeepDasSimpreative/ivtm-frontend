@@ -9,7 +9,8 @@ const CustomSelect = ({
   defaultValue,
   width = "300px",
   isMulti = false,
-  style = "dark"
+  style = "dark",
+  error // Added error prop to match InputField
 }) => {
   const options = data.map((item) => ({
     value: item[config.key],
@@ -25,13 +26,9 @@ const CustomSelect = ({
   const isDark = style === "dark";
 
   return (
-    <div className="my-3" style={{ width, maxWidth: '600px' }}>
+    <div className="w-full !max-w-[600px]"> {/* Updated to match InputField container */}
       {label && (
-        <label
-          className={`block font-medium mb-5 text-xl ${
-            isDark ? 'text-white' : 'text-gray-800'
-          }`}
-        >
+        <label className="block text-md text-gray-600 mb-2"> {/* Updated to match InputField label styling */}
           {label}
         </label>
       )}
@@ -41,24 +38,30 @@ const CustomSelect = ({
         options={options}
         onChange={onSelect}
         menuPortalTarget={document.body}
-        className="!text-xl"
+        className="!text-md"
         styles={{
           control: (base, state) => ({
             ...base,
             backgroundColor: isDark ? '#1f2937' : '#ffffff',
-            borderColor: state.isFocused
+            borderColor: error 
+              ? '#ef4444' // Red border when error exists
+              : state.isFocused
               ? '#3b82f6'
               : isDark
               ? '#4b5563'
               : '#d1d5db',
             borderWidth: '1px',
-            borderRadius: '0.5rem',
-            minHeight: '44px',
+            borderRadius: '0.375rem', // Updated to match InputField (rounded-md)
+            minHeight: '48px', // Updated to match InputField height (py-3)
             boxShadow: state.isFocused ? '0 0 0 1px #3b82f6' : 'none',
             color: isDark ? '#f9fafb' : '#111827',
             '&:hover': {
-              borderColor: '#3b82f6',
+              borderColor: error ? '#ef4444' : '#3b82f6',
             },
+          }),
+          valueContainer: (base) => ({
+            ...base,
+            padding: '0 12px', // Updated to match InputField px-3
           }),
           singleValue: (base) => ({
             ...base,
@@ -67,6 +70,8 @@ const CustomSelect = ({
           input: (base) => ({
             ...base,
             color: isDark ? '#f9fafb' : '#111827',
+            margin: 0,
+            padding: 0,
           }),
           option: (base, state) => ({
             ...base,
@@ -89,7 +94,7 @@ const CustomSelect = ({
           menu: (base) => ({
             ...base,
             backgroundColor: isDark ? '#1f2937' : '#ffffff',
-            borderRadius: '0.5rem',
+            borderRadius: '0.375rem', // Updated to match InputField
             zIndex: 9999,
           }),
           menuPortal: (base) => ({
@@ -119,6 +124,7 @@ const CustomSelect = ({
           }),
         }}
       />
+      {error && <p className="text-red-500 text-md mt-1">{error}</p>} {/* Added error display to match InputField */}
     </div>
   );
 };

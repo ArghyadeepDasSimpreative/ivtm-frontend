@@ -174,7 +174,7 @@ const VulnerabilityDashboard = () => {
     const areaData = Object.entries(areaWiseReports).map(([key, items]) => ({
         name: key,
         count: items.length,
-    }));
+    })).filter(item => item.count > 0);
 
     const ageingData = Object.entries(dateWiseReports).map(([key, items]) => ({
         date: key,
@@ -348,7 +348,7 @@ const VulnerabilityDashboard = () => {
                                                     <YAxis />
                                                     <Tooltip />
                                                     <Legend />
-                                                    <Bar dataKey="count" fill="#82ca9d" onClick={data => barChartClickHandler(data)} />
+                                                    <Bar dataKey="count" fill="#184ea3" onClick={data => barChartClickHandler(data)} />
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </div>

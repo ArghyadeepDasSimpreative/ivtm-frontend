@@ -73,7 +73,7 @@ export default function SignUp() {
         email: form.businessEmail,
         otp,
       })
-      if(response.status == 200) {
+      if (response.status == 200) {
         localStorage.setItem("userToken", response.data.token);
       }
       setOtpSuccess(true)
@@ -140,7 +140,7 @@ export default function SignUp() {
             </div>
 
             {errorMessage && (
-              <div className="text-red-400 text-md mx-auto mt-5">{errorMessage}</div>
+              <div className="text-red-400 text-md mx-auto mt-5 w-full text-center">{errorMessage}</div>
             )}
 
             <div className="mt-8 flex justify-center">
@@ -162,24 +162,44 @@ export default function SignUp() {
                     value={otp}
                     onChange={setOtp}
                     numInputs={6}
-                    inputStyle={{
-                      width: "3rem",
-                      height: "3rem",
-                      borderRadius: "0.5rem",
-                      border: "1px solid white",
-                      backgroundColor: "#1e293b",
-                      color: "#fff",
-                      fontSize: "1.25rem",
-                    }}
+                    inputType="tel"
                     containerStyle={{ gap: "0.5rem" }}
-                    renderInput={(props) => <input {...props} />}
+                    renderInput={(props, index) => (
+                      <input
+                        {...props}
+                        key={index}
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        onWheel={(e) => e.target.blur()}
+                        style={{
+                          ...props.style,
+                          width: "3rem",
+                          height: "3rem",
+                          borderRadius: "0.5rem",
+                          border: "1px solid white",
+                          backgroundColor: "#1e293b",
+                          color: "#fff",
+                          fontSize: "1.25rem",
+                          outline: "none",
+                          transition: "border 0.2s ease",
+                          marginBottom: "0.5rem",
+                          marginTop: "0.5rem",
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.border = "1px solid #38bdf8"; // Light blue focus border
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.border = "1px solid white"; // Revert border
+                        }}
+                      />
+                    )}
                   />
                 </div>
 
                 {otpError && <div className="text-red-400 mb-4 text-center">{otpError}</div>}
 
                 <div className="flex justify-center">
-                  <Button onClick={handleOtpVerify} loading={otpLoading}>
+                  <Button onClick={handleOtpVerify} loading={otpLoading} disabled={otp.length < 6}>
                     Verify OTP
                   </Button>
                 </div>

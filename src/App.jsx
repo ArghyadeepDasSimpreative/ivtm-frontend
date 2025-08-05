@@ -15,6 +15,8 @@ import TargetComparisonHipaa from './pages/target-comparison/hipaa'
 import Signin from './pages/auth/SignIn'
 import VulnerabilityManagementLayout from './layout/VulnerabilityManagementLayout'
 import VulnerabilityDashboard from './pages/dashboard'
+import ProfilePage from './pages/profile'
+import EvaluationsPage from './pages/evaluations'
 
 function App() {
   return (
@@ -35,6 +37,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/roadmap-analysis" element={<RoadmapAnalysis />} />
+        <Route path="/evaluations" element={<EvaluationsPage />} />
         <Route path="/questionnaire/nist" element={<Questionairre />} />
         <Route path="/questionnaire/hipaa" element={<HipaaQuestionsPage />} />
         <Route path="/analysis-preview/nist" element={<NistAnalysisPreview />} />
@@ -45,7 +48,7 @@ function App() {
         <Route path="/target-comparison/hipaa" element={<TargetComparisonHipaa />} />
         <Route path="/vulnerability-management" element={<VulnerabilityManagementLayout />}>
           <Route index element={<VulnerabilityDashboard />} />
-          {/* Add more routes for vulnerability management here */}
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Routes>
     </>
