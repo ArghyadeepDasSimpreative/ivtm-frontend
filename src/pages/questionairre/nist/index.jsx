@@ -174,7 +174,7 @@ const handleSubmit = async () => {
       }
 
       if (response.status === 200) {
-        showToast.success("Marks recorded successfully.");
+        showToast.success("Response recorded successfully.");
         setEvaluationId(response.data.data.evaluationId);
         setMarksResponse(response.data.data.marks);
       }
