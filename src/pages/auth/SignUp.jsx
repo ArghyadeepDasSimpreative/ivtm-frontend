@@ -143,6 +143,18 @@ export default function SignUp() {
               <div className="text-red-400 text-md mx-auto mt-5 w-full text-center">{errorMessage}</div>
             )}
 
+            <div className="mt-8 text-center">
+            <p className="text-sm text-gray-400">
+              Already have an account?{" "}
+              <Link 
+                to="/signin" 
+                className="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200"
+              >
+                Sign In
+              </Link>
+            </p>
+          </div>
+
             <div className="mt-8 flex justify-center">
               <Button loading={loading} onClick={handleSubmit}>
                 Sign Up
