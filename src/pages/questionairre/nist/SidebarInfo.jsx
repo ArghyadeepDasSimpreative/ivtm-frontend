@@ -14,6 +14,7 @@ const descriptions = {
 };
 
 export default function SidebarInfo({ current, index, total, onPrev, onNext, onSubmit, isSubmitted, submitLoading }) {
+  console.log("submit loaidng is ", submitLoading)
   const [loading, setLoading] = useState(true);
   const [subcategoryInfo, setSubcategoryInfo] = useState(null);
 
@@ -76,7 +77,7 @@ export default function SidebarInfo({ current, index, total, onPrev, onNext, onS
 
             {index === total - 1 ? (
               <button
-                onClick={onSubmit}
+                onClick={()=>onSubmit(true)}
                 className="px-4 py-2 rounded-xl text-sm bg-green-700 hover:bg-green-800 text-white"
               >
                 {submitLoading? <ClipLoader size={18} color="#ffffff" /> :  "Submit"}

@@ -6,10 +6,10 @@ export default function Table({ label, data = [], config = [], dark = false }) {
     : "bg-white text-gray-700 border-gray-200";
 
   const headerClass = dark
-    ? "bg-[#385385] text-white border-b border-blue-800"
-    : "bg-gray-100 text-gray-800 border-b border-gray-200";
+    ? "bg-[#385385] text-white border-b border-blue-800 py-3"
+    : "bg-gray-100 text-gray-800 border-b border-gray-200 py-3";
 
-  const rowBaseClass = dark ? "transition-colors" : "";
+  const rowBaseClass = dark ? "py-3 transition-colors" : "py-3";
 
   const evenRowBg = dark ? "bg-blue-950" : "bg-white";
   const oddRowBg = dark ? "bg-[#385385]" : "bg-gray-50";
@@ -51,7 +51,7 @@ export default function Table({ label, data = [], config = [], dark = false }) {
               {config.map((col) => (
                 <td
                   key={col.key}
-                  className="px-4 py-2"
+                  className="px-4 py-3"
                 >
                   {col.render ? col.render(item[col.key], item, idx) : item[col.key]}
                 </td>

@@ -7,16 +7,23 @@ export default function QuestionCard({
   functionName,
   setAnswersParent,
   answersParent,
+  handleSubmission
 }) {
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const current = questions[currentIndex];
   const currentAnswer = answersParent[current._id] || {};
+  const [submissionLoading, setSubmissionLoading] = useState(false);
 
   useEffect(() => {
     if (!answersParent[current._id]) {
       handlePrimary("No");
     }
   }, [current._id]);
+
+  // useEffect(function(){
+  //         console.log("current question is ", questions[currentIndex])
+  // },[currentIndex])
 
   const handlePrimary = (value) => {
     const baseUpdate = {
@@ -33,7 +40,7 @@ export default function QuestionCard({
         marks: 1,
         functionName
       };
-      console.log("update is ", update)
+      // console.log("update is ", update)
       setAnswersParent((prev) => ({
         ...prev,
         [current._id]: update,
@@ -58,17 +65,24 @@ export default function QuestionCard({
     }));
   };
 
-  const goNext = () => {
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex((i) => i + 1);
-    }
-  };
+const goNext = async () => {
+  setSubmissionLoading(true);
+  await handleSubmission();
+  setSubmissionLoading(false);
+  if (currentIndex < questions.length - 1) {
+    setCurrentIndex((i) => i + 1);
+  }
+};
 
-  const goPrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex((i) => i - 1);
-    }
-  };
+const goPrev = async () => {
+  setSubmissionLoading(true);
+  await handleSubmission();
+  setSubmissionLoading(false);
+  if (currentIndex > 0) {
+    setCurrentIndex((i) => i - 1);
+  }
+};
+
 
   return (
     <motion.div
@@ -123,7 +137,7 @@ export default function QuestionCard({
           disabled={currentIndex === 0}
           className="text-sm px-4 py-2 rounded-lg bg-slate-800 disabled:opacity-40 cursor-pointer"
         >
-          Previous
+          {submissionLoading ? "...Please wait" : "Previous"}
         </button>
         <div className="text-sm text-gray-400">
           Question {currentIndex + 1} of {questions.length}
@@ -133,7 +147,7 @@ export default function QuestionCard({
             onClick={goNext}
             className="text-sm px-4 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 cursor-pointer"
           >
-            Next
+            {submissionLoading ? "...Please wait" : "Next"}
           </button>
         ) : (
           <div />

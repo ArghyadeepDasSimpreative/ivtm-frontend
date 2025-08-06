@@ -195,7 +195,6 @@ const CreateUser = ({ showUsers }) => {
     return (
         <div className="w-full mx-auto p-6 bg-white rounded-lg">
             <div className="mb-6">
-                <h2 className="text-xl font-bold text-gray-800 mb-2">Create New User</h2>
                 <p className="text-gray-600 text-md">Add a new user to your organization</p>
             </div>
 
