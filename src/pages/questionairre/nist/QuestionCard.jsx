@@ -91,7 +91,7 @@ export default function QuestionCard({
   };
 
   return (
-    <div className="flex flex-col justify-between h-full w-full">
+    <div className="flex flex-col justify-between h-full w-full gap-5">
       <motion.div
         key={current._id}
         initial={{ opacity: 0, x: 30 }}
@@ -172,12 +172,12 @@ export default function QuestionCard({
 
         </div>
 
-        {currentAnswer?.primary && (
+        {/* {currentAnswer?.primary && (
           <div className="flex items-center gap-2 mt-4 text-green-400 text-sm">
             <FaCheckCircle />
             Answer saved
           </div>
-        )}
+        )} */}
 
       </motion.div>
 
