@@ -13,7 +13,7 @@ const descriptions = {
   Govern: "Establishes oversight for cybersecurity (CSF 2.0).",
 };
 
-export default function SidebarInfo({ current, index, total, onPrev, onNext, onSubmit, isSubmitted, submitLoading }) {
+export default function SidebarInfo({ current, index, total, onPrev, onNext, isSubmitted, submitLoading, navigationLoading }) {
   console.log("submit loaidng is ", submitLoading)
   const [loading, setLoading] = useState(true);
   const [subcategoryInfo, setSubcategoryInfo] = useState(null);
@@ -58,39 +58,54 @@ export default function SidebarInfo({ current, index, total, onPrev, onNext, onS
             </div>
           )}
 
-          <div className="flex items-center justify-between mt-10">
-            <button
-              onClick={onPrev}
-              disabled={index === 0}
-              className={`px-4 py-2 rounded-xl text-sm ${
-                index === 0
+          {!isSubmitted ?
+            <div className="flex items-center justify-between mt-10">
+              <button
+                onClick={onPrev}
+                disabled={index === 0 || navigationLoading}
+                className={`px-4 py-2 rounded-xl text-sm w-[100px] ${index === 0 || navigationLoading
                   ? "bg-slate-700 text-gray-400 cursor-not-allowed"
                   : "bg-slate-800 hover:bg-slate-700 text-white"
-              }`}
-            >
-              Previous
-            </button>
-
-            <span className="text-gray-400 text-sm">
-              Step {index + 1} of {total}
-            </span>
-
-            {index === total - 1 ? (
-              <button
-                onClick={()=>onSubmit(true)}
-                className="px-4 py-2 rounded-xl text-sm bg-green-700 hover:bg-green-800 text-white"
+                  }`}
+                  
               >
-                {submitLoading? <ClipLoader size={18} color="#ffffff" /> :  "Submit"}
+                {
+                    navigationLoading? <ClipLoader size={16} color="text-white" /> : "Previous"
+                }
+               
               </button>
-            ) : (
-              <button
-                onClick={onNext}
-                className="px-4 py-2 rounded-xl text-sm bg-blue-700 hover:bg-blue-800 text-white"
-              >
-                Next
-              </button>
-            )}
-          </div>
+
+              <span className="text-gray-400 text-sm">
+                Step {index + 1} of {total}
+              </span>
+
+              {index === total - 1 ? (
+                // <button
+                //   onClick={()=>onSubmit(true)}
+                //   className="px-4 py-2 rounded-xl text-sm bg-green-700 hover:bg-green-800 text-white"
+                // >
+                //   {submitLoading? <ClipLoader size={16} color="#ffffff" /> :  "Submit"}
+                // </button>
+                <div />
+              ) : (
+                <button
+                  onClick={onNext}
+                   className={`px-4 py-2 rounded-xl text-sm w-[100px] ${navigationLoading
+                  ? "bg-slate-700 text-gray-400 cursor-not-allowed"
+                  : "bg-blue-800 hover:bg-blue-700 text-white"
+                  }`}
+                  disabled={navigationLoading}
+                >
+                  {
+                    navigationLoading? <ClipLoader size={16} color="text-white" /> : "Next"
+                  }
+                 
+                </button>
+              )}
+            </div>
+            :
+            <div />
+          }
         </>
       )}
     </div>

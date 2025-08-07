@@ -45,7 +45,7 @@ const TargetMaturityPageNist = () => {
             setLoadingAssessments(true);
             try {
                 const { data } = await privateRequest.get("/nist-evaluation/assessments");
-                const formatted = data.assessments.map((item) => ({
+                const formatted = data.data.map((item) => ({
                     label: `📝 ${format(new Date(item.evaluationTime), "dd MMM yyyy, HH:mm")}`,
                     value: item._id,
                 }));
@@ -61,13 +61,10 @@ const TargetMaturityPageNist = () => {
     }, []);
 
     const {
-        targetAssessment,
         setTargetAssessment,
         targetLevelName,
         setTargetLevelName,
-        targetAverages,
         setTargetAverages,
-        targetFunctionMarks,
         setTargetFunctionMarks,
     } = useTargetMaturity();
 

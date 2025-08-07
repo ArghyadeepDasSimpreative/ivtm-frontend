@@ -32,7 +32,7 @@ const PriorityRadarChart = ({ data }) => {
     }));
 
     return (
-        <div className="w-full h-[55vh] shadow-md border border-zinc-200 rounded p-4 bg-white">
+        <div className="w-full h-[55vh] shadow-md border border-zinc-200 rounded-xl p-4 bg-white">
             <h2 className="text-xl font-semibold mb-4 text-gray-800">Priority Wise Distribution</h2>
             <ResponsiveContainer width="100%" height="100%">
                 <RadarChart outerRadius={120} data={chartData}>

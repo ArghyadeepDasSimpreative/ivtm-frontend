@@ -12,7 +12,6 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <TargetMaturityProvider>
         <App />
-        <Toaster position="top-right" />
       </TargetMaturityProvider>
     </BrowserRouter>
   </React.StrictMode>

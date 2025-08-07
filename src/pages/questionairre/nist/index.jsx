@@ -133,11 +133,6 @@ const handleSubmit = async () => {
   setIsSubmitted(true);
 };
 
-
-  // useEffect(function () {
-  //   console.log("answers changed ", answers)
-  // })
-
   const calculateAndSubmitScore = async (submitting=false) => {
     console.log("evaluation id is ", evaluationId)
     const transformedAnswers = Object.entries(answers).map(([questionId, data]) => ({
@@ -154,8 +149,6 @@ const handleSubmit = async () => {
     });
 
     totalScore += transformedAnswers.length;
-
-    const average = totalQuestions > 0 ? (totalScore / totalQuestions).toFixed(2) : "0.00";
 
     try {
       const payload = {
@@ -174,9 +167,9 @@ const handleSubmit = async () => {
       }
 
       if (response.status === 200) {
-        showToast.success("Response recorded successfully.");
+        submitting && showToast.success("Response recorded successfully.");
         setEvaluationId(response.data.data.evaluationId);
-        setMarksResponse(response.data.data.marks);
+        setMarksResponse(response.data.data.averageScore);
       }
     } catch (err) {
       console.error("Error submitting marks:", err);
@@ -194,6 +187,7 @@ const handleSubmit = async () => {
         onSubmit={handleSubmit}
         isSubmitted={isSubmitted}
         submitLoading={submitLoading}
+        navigationLoading={submitLoading}
       />
 
       <div className="flex-1 p-6 md:p-10 overflow-auto">
@@ -224,7 +218,11 @@ const handleSubmit = async () => {
             answersParent={answers}
             setAnswersParent={setAnswers}
             handleSubmission={calculateAndSubmitScore}
-            submissionLoading={submitLoading}
+            // submissionLoading={submitLoading}
+            currentFunctionIndex={currentFunctionIndex}
+            calculateAndSubmitScore={calculateAndSubmitScore}
+            setIsSubmitted={setIsSubmitted}
+            
           />
         )}
       </div>

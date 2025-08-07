@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { privateRequest } from "../api/config";
 
 const FunctionAnswerTable = ({ evaluationId, functionName, target = null }) => {
+  
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -9,7 +10,8 @@ const FunctionAnswerTable = ({ evaluationId, functionName, target = null }) => {
     const fetchAnswers = async () => {
       try {
         const res = await privateRequest(`/nist-evaluation/answers/${evaluationId}`);
-        const allQuestions = res.data.questions || [];
+        console.log("evaluation answers are ", res.data)
+        const allQuestions = res.data.data || [];
         const filteredQuestions = functionName
           ? allQuestions.filter(q => q.function === functionName)
           : allQuestions;

@@ -13,6 +13,9 @@ import { showToast } from "../../../lib/toast";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Button from "../../../components/Button";
+import { useNavigate } from "react-router-dom";
+import { BiGitCompare } from "react-icons/bi";
+import { IoDownloadOutline } from "react-icons/io5";
 
 const NistAnalysisPreview = () => {
     const [loading, setLoading] = useState(true);
@@ -29,7 +32,7 @@ const NistAnalysisPreview = () => {
             try {
                 const response = await privateRequest.get("/nist-evaluation/assessments");
                 if (response.status === 200) {
-                    const formatted = response.data.assessments.map((item) => ({
+                    const formatted = response.data.data.map((item) => ({
                         ...item,
                         formattedDate: format(new Date(item.evaluationTime), "dd MMM yyyy, hh:mm a"),
                         value: item._id,
@@ -39,6 +42,7 @@ const NistAnalysisPreview = () => {
                     throw new Error("Failed to fetch assessments.");
                 }
             } catch (err) {
+                console.log(err)
                 setError(err?.response?.data?.message || "Error fetching assessments.");
             } finally {
                 setLoading(false);
@@ -68,12 +72,9 @@ const NistAnalysisPreview = () => {
                 privateRequest.get(`/nist-evaluation/marks/function/${id}`),
             ]);
 
-            setEvaluationStats(statsRes.status === 200 ? statsRes.data : null);
-            const cleanedData = (functionMarksRes.data.result || []).map(item => ({
-                ...item,
-                averageScore: parseFloat(item.averageScore),
-            }));
-            setFunctionWiseMarks(cleanedData);
+            setEvaluationStats(statsRes.status === 200 ? statsRes.data.data : null);
+            setFunctionWiseMarks(functionMarksRes.data.data);
+
         } catch {
             setEvaluationStats(null);
             setFunctionWiseMarks([]);
@@ -91,7 +92,6 @@ const NistAnalysisPreview = () => {
                 backgroundColor: "#0f172a", // Same as bg-slate-950
             });
 
-            console.log("canvas is ")
 
             const imgData = canvas.toDataURL("image/png");
             const pdf = new jsPDF("p", "mm", "a4");
@@ -109,6 +109,8 @@ const NistAnalysisPreview = () => {
             showToast.error("PDF download failed!");
         }
     };
+
+    const navigate = useNavigate();
 
     return (
         <div className="bg-slate-950 min-h-screen text-white p-8">
@@ -128,17 +130,25 @@ const NistAnalysisPreview = () => {
                             onSelect={handleAssessmentChange}
                             width="300px"
                         />
-                        {evaluationStats && (
-                            <Button onClick={handleDownloadPdf}>Download PDF</Button>
-                        )}
+                        {evaluationStats && <div className="flex gap-3 items-between items-center">
+                            <Button onClick={() => navigate("/target-maturity/nist")}>
+                                <BiGitCompare size={22}/>
+                                <span>Compare</span></Button>
+                            <Button onClick={handleDownloadPdf}>
+                                 <IoDownloadOutline  size={22}/>
+                                <span>Download PDF</span>
+                            </Button>
+
+                        </div>
+                        }
                     </div>
 
                     <div ref={exportRef}>
                         {evaluationStats && (
                             <div className="flex flex-col gap-10 mt-7">
-                                {/* Top Row: Score, Maturity Bar, Legend */}
+
                                 <div className="flex flex-col lg:flex-row justify-between items-start gap-6">
-                                    {/* Overall Score */}
+
                                     <div className="bg-slate-900 border border-blue-400 rounded-md w-[300px] h-[130px] flex flex-col justify-center items-center shadow-lg shadow-blue-700/30">
                                         <h2 className="text-xl font-semibold text-blue-300">Overall Score</h2>
                                         <p className="text-4xl font-bold mt-4 text-blue-100">{evaluationStats.average}</p>
@@ -187,7 +197,6 @@ const NistAnalysisPreview = () => {
                                     </div>
                                 </div>
 
-                                {/* Function Table */}
                                 <FunctionAnswerTable
                                     evaluationId={evaluationStats?.evaluationId}
                                     functionName={selectedFunctionName}

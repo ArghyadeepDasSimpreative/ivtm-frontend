@@ -23,7 +23,7 @@ const SEVERITY_LABELS = [
 
 export default function SeverityIndex({ colors = defaultColors }) {
   return (
-    <div className="border border-zinc-200 rounded-xl p-4 w-full max-w-xl shadow-sm">
+    <div className="border border-zinc-200 rounded-xl p-4 w-full max-w-xl shadow-sm bg-white">
       <h2 className="text-lg font-semibold mb-4">Severity Scoring</h2>
       <div className="space-y-3">
         {SEVERITY_LABELS.map((item, index) => (

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_APP_MODE !== "deployment" ? import.meta.env.VITE_API_BASE_URL : 'http://localhost:5400'
-// const BASE_URL = 'http://localhost:5400'
+//const BASE_URL = import.meta.env.VITE_APP_MODE !== "deployment" ? import.meta.env.VITE_API_BASE_URL : 'http://localhost:5400'
+const BASE_URL = 'http://localhost:5400'
 
 export const publicRequest = axios.create({
   baseURL: BASE_URL,

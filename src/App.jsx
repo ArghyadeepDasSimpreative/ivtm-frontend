@@ -17,12 +17,12 @@ import VulnerabilityManagementLayout from './layout/VulnerabilityManagementLayou
 import VulnerabilityDashboard from './pages/dashboard'
 import ProfilePage from './pages/profile'
 import EvaluationsPage from './pages/evaluations'
+import NotFoundPage from './pages/not-found'
 
 function App() {
   return (
     <>
       <Toaster
-        position="top-middle" // ✅ optional: change position
         toastOptions={{
           duration: 3000,
           style: {
@@ -31,7 +31,6 @@ function App() {
           },
         }}
       />
-
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignUp />} />
@@ -50,6 +49,7 @@ function App() {
           <Route index element={<VulnerabilityDashboard />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
+        <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </>
   )
