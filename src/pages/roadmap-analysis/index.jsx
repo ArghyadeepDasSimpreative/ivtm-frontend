@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { FaShieldAlt, FaLock, FaNetworkWired } from "react-icons/fa"
 import Button from "../../components/Button"
+import Evaluations from "./Evaluations"
 
 const standards = [
   {
@@ -83,9 +84,12 @@ export default function RoadmapAnalysis() {
         })}
       </div>
 
-      <Button variant="primary" onClick={handleProceed}>
+      {/* <Button variant="primary" onClick={handleProceed}>
         Proceed to Questionnaire
-      </Button>
+      </Button> */}
+       <div className="max-w-[80vw] flex justify-between">
+         <Evaluations />
+       </div>
     </div>
   )
 }
