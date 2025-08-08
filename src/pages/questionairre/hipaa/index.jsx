@@ -70,7 +70,7 @@ export default function HipaaQuestionsPage() {
                   Your answers have been recorded. You can now view your analysis.
                 </p>
                 <Link to="/analysis-preview/hipaa">
-                  <Button>Go to Analysis</Button>
+                  <Button>View Analysis</Button>
                 </Link>
               </div>
             </div>

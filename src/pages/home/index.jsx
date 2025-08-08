@@ -9,7 +9,7 @@ const HomePage = () => {
 
   const options = [
     {
-      label: 'MaturityAssessment and Roadmap Analysis',
+      label: 'Maturity Assessment and Roadmap Analysis',
       path: '/roadmap-analysis',
     },
     {

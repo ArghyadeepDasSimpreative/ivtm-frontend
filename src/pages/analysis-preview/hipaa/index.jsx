@@ -15,6 +15,9 @@ import jsPDF from "jspdf";
 import Button from "../../../components/Button";
 import HipaaAnswerTable from "../../../components/HipaaAnswerTable";
 import MaturityLevelLegendHipaa from "../../../components/MaturityLevelLegendHipaa";
+import { BiGitCompare } from "react-icons/bi";
+import { IoDownloadOutline } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 const HipaaAnalysisPreview = () => {
     const [loading, setLoading] = useState(true);
@@ -121,6 +124,8 @@ const HipaaAnalysisPreview = () => {
         }
     };
 
+    const navigate = useNavigate();
+
     return (
         <div className="bg-slate-950 min-h-screen text-white p-8">
             {loading ? (
@@ -139,9 +144,17 @@ const HipaaAnalysisPreview = () => {
                             onSelect={handleAssessmentChange}
                             width="300px"
                         />
-                        {evaluationStats && (
-                            <Button onClick={handleDownloadPdf}>Download PDF</Button>
-                        )}
+                        {evaluationStats && <div className="flex gap-3 items-between items-center">
+                            <Button onClick={() => navigate("/target-maturity/hipaa")}>
+                                <BiGitCompare size={22} />
+                                <span>Compare</span></Button>
+                            <Button onClick={handleDownloadPdf}>
+                                <IoDownloadOutline size={22} />
+                                <span>Download PDF</span>
+                            </Button>
+
+                        </div>
+                        }
                     </div>
 
                     <div ref={exportRef}>

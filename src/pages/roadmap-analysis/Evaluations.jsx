@@ -31,29 +31,37 @@ const ErrorBanner = ({ message }) => (
   </div>
 );
 
-const Evaluations = () => {
+const Evaluations = ({ type = "nist" }) => {
   const navigate = useNavigate();
   const [evaluations, setEvaluations] = useState([]);
-  const [loading, setLoading] = useState(true); // New state
-  const [error, setError] = useState(null);     // New state
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // API endpoint selection based on type
+  const endpointMap = {
+    nist: "/nist-evaluation/assessments",
+    hipaa: "/hipaa-evaluations/assessments"
+  };
 
   useEffect(() => {
     const fetchEvaluations = async () => {
       try {
-        const res = await privateRequest.get("/nist-evaluation/assessments");
-        setEvaluations(res.data.data);
-        setError(null); // clear error if any
+        setLoading(true);
+        const res = await privateRequest.get(endpointMap[type]);
+        setEvaluations(type == "nist" ? res.data.data : res.data);
+        setError(null);
       } catch (error) {
-        setError("Failed to fetch evaluations. Please try again.");
+        setError(`Failed to fetch ${type.toUpperCase()} evaluations. Please try again.`);
       } finally {
         setLoading(false);
       }
     };
 
     fetchEvaluations();
-  }, []);
+  }, [type]);
 
-  const config = [
+  // Table config for NIST
+  const nistConfig = [
     {
       key: "index",
       label: "No.",
@@ -69,10 +77,11 @@ const Evaluations = () => {
       label: "Status",
       render: (value) => (
         <span
-          className={`my-2 px-2 py-1 rounded-full text-sm font-medium ${value === "submitted"
-            ? "bg-green-300 text-green-800 font-semibold border-green-800"
-            : "bg-orange-300 text-orange-700 font-semibold border-orange-700"
-            }`}
+          className={`my-2 px-2 py-1 rounded-full text-sm font-medium ${
+            value === "submitted"
+              ? "bg-green-300 text-green-800 font-semibold border-green-800"
+              : "bg-orange-300 text-orange-700 font-semibold border-orange-700"
+          }`}
         >
           {capitalizeFirstLetter(value)}
         </span>
@@ -97,19 +106,38 @@ const Evaluations = () => {
     }
   ];
 
+  // Table config for HIPAA
+  const hipaaConfig = [
+    {
+      key: "index",
+      label: "No.",
+      render: (_, __, idx) => idx + 1
+    },
+    {
+      key: "timeTaken",
+      label: "Evaluation Time",
+      render: (value) => new Date(value).toLocaleString()
+    }
+  ];
+
+  // Pick config dynamically
+  const config = type === "nist" ? nistConfig : hipaaConfig;
+
   return (
     <div className="bg-slate-950 py-10 px-6 w-screen min-h-screen text-white">
       <div className="flex flex-row w-full justify-end mb-6">
-        {/* <h1 className="text-2xl font-bold">Evaluations</h1> */}
-        <Button variant="tertiary" onClick={() => navigate("/questionnaire/nist")}>
+        <Button
+          variant="tertiary"
+          onClick={() =>
+            navigate(type === "nist" ? "/questionnaire/nist" : "/questionnaire/hipaa")
+          }
+        >
           <span>Launch New Assessment</span>
         </Button>
       </div>
 
-      {/* Error Banner */}
       {error && <ErrorBanner message={error} />}
 
-      {/* Loader */}
       {loading ? (
         <SkeletonTable />
       ) : (

@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { privateRequest } from "../../../api/config";
 import TreeDisplay from "../../../components/TreeDisplay";
 import { ClipLoader } from "react-spinners";
+import Button from "../../../components/Button";
+import { Link, useNavigate } from "react-router-dom";
 
 const descriptions = {
   Identify: "Helps understand the organizational environment to manage risk.",
@@ -33,6 +35,8 @@ export default function SidebarInfo({ current, index, total, onPrev, onNext, isS
     fetchSubCategories();
   }, [current]);
 
+  const navigate = useNavigate();
+
   return (
     <div className="w-full md:w-2/5 lg:w-1/3 bg-slate-900 border-r border-white/10 p-6 flex flex-col justify-between">
       {loading ? (
@@ -52,9 +56,12 @@ export default function SidebarInfo({ current, index, total, onPrev, onNext, isS
           {!isSubmitted ? (
             <TreeDisplay data={subcategoryInfo} />
           ) : (
-            <div className="mt-6 bg-green-800/20 p-4 rounded-lg text-green-300 text-sm">
+            <div className="mt-6 bg-green-800/20 p-4 rounded-lg text-green-300 text-sm flex flex-col justify-between">
               <p>✅ Questionnaire completed !</p>
-              <p className="mt-1">You can now review or export the results.</p>
+              <p className="mt-1 mb-4">You can now review or export the results.</p>
+              <Link to="/analysis-preview/nist" className="mx-auto mt-4">
+                  <Button>View Analysis</Button>
+                </Link>
             </div>
           )}
 

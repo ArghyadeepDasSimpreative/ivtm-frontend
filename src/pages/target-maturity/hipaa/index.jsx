@@ -48,7 +48,7 @@ const TargetMaturityPageHipaa = () => {
     loadAssessments();
   }, []);
 
-  
+
 
   const handleAssessmentSelect = async (assessment) => {
     const { value: id, label } = assessment;
@@ -97,6 +97,10 @@ const TargetMaturityPageHipaa = () => {
     "Physical Safeguards",
     "Administrative Safeguards",
   ];
+
+  useEffect(function () {
+    console.log("hipa target score ", hipaaTargetScore)
+  }, [])
 
   return (
     <div className="p-6 max-w-6xl mx-auto bg-slate-900 min-h-screen text-white min-w-screen">
@@ -148,33 +152,42 @@ const TargetMaturityPageHipaa = () => {
 
       {hipaaTargetAssessment && (
         <div className="flex flex-col gap-4 items-center justify-between mb-6">
-          <div className="bg-blue-800 text-blue-100 rounded p-4 text-center shadow">
-            🎯 You selected <strong>{hipaaTargetScore} - {hipaaTargetScore + 1}</strong> as your
-            target maturity. Let’s work toward it!
-          </div>
-          <Button onClick={navigateToComparisonPage}>
-            <VscDebugStart className="h-5 w-5" />
-            <span>Start</span>
-          </Button>
+          {
+            hipaaTargetScore &&
+            <><div className="bg-blue-800 text-blue-100 rounded p-4 text-center shadow">
+              🎯 You selected <strong>{hipaaTargetScore} - {hipaaTargetScore + 1}</strong> as your
+              target maturity. Let’s work toward it!
+            </div>
+              <Button onClick={navigateToComparisonPage}>
+                <VscDebugStart className="h-5 w-5" />
+                <span>Start</span>
+              </Button>
+            </>
+          }
+
+
         </div>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
         {loadingAssessmentDetails
           ? Array(6)
-              .fill(0)
-              .map((_, i) => <div key={i}>{shimmerBox}</div>)
+            .fill(0)
+            .map((_, i) => <div key={i}>{shimmerBox}</div>)
           : HIPAA_CATEGORIES.map((category) => (
-              <div
-                key={category}
-                className="bg-slate-800 rounded-lg p-5 flex flex-col items-center text-center border border-slate-700 hover:shadow-xl transition duration-200"
-              >
-                <h2 className="text-xl font-semibold text-slate-200 mb-1">{category}</h2>
-                <p className="text-sm text-slate-400">
+            <div
+              key={category}
+              className="bg-slate-800 rounded-lg p-5 flex flex-col items-center text-center border border-slate-700 hover:shadow-xl transition duration-200"
+            >
+              <h2 className="text-xl font-semibold text-slate-200 mb-1">{category}</h2>
+              {
+                averages.length > 0 && <p className="text-sm text-slate-400">
                   Avg Score: {getAverageByCategory(category)}
                 </p>
-              </div>
-            ))}
+              }
+
+            </div>
+          ))}
       </div>
     </div>
   );

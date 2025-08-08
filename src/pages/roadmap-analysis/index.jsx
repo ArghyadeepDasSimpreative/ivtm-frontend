@@ -88,7 +88,7 @@ export default function RoadmapAnalysis() {
         Proceed to Questionnaire
       </Button> */}
        <div className="max-w-[80vw] flex justify-between">
-         <Evaluations />
+         <Evaluations type={selected}/>
        </div>
     </div>
   )

@@ -35,7 +35,6 @@ const TargetComparisonNist = () => {
         setTargetAssessment,
     } = useTargetMaturity();
 
-    console.log("target function name is ", targetLevelName);
 
     useEffect(function () {
         if(!targetLevelName){
@@ -75,7 +74,7 @@ const TargetComparisonNist = () => {
             try {
                 const response = await privateRequest.get("/nist-evaluation/assessments");
                 if (response.status === 200) {
-                    const formatted = response.data.assessments.map((item) => ({
+                    const formatted = response.data.data.map((item) => ({
                         ...item,
                         formattedDate: format(new Date(item.evaluationTime), "dd MMM yyyy, hh:mm a"),
                         value: item._id,
@@ -115,12 +114,8 @@ const TargetComparisonNist = () => {
                 privateRequest.get(`/nist-evaluation/marks/function/${id}`),
             ]);
 
-            setEvaluationStats(statsRes.status === 200 ? statsRes.data : null);
-            const cleanedData = (functionMarksRes.data.result || []).map(item => ({
-                ...item,
-                averageScore: parseFloat(item.averageScore),
-            }));
-            setFunctionWiseMarks(cleanedData);
+            setEvaluationStats(statsRes.status === 200 ? statsRes.data.data : null);
+            setFunctionWiseMarks(functionMarksRes.data.data);
         } catch {
             setEvaluationStats(null);
             setFunctionWiseMarks([]);

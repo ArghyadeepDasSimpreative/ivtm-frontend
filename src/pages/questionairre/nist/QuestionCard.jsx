@@ -186,7 +186,7 @@ export default function QuestionCard({
           Default Option Notice
         </h2>
         <p className="text-slate-100 text-sm">
-          All of the subsequent questions in this section will have a default selected option.
+         If nothing is selected, all questions of this sections will have a default option selected.
         </p>
       </div>
     </div>

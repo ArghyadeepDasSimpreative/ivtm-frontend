@@ -13,15 +13,19 @@ import { showToast } from "../../../lib/toast";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Button from "../../../components/Button";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { BiGitCompare } from "react-icons/bi";
 import { IoDownloadOutline } from "react-icons/io5";
 
 const NistAnalysisPreview = () => {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const evaluationId = queryParams.get("evaluation-id");
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [assessmentsList, setAssessmentsList] = useState([]);
-    const [selectedId, setSelectedId] = useState("");
+    const [selectedId, setSelectedId] = useState(evaluationId);
     const [evaluationStats, setEvaluationStats] = useState(null);
     const [functionWiseMarks, setFunctionWiseMarks] = useState([]);
     const [selectedFunctionName, setSelectedFunctionName] = useState("");
@@ -38,11 +42,15 @@ const NistAnalysisPreview = () => {
                         value: item._id,
                     }));
                     setAssessmentsList(formatted);
+                    console.log("selected id is ", selectedId)
+                    if(selectedId) {
+                        console.log("entering")
+                           handleAssessmentChange({value: selectedId})
+                    }
                 } else {
                     throw new Error("Failed to fetch assessments.");
                 }
             } catch (err) {
-                console.log(err)
                 setError(err?.response?.data?.message || "Error fetching assessments.");
             } finally {
                 setLoading(false);
@@ -58,6 +66,7 @@ const NistAnalysisPreview = () => {
     }
 
     const handleAssessmentChange = async (option) => {
+        console.log("option is ", option)
         const id = option?.value;
         setSelectedId(id);
         setEvaluationStats(null);
@@ -65,8 +74,10 @@ const NistAnalysisPreview = () => {
         setSelectedFunctionName(""); // Reset on new selection
 
         if (!id) return;
+        
 
         try {
+            console.log("entring try and with ", id)
             const [statsRes, functionMarksRes] = await Promise.all([
                 privateRequest.get(`/nist-evaluation/stats/${id}`),
                 privateRequest.get(`/nist-evaluation/marks/function/${id}`),
@@ -95,7 +106,6 @@ const NistAnalysisPreview = () => {
 
             const imgData = canvas.toDataURL("image/png");
             const pdf = new jsPDF("p", "mm", "a4");
-            console.log("pdf is ", pdf)
 
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
@@ -132,10 +142,10 @@ const NistAnalysisPreview = () => {
                         />
                         {evaluationStats && <div className="flex gap-3 items-between items-center">
                             <Button onClick={() => navigate("/target-maturity/nist")}>
-                                <BiGitCompare size={22}/>
+                                <BiGitCompare size={22} />
                                 <span>Compare</span></Button>
                             <Button onClick={handleDownloadPdf}>
-                                 <IoDownloadOutline  size={22}/>
+                                <IoDownloadOutline size={22} />
                                 <span>Download PDF</span>
                             </Button>
 
