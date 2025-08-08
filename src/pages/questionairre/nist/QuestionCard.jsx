@@ -182,9 +182,9 @@ export default function QuestionCard({
       </motion.div>
 
       <div className="rounded-lg border border-blue-500 bg-slate-900 px-6 py-4 shadow-md w-[80%] mx-auto">
-        <h2 className="text-blue-400 font-semibold text-md mb-1">
+        {/* <h2 className="text-blue-400 font-semibold text-md mb-1">
           Default Option Notice
-        </h2>
+        </h2> */}
         <p className="text-slate-100 text-sm">
          If nothing is selected, all questions of this sections will have a default option selected.
         </p>

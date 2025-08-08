@@ -18,6 +18,7 @@ import VulnerabilityDashboard from './pages/dashboard'
 import ProfilePage from './pages/profile'
 import EvaluationsPage from './pages/evaluations'
 import NotFoundPage from './pages/not-found'
+import QuestionsFlow from './pages/home/QuestionsFlow'
 
 function App() {
   return (
@@ -45,7 +46,9 @@ function App() {
         <Route path="/target-maturity/hipaa" element={<TargetMaturityPageHipaa />} />
         <Route path="/target-comparison/nist" element={<TargetComparissonNist />} />
         <Route path="/target-comparison/hipaa" element={<TargetComparisonHipaa />} />
+         <Route path="/initial-questions" element={<QuestionsFlow />} />
         <Route path="/vulnerability-management" element={<VulnerabilityManagementLayout />}>
+       
           <Route index element={<VulnerabilityDashboard />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>

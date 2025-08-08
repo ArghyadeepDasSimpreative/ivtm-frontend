@@ -7,32 +7,20 @@ const HomePage = () => {
   const [selected, setSelected] = useState(null);
   const [error, setError] = useState('');
 
-  const options = [
-    {
-      label: 'Maturity Assessment and Roadmap Analysis',
-      path: '/roadmap-analysis',
-    },
-    {
-      label: 'Vulnerability Management',
-      path: '/vulnerability-management',
-    },
-    {
-      label: 'AI based incident Management',
-      path: null,
-    },
-  ];
+
 
   const handleGetStarted = () => {
-    if (!selected) {
-      setError('Please select one of the options above.');
-      return;
-    }
+    // if (!selected) {
+    //   setError('Please select one of the options above.');
+    //   return;
+    // }
 
-    setError('');
-    const selectedOption = options.find((opt) => opt.label === selected);
-    if (selectedOption?.path) {
-      navigate(selectedOption.path);
-    }
+    // setError('');
+    // const selectedOption = options.find((opt) => opt.label === selected);
+    // if (selectedOption?.path) {
+    //   navigate(selectedOption.path);
+    // }
+    navigate("/initial-questions")
   };
 
   const handleSelect = (label) => {
@@ -54,23 +42,8 @@ const HomePage = () => {
         Quickly evaluate how secure your infrastructure is — identify strengths and weaknesses with a few quick questions.
       </div>
 
-      {/* OPTIONS - Above the button */}
-      <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12 w-full max-w-3xl">
-        {options.map((option) => (
-          <button
-            key={option.label}
-            onClick={() => handleSelect(option.label)}
-            className={`flex-1 px-6 py-4 rounded-2xl text-lg font-medium transition-all duration-300 border text-white text-center 
-              ${
-                selected === option.label
-                  ? 'bg-sky-600 border-sky-500 shadow-xl scale-105'
-                  : 'bg-white/10 border-white/20 hover:bg-white/20'
-              }`}
-          >
-            {option.label}
-          </button>
-        ))}
-      </div>
+     
+      
 
       {/* START BUTTON */}
       <div className="relative group mb-6">

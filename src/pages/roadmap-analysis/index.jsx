@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { FaShieldAlt, FaLock, FaNetworkWired } from "react-icons/fa"
 import Button from "../../components/Button"
 import Evaluations from "./Evaluations"
+import { GrFormNextLink } from "react-icons/gr";
 
 const standards = [
   {
@@ -29,67 +30,117 @@ const standards = [
 ]
 
 const treeData = {
-    function: "GOVERN",
-    subcategories: [
-        "GV.OC",
-        "GV.RM",
-        "GV.RR",
-        "GV.PO",
-        "GV.OV",
-        "GV.SC"
-    ]
+  function: "GOVERN",
+  subcategories: [
+    "GV.OC",
+    "GV.RM",
+    "GV.RR",
+    "GV.PO",
+    "GV.OV",
+    "GV.SC"
+  ]
 }
 
+const options = [
+  {
+    label: 'Maturity Assessment and Roadmap Analysis',
+    path: '/roadmap-analysis',
+  },
+  {
+    label: 'Vulnerability Management',
+    path: '/vulnerability-management',
+  },
+  {
+    label: 'AI based incident Management',
+    path: null,
+  },
+];
+
 export default function RoadmapAnalysis() {
-  const [selected, setSelected] = useState("nist")
+  const [selected, setSelected] = useState("nist");
+  const [chosenOption, setChosenOption] = useState(null);
+  const [proceeded, setProceeded] = useState(false)
+
   const navigate = useNavigate()
 
   const handleProceed = () => {
-    navigate(`/questionnaire/${selected}`)
+    setProceeded(true)
+    if(chosenOption == "Maturity Assessment and Roadmap Analysis") {
+      return
+    }
+    else {
+      navigate("/vulnerability-management")
+    }
   }
 
   return (
     <div className="min-h-screen bg-slate-950 text-white px-6 py-10 flex flex-col items-center">
-      <h2 className="text-3xl font-bold mb-6 text-center">
-        Choose a Security Standard
-      </h2>
-      <p className="text-gray-400 text-center max-w-2xl mb-10">
-        Select the cybersecurity framework you'd like to use for your roadmap
-        analysis. Each option offers a different perspective to assess and
-        improve your security maturity.
-      </p>
+      {
+        (chosenOption !== "Maturity Assessment and Roadmap Analysis" || !proceeded) ?
+          <>
+            <p className="text-white mb-7 text-xl">Please Select one from the below</p>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12 w-full max-w-3xl">
+              {options.map((option) => (
+                <button
+                  key={option.label}
+                  onClick={() => setChosenOption(option.label)}
+                  className={`flex-1 px-6 py-4 rounded-2xl text-lg font-medium transition-all duration-300 border text-white text-center 
+                      ${chosenOption === option.label
+                      ? 'bg-sky-600 border-sky-500 shadow-xl scale-105'
+                      : 'bg-white/10 border-white/20 hover:bg-white/20'
+                    }`}
+                >
+                  {option.label}
+                </button>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mb-10">
-        {standards.map((std) => {
-          const isActive = selected === std.key
-          return (
-            <button
-              key={std.key}
-              onClick={() => setSelected(std.key)}
-              className={`cursor-pointer flex flex-col items-start gap-4 p-6 rounded-xl border transition-all text-left h-full ${
-                isActive
-                  ? "border-sky-500 bg-slate-800 shadow-lg scale-[1.02]"
-                  : "border-white/10 bg-slate-900 hover:border-white/20"
-              }`}
-            >
-              <div className="flex items-center gap-3 text-lg font-semibold text-white">
-                <div className="text-sky-400">{std.icon}</div>
-                {std.name}
-              </div>
-              <div className="text-gray-400 text-sm leading-relaxed">
-                {std.description}
-              </div>
-            </button>
-          )
-        })}
+              ))}
+              
+            </div>
+            <Button onClick={handleProceed}>
+              <GrFormNextLink size={24} />
+              <span>Proceed</span></Button>
+          </>
+          :
+          <>
+            <h2 className="text-3xl font-bold mb-6 text-center">
+              Choose a Security Standard
+            </h2>
+            <p className="text-gray-400 text-center max-w-2xl mb-10">
+              Select the cybersecurity framework you'd like to use for your roadmap
+              analysis. Each option offers a different perspective to assess and
+              improve your security maturity.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mb-10">
+              {standards.map((std) => {
+                const isActive = selected === std.key
+                return (
+                  <button
+                    key={std.key}
+                    onClick={() => setSelected(std.key)}
+                    className={`cursor-pointer flex flex-col items-start gap-4 p-6 rounded-xl border transition-all text-left h-full ${isActive
+                      ? "border-sky-500 bg-slate-800 shadow-lg scale-[1.02]"
+                      : "border-white/10 bg-slate-900 hover:border-white/20"
+                      }`}
+                  >
+                    <div className="flex items-center gap-3 text-lg font-semibold text-white">
+                      <div className="text-sky-400">{std.icon}</div>
+                      {std.name}
+                    </div>
+                    <div className="text-gray-400 text-sm leading-relaxed">
+                      {std.description}
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+            <div className="max-w-[80vw] flex justify-between">
+        <Evaluations type={selected} />
       </div>
+          </>
+      }
 
-      {/* <Button variant="primary" onClick={handleProceed}>
-        Proceed to Questionnaire
-      </Button> */}
-       <div className="max-w-[80vw] flex justify-between">
-         <Evaluations type={selected}/>
-       </div>
+      
     </div>
   )
 }
