@@ -33,6 +33,7 @@ const FunctionAnswerTable = ({ evaluationId, functionName, target = null }) => {
 
     // Format data for Excel
     const dataForExcel = questions.map((q, index) => {
+      console.log("q is ", q)
       const targetSolution =
         target !== null && Array.isArray(q.answers)
           ? q.answers[target - 1] || q.answers[q.answers.length - 1]
@@ -105,7 +106,7 @@ const FunctionAnswerTable = ({ evaluationId, functionName, target = null }) => {
                 ? q.options[target - 1] || q.options[q.options.length - 1]
                 : null;
 
-                console.log("taregt assessingggggg", q)
+                console.log("taregt assessingggggg", q.answer, " and mrk is ", q.marks )
 
             return (
               <tr
