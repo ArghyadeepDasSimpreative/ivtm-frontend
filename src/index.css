@@ -164,6 +164,27 @@ select:focus {
   border-color: inherit;
 }
 
+/* styles/globals.css or index.css */
+
+/* Reduce all text inside Recharts */
+.recharts-text {
+  font-size: 13px !important; /* adjust size */
+  
+}
+
+/* Reduce axis tick labels */
+.recharts-cartesian-axis-tick-value {
+  font-size: 13px !important;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+/* Reduce legend text size */
+.recharts-default-legend {
+  font-size: 14px !important;
+}
+
+
 
 
 

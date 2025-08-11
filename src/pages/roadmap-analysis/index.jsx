@@ -1,9 +1,9 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { FaShieldAlt, FaLock, FaNetworkWired } from "react-icons/fa"
-import Button from "../../components/Button"
-import Evaluations from "./Evaluations"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FaShieldAlt, FaLock, FaNetworkWired } from "react-icons/fa";
 import { GrFormNextLink } from "react-icons/gr";
+import Button from "../../components/Button";
+import Evaluations from "./Evaluations";
 
 const standards = [
   {
@@ -27,31 +27,19 @@ const standards = [
     description:
       "The Cybersecurity Capability Maturity Model (C2M2) helps organizations evaluate and improve cybersecurity capabilities.",
   },
-]
-
-const treeData = {
-  function: "GOVERN",
-  subcategories: [
-    "GV.OC",
-    "GV.RM",
-    "GV.RR",
-    "GV.PO",
-    "GV.OV",
-    "GV.SC"
-  ]
-}
+];
 
 const options = [
   {
-    label: 'Maturity Assessment and Roadmap Analysis',
-    path: '/roadmap-analysis',
+    label: "Maturity Assessment and Roadmap Analysis",
+    path: "/roadmap-analysis",
   },
   {
-    label: 'Vulnerability Management',
-    path: '/vulnerability-management',
+    label: "Vulnerability Management",
+    path: "/vulnerability-management",
   },
   {
-    label: 'AI based incident Management',
+    label: "AI based Incident Management",
     path: null,
   },
 ];
@@ -59,88 +47,98 @@ const options = [
 export default function RoadmapAnalysis() {
   const [selected, setSelected] = useState("nist");
   const [chosenOption, setChosenOption] = useState(null);
-  const [proceeded, setProceeded] = useState(false)
+  const [proceeded, setProceeded] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleProceed = () => {
-    setProceeded(true)
-    if(chosenOption == "Maturity Assessment and Roadmap Analysis") {
-      return
+    setProceeded(true);
+    if (chosenOption === "Maturity Assessment and Roadmap Analysis") {
+      return;
+    } else {
+      navigate("/vulnerability-management");
     }
-    else {
-      navigate("/vulnerability-management")
-    }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-white px-6 py-10 flex flex-col items-center">
-      {
-        (chosenOption !== "Maturity Assessment and Roadmap Analysis" || !proceeded) ?
-          <>
-            <p className="text-white mb-7 text-xl">Please Select one from the below</p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12 w-full max-w-3xl">
-              {options.map((option) => (
+      {chosenOption !== "Maturity Assessment and Roadmap Analysis" || !proceeded ? (
+        <>
+          {/* Welcome Section */}
+          <h1 className="text-3xl font-bold mb-3 text-center">
+            👋 Welcome to Your Cybersecurity Hub
+          </h1>
+          <p className="text-gray-400 mb-8 text-center max-w-xl">
+            Let's start by choosing the area you'd like to explore. Each option
+            offers powerful tools and assessments to strengthen your security posture.
+          </p>
+
+          {/* Options */}
+          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-10 w-full max-w-3xl">
+            {options.map((option) => (
+              <button
+                key={option.label}
+                onClick={() => setChosenOption(option.label)}
+                className={`flex-1 px-6 py-5 rounded-2xl text-md font-medium transition-all duration-300 border text-white text-center
+                  ${
+                    chosenOption === option.label
+                      ? "bg-sky-600 border-sky-500 shadow-xl scale-105"
+                      : "bg-white/10 border-white/20 hover:bg-white/20 hover:scale-105"
+                  }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+
+          
+          <Button onClick={handleProceed}>
+            <GrFormNextLink size={20} />
+            <span>Proceed</span>
+          </Button>
+        </>
+      ) : (
+        <>
+          {/* Standard Selection */}
+          <h2 className="text-2xl font-bold mb-4 text-center">
+            Choose Your Security Standard
+          </h2>
+          <p className="text-gray-400 text-center max-w-2xl mb-10">
+            Select the cybersecurity framework you'd like to use for your roadmap
+            analysis. This will guide the structure and scope of your assessment.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mb-10">
+            {standards.map((std) => {
+              const isActive = selected === std.key;
+              return (
                 <button
-                  key={option.label}
-                  onClick={() => setChosenOption(option.label)}
-                  className={`flex-1 px-6 py-4 rounded-2xl text-lg font-medium transition-all duration-300 border text-white text-center 
-                      ${chosenOption === option.label
-                      ? 'bg-sky-600 border-sky-500 shadow-xl scale-105'
-                      : 'bg-white/10 border-white/20 hover:bg-white/20'
-                    }`}
-                >
-                  {option.label}
-                </button>
-
-              ))}
-              
-            </div>
-            <Button onClick={handleProceed}>
-              <GrFormNextLink size={24} />
-              <span>Proceed</span></Button>
-          </>
-          :
-          <>
-            <h2 className="text-3xl font-bold mb-6 text-center">
-              Choose a Security Standard
-            </h2>
-            <p className="text-gray-400 text-center max-w-2xl mb-10">
-              Select the cybersecurity framework you'd like to use for your roadmap
-              analysis. Each option offers a different perspective to assess and
-              improve your security maturity.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mb-10">
-              {standards.map((std) => {
-                const isActive = selected === std.key
-                return (
-                  <button
-                    key={std.key}
-                    onClick={() => setSelected(std.key)}
-                    className={`cursor-pointer flex flex-col items-start gap-4 p-6 rounded-xl border transition-all text-left h-full ${isActive
+                  key={std.key}
+                  onClick={() => setSelected(std.key)}
+                  className={`cursor-pointer flex flex-col items-start gap-4 p-6 rounded-xl border transition-all text-left h-full ${
+                    isActive
                       ? "border-sky-500 bg-slate-800 shadow-lg scale-[1.02]"
-                      : "border-white/10 bg-slate-900 hover:border-white/20"
-                      }`}
-                  >
-                    <div className="flex items-center gap-3 text-lg font-semibold text-white">
-                      <div className="text-sky-400">{std.icon}</div>
-                      {std.name}
-                    </div>
-                    <div className="text-gray-400 text-sm leading-relaxed">
-                      {std.description}
-                    </div>
-                  </button>
-                )
-              })}
-            </div>
-            <div className="max-w-[80vw] flex justify-between">
-        <Evaluations type={selected} />
-      </div>
-          </>
-      }
+                      : "border-white/10 bg-slate-900 hover:border-white/20 hover:scale-[1.01]"
+                  }`}
+                >
+                  <div className="flex items-center gap-3 text-md font-semibold text-white">
+                    <div className="text-sky-400">{std.icon}</div>
+                    {std.name}
+                  </div>
+                  <div className="text-gray-400 text-sm leading-relaxed">
+                    {std.description}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
 
-      
+          {/* Evaluation Table */}
+          <div className="max-w-[80vw] flex justify-between">
+            <Evaluations type={selected} />
+          </div>
+        </>
+      )}
     </div>
-  )
+  );
 }

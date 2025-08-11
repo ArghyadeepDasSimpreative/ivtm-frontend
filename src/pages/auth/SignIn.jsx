@@ -93,7 +93,7 @@ export default function Signin() {
       {/* Left image section */}
       <div className="hidden lg:flex w-full max-w-lg xl:max-w-xl mr-8 xl:mr-12 flex-col">
         <div className="mb-2">
-          <h1 className="text-3xl xl:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-2xl xl:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
             Secure Your Digital Assets
           </h1>
         </div>
@@ -109,7 +109,7 @@ export default function Signin() {
         <div className="bg-slate-800/50 backdrop-blur-xl p-6 lg:p-8 rounded-2xl border border-white/10 shadow-2xl">
           {/* Header */}
           <div className="text-center mb-8">
-            <h2 className="text-2xl lg:text-3xl font-bold mb-3 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <h2 className="text-xl lg:text-2xl font-bold mb-3 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               Welcome Back
             </h2>
             <p className="text-gray-400 text-sm lg:text-base">

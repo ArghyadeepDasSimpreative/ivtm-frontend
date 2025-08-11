@@ -4,6 +4,9 @@ import { privateRequest } from "../../api/config";
 import UserManagement from "./users";
 import CreateUser from "./users/Create";
 import { FiMenu, FiX } from "react-icons/fi";
+import defaultUserImage from "../../assets/default-user-image.png"
+import { FaEdit } from "react-icons/fa";
+import { useRef } from "react";
 
 const ProfilePage = () => {
     const [userDetails, setUserDetails] = useState(null);
@@ -61,7 +64,7 @@ const ProfilePage = () => {
             {/* Mobile Header with Menu Button */}
             <div className="lg:hidden bg-white shadow-sm border-b border-gray-200 p-4 sticky top-0 z-50">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-xl font-semibold text-gray-800">{getTabTitle()}</h1>
+                    <h1 className="text-lg font-semibold text-gray-800">{getTabTitle()}</h1>
                     <button
                         onClick={() => setSidebarOpen(!sidebarOpen)}
                         className="p-2 rounded-md cursor-pointer text-gray-600 hover:bg-gray-100 transition-colors"
@@ -74,7 +77,7 @@ const ProfilePage = () => {
             <div className="flex flex-col lg:flex-row lg:gap-6 lg:p-6">
                 {/* Mobile Overlay */}
                 {sidebarOpen && (
-                    <div 
+                    <div
                         className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
                         onClick={() => setSidebarOpen(false)}
                     />
@@ -116,14 +119,23 @@ const ProfilePage = () => {
                         </div>
                     ) : (
                         <div className="flex flex-col items-center">
-                            <img 
-                                src={userDetails.profileImageUrl} 
-                                className="w-20 h-20 lg:w-24 lg:h-24 xl:w-32 xl:h-32 border border-slate-400 rounded-full mb-3 lg:mb-4 object-cover" 
-                                alt="Profile" 
-                            />
-                            <h2 className="text-lg lg:text-xl font-semibold mb-3 lg:mb-4 text-center break-words">
+                            <div className="relative w-20 h-20 lg:w-24 lg:h-24 xl:w-32 xl:h-32">
+                                <img
+                                    src={userDetails.profileImageUrl || defaultUserImage}
+                                    className="border border-slate-300 rounded-full object-cover w-full h-full"
+                                    alt="Profile"
+                                />
+                                <button
+                                    className="absolute -bottom-3 right-3 bg-slate-200 hover:bg-slate-300 transition-all duration-300 border border-gray-400 rounded-full p-2 shadow cursor-pointer"
+                                >
+                                    <FaEdit />
+                                </button>
+                            </div>
+
+                            <h2 className="text-md lg:text-lg font-semibold mb-3 lg:mb-4 text-center break-words mt-4">
                                 {userDetails.username}
                             </h2>
+                            <p>{userDetails.email}</p>
                             <div className="flex flex-col gap-2 lg:gap-3 w-full">
                                 {buttonsData.map((button, index) => (
                                     <button
@@ -150,7 +162,7 @@ const ProfilePage = () => {
                 <div className="flex-1 lg:w-3/4 bg-white shadow-sm lg:shadow-md p-4 lg:p-6 lg:border lg:border-slate-300 lg:rounded-xl min-h-[calc(100vh-80px)] lg:min-h-fit">
                     {/* Desktop Title */}
                     <div className="hidden lg:block mb-6">
-                        <h1 className="text-2xl font-bold text-gray-800">{getTabTitle()}</h1>
+                        <h1 className="text-xl font-bold text-gray-800">{getTabTitle()}</h1>
                     </div>
 
                     {pageLoading ? (
@@ -168,12 +180,12 @@ const ProfilePage = () => {
                             {activeTab === "profile" && (
                                 <div className="space-y-6">
                                     <div className="text-center lg:text-left">
-                                        <h2 className="text-xl lg:text-2xl font-semibold text-gray-800 mb-2">
+                                        <h2 className="text-lg lg:text-xl font-semibold text-gray-800 mb-2">
                                             Profile Information
                                         </h2>
                                         <p className="text-gray-600">Manage your account settings and preferences</p>
                                     </div>
-                                    
+
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                                         <div className="bg-gray-50 p-4 rounded-lg">
                                             <h3 className="font-medium text-gray-700 mb-2">Email</h3>
@@ -196,11 +208,11 @@ const ProfilePage = () => {
                                     </div>
                                 </div>
                             )}
-                            
+
                             {activeTab === "management" && (
                                 <UserManagement openUserAddModal={() => setActiveTab("create-user")} />
                             )}
-                            
+
                             {activeTab === "create-user" && (
                                 <div>
                                     {/* Back button for mobile */}

@@ -147,7 +147,7 @@ const VulnerabilityDashboard = () => {
         }
 
         const formData = new FormData();
-        formData.append("excel", file);
+        formData.append("file", file);
 
         try {
             setUploadLoading(true);
@@ -280,7 +280,7 @@ const VulnerabilityDashboard = () => {
                         <div className="flex justify-between gap-3 mb-6 max-h-[80vh] overflow-y-auto">
                             <div className="flex flex-col w-[72%] border border-zinc-200 shadow-md h-full rounded-xl p-4">
                                 <div className="text-gray-800">
-                                    <h2 className="text-xl font-semibold mb-4">Vulnerability summary</h2>
+                                    <h2 className="text-lg font-semibold mb-4">Vulnerability summary</h2>
 
                                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
                                         <div className="bg-white p-4 rounded-xl shadow">

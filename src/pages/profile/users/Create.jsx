@@ -261,7 +261,7 @@ const CreateUser = ({ showUsers }) => {
                             type="text"
                             value={formData.defaultPassword}
                             readOnly
-                            className="w-full px-3 py-2 pr-12 border border-gray-300 rounded-md text-lg bg-gray-50 focus:outline-none cursor-not-allowed"
+                            className="w-full px-3 py-2 pr-12 border border-gray-300 rounded-md text-md bg-gray-50 focus:outline-none cursor-not-allowed"
                         />
                         <button
                             type="button"

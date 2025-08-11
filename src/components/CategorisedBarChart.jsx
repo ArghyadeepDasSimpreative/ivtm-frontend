@@ -37,8 +37,8 @@ const CategorisedBarChart = ({ datasets, title, note, handleClick }) => {
   };
 
   return (
-    <div className="bg-slate-900 p-4 rounded-md shadow-md text-white w-full max-w-5xl h-[500px]">
-      <h2 className="text-center text-xl font-semibold mb-1">{title}</h2>
+    <div className="bg-slate-900 p-4 rounded-md text-white w-full max-w-5xl h-[500px]">
+      <h2 className="text-center text-lg font-semibold mb-1">{title}</h2>
       {note && <p className="text-center text-sm text-slate-400 mb-4">{note}</p>}
       <ResponsiveContainer width="100%" height={350}>
         <BarChart

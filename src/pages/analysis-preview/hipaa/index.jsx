@@ -3,12 +3,12 @@ import { format } from "date-fns";
 import { privateRequest } from "../../../api/config";
 
 import CustomSelect from "../../../components/Select";
-import MaturityLevelBarChart from "../../../components/MaturityLevelBarChart";
+import MaturityLadder from "../../../components/MaturityLadder";
 import RadarChartComponent from "../../../components/RadarChartComponent";
 import CategorisedBarChart from "../../../components/CategorisedBarChart";
 import MultiLineChart from "../../../components/MultiLineChart";
-import MaturityLevelLegendNist from "../../../components/MaturityLevelLegendNist";
-import FunctionAnswerTable from "../../../components/FunctionAnswerTable";
+// import MaturityLevelLegendNist from "../../../components/MaturityLevelLegendNist";
+// import FunctionAnswerTable from "../../../components/FunctionAnswerTable";
 import { showToast } from "../../../lib/toast";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -17,13 +17,17 @@ import HipaaAnswerTable from "../../../components/HipaaAnswerTable";
 import MaturityLevelLegendHipaa from "../../../components/MaturityLevelLegendHipaa";
 import { BiGitCompare } from "react-icons/bi";
 import { IoDownloadOutline } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const HipaaAnalysisPreview = () => {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const evaluationId = queryParams.get("evaluation-id");
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [assessmentsList, setAssessmentsList] = useState([]);
-    const [selectedId, setSelectedId] = useState("");
+    const [selectedId, setSelectedId] = useState(evaluationId);
     const [evaluationStats, setEvaluationStats] = useState(null);
     const [functionWiseMarks, setFunctionWiseMarks] = useState([]);
     const [maturityDistribution, setMaturityDistribution] = useState([]);
@@ -37,16 +41,22 @@ const HipaaAnalysisPreview = () => {
             try {
                 const response = await privateRequest.get("/hipaa-evaluations/assessments");
                 if (response.status === 200) {
-                    const formatted = response.data.map((item) => ({
+                    const formatted = response.data.data.map((item) => ({
                         ...item,
                         formattedDate: format(new Date(item.timeTaken), "dd MMM yyyy, hh:mm a"),
                         value: item._id,
                     }));
                     setAssessmentsList(formatted);
+                    if (selectedId) {
+                        console.log("entering")
+                        handleAssessmentChange({ value: selectedId })
+                    }
                 } else {
+                    
                     throw new Error("Failed to fetch HIPAA assessments.");
                 }
             } catch (err) {
+                console.log(err)
                 setError(err?.response?.data?.message || "Error fetching assessments.");
             } finally {
                 setLoading(false);
@@ -129,12 +139,12 @@ const HipaaAnalysisPreview = () => {
     return (
         <div className="bg-slate-950 min-h-screen text-white p-8">
             {loading ? (
-                <p className="text-blue-300 text-lg">Loading...</p>
+                <p className="text-blue-300 text-md">Loading...</p>
             ) : error ? (
                 <p className="text-red-500">{error}</p>
             ) : (
                 <div className="flex flex-col gap-10">
-                    <p className="w-full text-center text-3xl font-semibold text-blue-200">Assessment result based on <strong className="text-blue-400">HIPAA</strong> compliance</p>
+                    <p className="w-full text-center text-2xl font-semibold text-blue-200">Assessment result based on <strong className="text-blue-400">HIPAA</strong> compliance</p>
                     {/* Dropdown */}
                     <div className="flex justify-between items-center">
                         <CustomSelect
@@ -164,13 +174,13 @@ const HipaaAnalysisPreview = () => {
                                 <div className="flex flex-col lg:flex-row justify-between items-start gap-6">
                                     {/* Overall Score */}
                                     <div className="bg-slate-900 border border-blue-400 rounded-md w-[300px] h-[130px] flex flex-col justify-center items-center shadow-lg shadow-blue-700/30">
-                                        <h2 className="text-xl font-semibold text-blue-300">Overall Score</h2>
+                                        <h2 className="text-lg font-semibold text-blue-300">Overall Score</h2>
                                         <p className="text-4xl font-bold mt-4 text-blue-100">{evaluationStats.average}</p>
                                     </div>
 
                                     {/* Maturity Chart */}
-                                    <div className="flex gap-10 justify-end items-center">
-                                        <MaturityLevelBarChart
+                                    <div className="flex gap-10 justify-end items-start">
+                                        <MaturityLadder
                                             position={parseInt(evaluationStats.average)}
                                             levels={[
                                                 { label: "Physical" },
@@ -184,21 +194,20 @@ const HipaaAnalysisPreview = () => {
                                     </div>
                                 </div>
 
-                                {/* Chart Row */}
                                 <div className="flex flex-col lg:flex-row justify-between gap-6 mt-6">
                                     {functionWiseMarks.length > 0 && (
                                         <div className="flex-1 bg-slate-900 p-4 rounded-md">
                                             <MultiLineChart
-                                                dataSets={[{ label: "Maturity score", data: functionWiseMarks }]}
-                                                title="Function-wise HIPAA score"
+                                                dataSets={[{ label: "", data: functionWiseMarks }]}
+                                                title="Function-wise analysis"
                                             />
                                         </div>
                                     )}
 
                                     <div className="flex-1 bg-slate-900 p-4 rounded-md">
                                         <RadarChartComponent
-                                            dataSets={[{ name: "Maturity score", data: functionWiseMarks }]}
-                                            label="Function-wise HIPAA score"
+                                            dataSets={[{ name: "", data: functionWiseMarks }]}
+                                            label="Domain wise distribution"
                                             notation="Each axis shows a function's average score (Max: 5)"
                                         />
                                     </div>
@@ -207,19 +216,18 @@ const HipaaAnalysisPreview = () => {
                                         <CategorisedBarChart
                                             datasets={[
                                                 {
-                                                    name: "Maturity score",
+                                                    name: "",
                                                     color: "#22d3ee",
                                                     data: functionWiseMarks,
                                                 },
                                             ]}
-                                            title="Function-Wise HIPAA score"
+                                            title="Number of elements wise analysis"
                                             note="Average score per function (range 0 to 5)"
                                             handleClick={handleBarClick}
                                         />
                                     </div>
                                 </div>
 
-                                {/* Table */}
                                 <HipaaAnswerTable
                                     data={answersGiven}
                                     category={selectedCategoryName}

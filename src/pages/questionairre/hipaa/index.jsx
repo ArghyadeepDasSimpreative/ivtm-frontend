@@ -4,6 +4,7 @@ import QuestionCard from "./QuestionCard";
 import Button from "../../../components/Button";
 import { showToast } from "../../../lib/toast";
 import { Link } from "react-router-dom";
+import hipaaImage from "../../../assets/hipaa-cyber-security.png"
 
 export default function HipaaQuestionsPage() {
   const [questions, setQuestions] = useState([]);
@@ -55,8 +56,9 @@ export default function HipaaQuestionsPage() {
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-900 text-white relative">
       {/* Left Sidebar */}
-      <div className="lg:block lg:w-1/3 bg-[#0f172a] flex items-center justify-center p-6">
-        <h2 className="text-3xl font-bold text-cyan-400">HIPAA Portal</h2>
+      <div className="lg:block lg:w-1/3 bg-[#0f172a] flex flex-col items-center justify-center p-6">
+        <h2 className="text-2xl font-bold text-cyan-400 w-full text-center">HIPAA Portal</h2>
+        <img src={hipaaImage} className="m-10 w-[80%] min-h-[50vh]"/>
       </div>
 
       {/* Right Section */}
@@ -65,7 +67,7 @@ export default function HipaaQuestionsPage() {
           {isSubmitted ? (
             <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
               <div className="bg-slate-900 text-white p-8 rounded-xl shadow-xl text-center max-w-md w-full border border-cyan-700">
-                <h2 className="text-2xl font-bold mb-4 text-green-400">Submission Successful!</h2>
+                <h2 className="text-xl font-bold mb-4 text-green-400">Submission Successful!</h2>
                 <p className="mb-6 text-gray-300">
                   Your answers have been recorded. You can now view your analysis.
                 </p>
@@ -76,12 +78,12 @@ export default function HipaaQuestionsPage() {
             </div>
           ) : (
             <>
-              <h1 className="text-3xl font-bold text-cyan-200 mb-8">
+              <h1 className="text-2xl font-bold text-cyan-200 mb-8">
                 HIPAA Assessment
               </h1>
 
               {loading ? (
-                <p className="text-gray-400 text-lg">Loading questions...</p>
+                <p className="text-gray-400 text-md">Loading questions...</p>
               ) : (
                 <>
                   <div className="space-y-6">

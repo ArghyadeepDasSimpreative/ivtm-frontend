@@ -49,7 +49,7 @@ export default function SidebarInfo({ current, index, total, onPrev, onNext, isS
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <h2 className="text-3xl font-bold mb-2 text-white">{current}</h2>
+            <h2 className="text-2xl font-bold mb-2 text-white">{current}</h2>
             <p className="text-gray-400 text-sm">{descriptions[current]}</p>
           </motion.div>
 

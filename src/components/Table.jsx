@@ -25,7 +25,7 @@ export default function Table({ label, data = [], config = [], dark = false }) {
   return (
     <div className={`overflow-x-auto w-full mt-6 shadow rounded border ${wrapperClass}`}>
       {label && (
-        <h2 className="text-lg font-semibold px-4 py-3 border-b border-blue-800">
+        <h2 className="text-md font-semibold px-4 py-3 border-b border-blue-800">
           {label}
         </h2>
       )}
@@ -51,7 +51,7 @@ export default function Table({ label, data = [], config = [], dark = false }) {
               {config.map((col) => (
                 <td
                   key={col.key}
-                  className="px-4 py-3"
+                  className="px-4 py-3 text-sm"
                 >
                   {col.render ? col.render(item[col.key], item, idx) : item[col.key]}
                 </td>

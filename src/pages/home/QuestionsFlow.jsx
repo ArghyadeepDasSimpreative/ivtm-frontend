@@ -62,29 +62,30 @@ export default function QuestionsFlow() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                 >
-                    <h2 className="text-3xl font-bold mb-4">Assessment Complete ✅</h2>
-                    <p className="text-lg text-gray-300 mb-6">
+                    <h2 className="text-2xl font-bold mb-4">Assessment Complete ✅</h2>
+                    <p className="text-md text-gray-300 mb-6">
                         Thank you for completing the cybersecurity maturity questionnaire.
                     </p>
 
                     {!submitted ? (
-                        <button
-                            onClick={handleSubmit}
-                            disabled={isSubmitting}
-                            className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-xl transition-all flex items-center justify-center gap-3 min-w-[180px] mx-auto"
-                        >
-                            {isSubmitting ? (
-                                <>
-                                    <ClipLoader size={18} color="#ffffff" />
-                                    <span>Submitting...</span>
-                                </>
-                            ) : (
-                                'Submit Results'
-                            )}
-                        </button>
+                        // <button
+                        //     onClick={handleSubmit}
+                        //     disabled={isSubmitting}
+                        //     className="bg-blue-700 hover:bg-blue-800 text-white px-3 py-1 rounded-xl transition-all flex items-center justify-center gap-3 min-w-[180px] mx-auto"
+                        // >
+                        //     {isSubmitting ? (
+                        //         <>
+                        //             <ClipLoader size={18} color="#ffffff" />
+                        //             <span>Submitting...</span>
+                        //         </>
+                        //     ) : (
+                        //         'Submit Results'
+                        //     )}
+                        // </button>
+                        <Button loading={isSubmitting} onClick={handleSubmit}>Submit Results</Button>
                     ) : (
                         <>
-                            <div className="text-xl text-sky-400 font-semibold mb-6 mt-4">
+                            <div className="text-lg text-sky-400 font-semibold mb-6 mt-4">
                                 Your Score Range:{' '}
                                 <span className="text-white">
                                     {finalScore < 1 && 'Between 0 to 1'}
@@ -112,7 +113,7 @@ export default function QuestionsFlow() {
                                     }}
                                     variant="primary"
                                 >
-                                    Roadmap Analysis
+                                    Get Started With Us
                                 </Button>
                             </div>
                         </>

@@ -114,7 +114,7 @@ const TargetMaturityPageNist = () => {
 
     return (
         <div className="p-6 max-w-6xl mx-auto bg-slate-900 min-h-screen text-white min-w-screen">
-            <h1 className="text-3xl font-bold mb-6 text-center text-blue-300">🎯 Set Your Target Maturity</h1>
+            <h1 className="text-2xl font-bold mb-6 text-center text-blue-300">🎯 Set Your Target Maturity</h1>
 
             <div className="grid sm:grid-cols-2 gap-6 mb-6">
                 {loadingAssessments ? (
@@ -151,9 +151,9 @@ const TargetMaturityPageNist = () => {
             {loadingAssessmentDetails ? (
                 <div className="bg-slate-800 h-[60px] rounded animate-pulse mb-6"></div>
             ) : currentLevel !== null ? (
-                <div className="bg-slate-800 rounded p-4 mb-6 text-lg shadow text-center">
+                <div className="bg-slate-800 rounded p-4 mb-6 text-md shadow text-center">
                     <span className="font-semibold text-slate-300">Current Maturity Level:</span>{" "}
-                    <span className="text-green-400 font-bold text-xl">{currentLevel} - {currentLevel + 1}</span>
+                    <span className="text-green-400 font-bold text-lg">{currentLevel} - {currentLevel + 1}</span>
                 </div>
             ) : null}
 
@@ -180,7 +180,7 @@ const TargetMaturityPageNist = () => {
                             className="bg-slate-800 rounded-lg p-5 flex flex-col items-center text-center border border-slate-700 hover:shadow-xl transition duration-200"
                         >
                             <div className="mb-3 text-blue-400">{functionIcons[fn]}</div>
-                            <h2 className="text-xl font-semibold text-slate-200 mb-1">{fn}</h2>
+                            <h2 className="text-lg font-semibold text-slate-200 mb-1">{fn}</h2>
                             <p className="text-sm text-slate-400">Avg Score: {getAveragePerFunction(fn)}</p>
                         </div>
                     ))}

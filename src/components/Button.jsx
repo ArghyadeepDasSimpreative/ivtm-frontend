@@ -9,7 +9,7 @@ export default function Button({
   type = 'button',
   ...rest
 }) {
-  const baseStyle = `inline-flex items-center justify-center gap-2 cursor-pointer px-3 py-1 text-md rounded-[10px] transition-all font-medium min-w-[160px] min-h-[46px]`
+  const baseStyle = `inline-flex items-center justify-center gap-2 cursor-pointer px-3 py-3 text-md rounded-[10px] transition-all font-medium min-w-[160px] min-h-[46px]`
 
   const styles = {
     primary: `bg-blue-700 hover:bg-blue-800 text-white`,

@@ -197,18 +197,18 @@ const handleSubmit = async () => {
           </div>
         ) : questions.length === 0 ? (
           <div className="h-full flex items-center justify-center text-center">
-            <p className="text-red-400 text-lg">
+            <p className="text-red-400 text-md">
               No questions found for <span className="font-bold">{currentFunction}</span>
             </p>
           </div>
         ) : isSubmitted ? (
           <div className="h-full flex flex-col items-center justify-center text-center">
             <div className="bg-green-800/10 p-6 rounded-lg max-w-md">
-              <h2 className="text-2xl font-bold text-green-400 mb-2">Submitted!</h2>
+              <h2 className="text-xl font-bold text-green-400 mb-2">Submitted!</h2>
               <p className="text-gray-300 mb-4">
                 Your responses have been recorded.
               </p>
-              <p className="text-blue-400 text-lg mt-1">Average Score: {marksResponse}</p>
+              <p className="text-blue-400 text-md mt-1">Average Score: {marksResponse}</p>
             </div>
           </div>
         ) : (

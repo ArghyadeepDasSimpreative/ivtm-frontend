@@ -65,7 +65,7 @@ export default function QuestionAnswer({ question, onAnswered }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <div className="text-xl font-semibold mb-4">{question.questionText}</div>
+      <div className="text-lg font-semibold mb-4">{question.questionText}</div>
 
       <div className="grid gap-3 mb-6">
         {question.options.map((option, index) => {
@@ -129,7 +129,7 @@ export default function QuestionAnswer({ question, onAnswered }) {
         onClick={handleSubmit}
         className="mt-6 mx-auto bg-blue-700 hover:bg-blue-800 transition-all text-white font-semibold px-6 py-3 rounded-xl disabled:opacity-40"
       >
-        Submit Answer
+        Confirm
       </button>
     </motion.div>
   )

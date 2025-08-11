@@ -100,10 +100,11 @@ const EvaluationsPage = () => {
   return (
     <div className="bg-slate-950 py-10 px-6 w-screen min-h-screen text-white">
       <div className="flex flex-row w-full justify-between mb-6">
-        <h1 className="text-2xl font-bold">Evaluations</h1>
+        <h1 className="text-xl font-bold">Evaluations</h1>
         <Button variant="tertiary" onClick={() => navigate("/questionnaire/nist")}>
           <span>Launch New Assessment</span>
         </Button>
+       
       </div>
 
       {/* Error Banner */}

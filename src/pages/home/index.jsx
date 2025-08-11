@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FaRocket } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -29,16 +29,20 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-950 flex flex-col justify-center items-center px-4 text-center transition-all duration-500">
+    <div className="min-h-screen w-full bg-slate-950 flex flex-col justify-center items-center px-4 text-center transition-all duration-500 relative">
+      <div className='absolute top-3 right-3 flex gap-4'>
+        <Link className='text-blue-400 p-2' to="/signin">Sign In</Link>
+        <Link className='text-white bg-blue-600 p-2 px-5 rounded-lg' to="/signup">Sign Up</Link>
+      </div>
       <div className="text-white font-extrabold text-4xl mb-3">
         Do you want to assess the maturity of your platform?
       </div>
 
-      <div className="text-sky-400 text-base font-medium mb-6 animate-pulse">
-        Based on the NIST Cybersecurity Framework (CSF)
+      <div className="text-sky-400 text-base font-medium mb-6 animate-pulse mt-2">
+        Based on the NIST Cybersecurity Framework (CSF), HIPAA compliance and C2M2 compliance
       </div>
 
-      <div className="text-gray-400 text-lg mb-10 max-w-2xl">
+      <div className="text-gray-400 text-md mb-10 max-w-2xl">
         Quickly evaluate how secure your infrastructure is — identify strengths and weaknesses with a few quick questions.
       </div>
 
@@ -53,8 +57,8 @@ const HomePage = () => {
           className="relative group inline-flex items-center justify-center px-10 py-4 overflow-hidden font-semibold text-gray-100 transition-all duration-500 ease-in-out rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 hover:scale-105 cursor-pointer"
         >
           <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-          <span className="relative z-10 flex items-center text-xl gap-3">
-            <FaRocket className="text-xl group-hover:rotate-12 transition-transform duration-300" />
+          <span className="relative z-10 flex items-center text-lg gap-3">
+            <FaRocket className="text-lg group-hover:rotate-12 transition-transform duration-300" />
             Get Started
           </span>
         </button>

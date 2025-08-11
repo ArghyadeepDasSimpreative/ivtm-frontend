@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Table from "../../components/Table";
 import { privateRequest } from "../../api/config";
 import { capitalizeFirstLetter } from "../../lib/text";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaEye } from "react-icons/fa";
 import Button from "../../components/Button";
 import { useNavigate } from "react-router-dom";
 
@@ -48,7 +48,7 @@ const Evaluations = ({ type = "nist" }) => {
       try {
         setLoading(true);
         const res = await privateRequest.get(endpointMap[type]);
-        setEvaluations(type == "nist" ? res.data.data : res.data);
+        setEvaluations(type == "nist" ? res.data.data : res.data.data);
         setError(null);
       } catch (error) {
         setError(`Failed to fetch ${type.toUpperCase()} evaluations. Please try again.`);
@@ -77,11 +77,10 @@ const Evaluations = ({ type = "nist" }) => {
       label: "Status",
       render: (value) => (
         <span
-          className={`my-2 px-2 py-1 rounded-full text-sm font-medium ${
-            value === "submitted"
-              ? "bg-green-300 text-green-800 font-semibold border-green-800"
-              : "bg-orange-300 text-orange-700 font-semibold border-orange-700"
-          }`}
+          className={`my-2 px-2 py-1 rounded-full text-sm font-medium ${value === "submitted"
+            ? "bg-green-300 text-green-800 font-semibold border-green-800"
+            : "bg-orange-300 text-orange-700 font-semibold border-orange-700"
+            }`}
         >
           {capitalizeFirstLetter(value)}
         </span>
@@ -91,17 +90,21 @@ const Evaluations = ({ type = "nist" }) => {
       key: "actions",
       label: "Actions",
       render: (_, row) => {
-        if (row.status !== "submitted") {
-          return (
-            <button
-              className="text-green-500 hover:text-green-600 bg-green-200 hover:bg-green-300 transition-all duration-300 p-2 rounded-full cursor-pointer"
-              onClick={() => navigate(`/questionnaire/nist/?evaluation-id=${row._id}`)}
-            >
-              <FaEdit />
-            </button>
-          );
-        }
-        return null;
+        return (<div className="flex gap-2">
+          {
+            row.status !== "submitted" ?
+              <button
+                className="text-indigo-500 hover:text-indigo-600 bg-indigo-200 hover:bg-indigo-300 transition-all duration-300 p-2 rounded-full cursor-pointer"
+                onClick={() => navigate(`/questionnaire/nist/?evaluation-id=${row._id}`)}
+              >
+                <FaEdit />
+              </button>
+              :
+               <button className="text-blue-500 hover:text-blue-600 bg-blue-200 hover:bg-blue-300 transition-all duration-300 p-2 rounded-full cursor-pointer" onClick={()=>navigate(`/analysis-preview/nist/?evaluation-id=${row._id}`)}><FaEye /></button>
+          }
+         
+        </div>)
+
       }
     }
   ];
@@ -117,6 +120,32 @@ const Evaluations = ({ type = "nist" }) => {
       key: "timeTaken",
       label: "Evaluation Time",
       render: (value) => new Date(value).toLocaleString()
+    },
+    {
+      key: "status",
+      label: "Status",
+      render: (value) => (
+        <span
+          className={`my-2 px-2 py-1 rounded-full text-sm font-medium ${value === "submitted"
+            ? "bg-green-300 text-green-800 font-semibold border-green-800"
+            : "bg-orange-300 text-orange-700 font-semibold border-orange-700"
+            }`}
+        >
+          {capitalizeFirstLetter(value)}
+        </span>
+      )
+    },
+    {
+      key: "actions",
+      label: "Actions",
+      render: (_, row) => {
+        return (<div className="flex gap-2">
+          
+               <button className="text-blue-500 hover:text-blue-600 bg-blue-200 hover:bg-blue-300 transition-all duration-300 p-2 rounded-full cursor-pointer" onClick={()=>navigate(`/analysis-preview/hipaa/?evaluation-id=${row._id}`)}><FaEye /></button>
+         
+        </div>)
+
+      }
     }
   ];
 

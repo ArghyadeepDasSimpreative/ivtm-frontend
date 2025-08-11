@@ -97,7 +97,7 @@ export default function SignUp() {
       <div className="w-full max-w-xl bg-slate-900 p-8 rounded-2xl border border-white/10 shadow-xl">
         {!success ? (
           <>
-            <h2 className="text-2xl font-bold mb-6 text-center">
+            <h2 className="text-xl font-bold mb-6 text-center">
               Create Your Free Account With Us
             </h2>
 
@@ -165,7 +165,7 @@ export default function SignUp() {
           <>
             {!otpSuccess ? (
               <>
-                <h2 className="text-xl font-semibold mb-4 text-center">
+                <h2 className="text-lg font-semibold mb-4 text-center">
                   An OTP has been sent to <span className="text-sky-400">{form.businessEmail}</span>
                 </h2>
 
@@ -218,11 +218,11 @@ export default function SignUp() {
               </>
             ) : (
               <div className="text-center flex flex-col gap-3">
-                <h2 className="text-2xl font-bold mb-4 text-green-400">🎉 Verification Successful</h2>
+                <h2 className="text-xl font-bold mb-4 text-green-400">🎉 Verification Successful</h2>
                 <p className="text-gray-300 mb-4">
                   Your account is now verified and ready to use.
                 </p>
-                <Link to="/roadmap-analysis" className="p-4 bg-blue-500 rounded-lg inline-block text-lg">Proceed to Roadmap Analysis</Link>
+                <Link to="/roadmap-analysis" className="p-4 bg-blue-500 rounded-lg inline-block text-md">Proceed to Roadmap Analysis</Link>
               </div>
             )}
           </>

@@ -98,8 +98,8 @@ export default function QuestionCard({
         animate={{ opacity: 1, x: 0 }}
         className="max-w-3xl mx-auto w-full"
       >
-        <h3 className="text-xl font-semibold mb-4">{current.category}</h3>
-        <p className="text-lg mb-6 bg-blue-100 text-blue-900 dark:bg-blue-300/10 dark:text-blue-300 px-4 py-3 rounded-md border-l-4 border-blue-400 font-medium shadow-sm">
+        <h3 className="text-lg font-semibold mb-4">{current.category}</h3>
+        <p className="text-md mb-6 bg-blue-100 text-blue-900 dark:bg-blue-300/10 dark:text-blue-300 px-4 py-3 rounded-md border-l-4 border-blue-400 font-medium shadow-sm">
           {current.questionText}
         </p>
         <div className="space-y-4 mb-8">
@@ -186,7 +186,7 @@ export default function QuestionCard({
           Default Option Notice
         </h2> */}
         <p className="text-slate-100 text-sm">
-         If nothing is selected, all questions of this sections will have a default option selected.
+         If nothing is selected, all questions of this section will have a default option selected.
         </p>
       </div>
     </div>

@@ -29,7 +29,7 @@ const HipaaAnswerTable = ({ data, target = null, category }) => {
 
   return (
     <div className="bg-slate-900 p-4 rounded-md shadow-md text-white w-full overflow-x-auto">
-      <h2 className="text-lg font-semibold mb-4">
+      <h2 className="text-md font-semibold mb-4">
         {target !== null ? `Summary of assessment - Target Comparison (Target: ${target})` : "Summary of assessment"}
       </h2>
       <table className="w-full table-auto border-collapse">

@@ -4,7 +4,7 @@ import { privateRequest } from "../../../api/config";
 import { useTargetMaturity } from "../../../context/TargetMaturityContext";
 
 import CustomSelect from "../../../components/Select";
-import MaturityLevelBarChart from "../../../components/MaturityLevelBarChart";
+import MaturityLadder from "../../../components/MaturityLadder";
 import RadarChartComponent from "../../../components/RadarChartComponent";
 import CategorisedBarChart from "../../../components/CategorisedBarChart";
 import MultiLineChart from "../../../components/MultiLineChart";
@@ -15,6 +15,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Button from "../../../components/Button";
 import { useNavigate } from "react-router-dom";
+import { IoDownloadOutline } from "react-icons/io5";
 
 const TargetComparisonNist = () => {
     const [loading, setLoading] = useState(true);
@@ -37,7 +38,7 @@ const TargetComparisonNist = () => {
 
 
     useEffect(function () {
-        if(!targetLevelName){
+        if (!targetLevelName) {
             showToast.info("Please select you target maturity level first.")
             navigate("/target-maturity/nist");
         }
@@ -151,11 +152,12 @@ const TargetComparisonNist = () => {
     return (
         <div className="bg-slate-950 min-h-screen text-white p-8">
             {loading ? (
-                <p className="text-blue-300 text-lg">Loading...</p>
+                <p className="text-blue-300 text-md">Loading...</p>
             ) : error ? (
                 <p className="text-red-500">{error}</p>
             ) : (
                 <div className="flex flex-col gap-10">
+                    <p className="w-full text-center text-2xl font-semibold text-blue-200">Assessment result based on <strong className="text-blue-400">NIST CSF</strong></p>
                     <div className="flex justify-between items-center">
                         <CustomSelect
                             label="Select Assessment"
@@ -165,28 +167,29 @@ const TargetComparisonNist = () => {
                             width="300px"
                         />
                         {evaluationStats && (
-                            <Button onClick={handleDownloadPdf}>Download PDF</Button>
+                            <Button onClick={handleDownloadPdf}>
+                                <IoDownloadOutline size={22} />
+                                Download PDF</Button>
                         )}
                     </div>
 
                     <div ref={exportRef}>
                         {evaluationStats && (
                             <div className="flex flex-col gap-10 mt-7">
-                                {/* Top Row */}
                                 <div className="flex flex-col lg:flex-row justify-between items-start gap-6">
                                     <div className="flex flex-col justify-between items-center w-auto gap-10">
                                         <div className="bg-slate-900 border border-blue-400 rounded-md w-[300px] h-[130px] flex flex-col justify-center items-center shadow-lg shadow-blue-700/30">
-                                            <h2 className="text-xl font-semibold text-blue-300">Overall Score</h2>
+                                            <h2 className="text-lg font-semibold text-blue-300">Overall Score</h2>
                                             <p className="text-4xl font-bold mt-4 text-blue-100">{evaluationStats.average}</p>
                                         </div>
                                         <div className="bg-slate-900 border border-orange-400 rounded-md w-[300px] h-[130px] flex flex-col justify-center items-center shadow-lg shadow-orange-700/30">
-                                            <h2 className="text-xl font-semibold text-blue-300">Target Score</h2>
+                                            <h2 className="text-lg font-semibold text-blue-300">Target Score</h2>
                                             <p className="text-4xl font-bold mt-4 text-orange-300">{targetLevelName + 1}</p>
                                         </div>
                                     </div>
 
-                                    <div className="flex gap-10 justify-end items-center">
-                                        <MaturityLevelBarChart
+                                    <div className="flex gap-10 justify-end items-start">
+                                        <MaturityLadder
                                             position={parseInt(evaluationStats.average)}
                                             target={parseInt(targetLevelName)}
                                             levels={[
@@ -201,7 +204,6 @@ const TargetComparisonNist = () => {
                                     </div>
                                 </div>
 
-                                {/* Graph Row */}
                                 <div className="flex flex-col lg:flex-row justify-between gap-6 mt-6">
                                     {functionWiseMarks?.length > 0 && (
                                         <div className="flex-1 bg-slate-900 p-4 rounded-md">
@@ -240,7 +242,6 @@ const TargetComparisonNist = () => {
                                     </div>
                                 </div>
 
-                                {/* Table */}
                                 <FunctionAnswerTable
                                     evaluationId={evaluationStats?.evaluationId}
                                     functionName={selectedFunctionName}

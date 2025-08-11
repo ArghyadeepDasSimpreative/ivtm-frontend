@@ -52,7 +52,7 @@ const QuestionCard = ({ questionData, onSelect }) => {
 
     return (
         <div className="rounded-2xl shadow-xl p-6 mb-6 border border-white/10 bg-slate-900 text-white">
-            <h3 className="text-lg font-semibold mb-3">{question}</h3>
+            <h3 className="text-md font-semibold mb-3">{question}</h3>
             {description && (
                 <p className="text-sm text-slate-400 mb-5 leading-relaxed">
                     {description}

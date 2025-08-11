@@ -33,7 +33,7 @@ const TargetMaturityPageHipaa = () => {
       setLoadingAssessments(true);
       try {
         const { data } = await privateRequest.get("/hipaa-evaluations/assessments");
-        const formatted = data.map((item) => ({
+        const formatted = data.data.map((item) => ({
           label: `📝 ${format(new Date(item.timeTaken), "dd MMM yyyy, HH:mm")}`,
           value: item._id,
         }));
@@ -104,7 +104,7 @@ const TargetMaturityPageHipaa = () => {
 
   return (
     <div className="p-6 max-w-6xl mx-auto bg-slate-900 min-h-screen text-white min-w-screen">
-      <h1 className="text-3xl font-bold mb-6 text-center text-blue-300">
+      <h1 className="text-2xl font-bold mb-6 text-center text-blue-300">
         🎯 Set Your HIPAA Target Maturity
       </h1>
 
@@ -142,9 +142,9 @@ const TargetMaturityPageHipaa = () => {
       {loadingAssessmentDetails ? (
         <div className="bg-slate-800 h-[60px] rounded animate-pulse mb-6"></div>
       ) : currentLevel !== null ? (
-        <div className="bg-slate-800 rounded p-4 mb-6 text-lg shadow text-center">
+        <div className="bg-slate-800 rounded p-4 mb-6 text-md shadow text-center">
           <span className="font-semibold text-slate-300">Current Maturity Level:</span>{" "}
-          <span className="text-green-400 font-bold text-xl">
+          <span className="text-green-400 font-bold text-lg">
             {currentLevel} - {currentLevel + 1}
           </span>
         </div>
@@ -179,7 +179,7 @@ const TargetMaturityPageHipaa = () => {
               key={category}
               className="bg-slate-800 rounded-lg p-5 flex flex-col items-center text-center border border-slate-700 hover:shadow-xl transition duration-200"
             >
-              <h2 className="text-xl font-semibold text-slate-200 mb-1">{category}</h2>
+              <h2 className="text-lg font-semibold text-slate-200 mb-1">{category}</h2>
               {
                 averages.length > 0 && <p className="text-sm text-slate-400">
                   Avg Score: {getAverageByCategory(category)}

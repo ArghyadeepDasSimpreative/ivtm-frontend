@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { privateRequest } from "../../../api/config";
 
 import CustomSelect from "../../../components/Select";
-import MaturityLevelBarChart from "../../../components/MaturityLevelBarChart";
+import MaturityLadder from "../../../components/MaturityLadder";
 import RadarChartComponent from "../../../components/RadarChartComponent";
 import CategorisedBarChart from "../../../components/CategorisedBarChart";
 import MultiLineChart from "../../../components/MultiLineChart";
@@ -125,12 +125,12 @@ const NistAnalysisPreview = () => {
     return (
         <div className="bg-slate-950 min-h-screen text-white p-8">
             {loading ? (
-                <p className="text-blue-300 text-lg">Loading...</p>
+                <p className="text-blue-300 text-md">Loading...</p>
             ) : error ? (
                 <p className="text-red-500">{error}</p>
             ) : (
                 <div className="flex flex-col gap-10">
-                    <p className="w-full text-center text-3xl font-semibold text-blue-200">Assessment result based on <strong className="text-blue-400">NIST CSF</strong></p>
+                    <p className="w-full text-center text-2xl font-semibold text-blue-200">Assessment result based on <strong className="text-blue-400">NIST CSF</strong></p>
                     {/* Dropdown */}
                     <div className="flex justify-between items-center">
                         <CustomSelect
@@ -160,13 +160,13 @@ const NistAnalysisPreview = () => {
                                 <div className="flex flex-col lg:flex-row justify-between items-start gap-6">
 
                                     <div className="bg-slate-900 border border-blue-400 rounded-md w-[300px] h-[130px] flex flex-col justify-center items-center shadow-lg shadow-blue-700/30">
-                                        <h2 className="text-xl font-semibold text-blue-300">Overall Score</h2>
+                                        <h2 className="text-lg font-semibold text-blue-300">Overall Score</h2>
                                         <p className="text-4xl font-bold mt-4 text-blue-100">{evaluationStats.average}</p>
                                     </div>
 
                                     {/* Maturity Bar and Legend */}
-                                    <div className="flex gap-10 justify-end items-center">
-                                        <MaturityLevelBarChart position={parseInt(evaluationStats.average)}
+                                    <div className="flex gap-10 justify-end items-start">
+                                        <MaturityLadder position={parseInt(evaluationStats.average)}
                                             levels={[
                                                 { label: "Physical" },
                                                 { label: "Administrative" },
