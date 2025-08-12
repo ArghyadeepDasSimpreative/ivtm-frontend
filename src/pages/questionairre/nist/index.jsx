@@ -177,7 +177,7 @@ const handleSubmit = async () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-950 text-white flex">
+    <div className="min-h-screen w-full bg-[#0f172a] text-white flex">
       <SidebarInfo
         current={currentFunction}
         index={currentFunctionIndex}

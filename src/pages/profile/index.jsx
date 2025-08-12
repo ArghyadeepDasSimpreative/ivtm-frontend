@@ -7,6 +7,7 @@ import { FiMenu, FiX } from "react-icons/fi";
 import defaultUserImage from "../../assets/default-user-image.png"
 import { FaEdit } from "react-icons/fa";
 import { useRef } from "react";
+import { showToast } from "../../lib/toast";
 
 const ProfilePage = () => {
     const [userDetails, setUserDetails] = useState(null);
@@ -14,6 +15,10 @@ const ProfilePage = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [activeTab, setActiveTab] = useState("profile");
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [imageUploading, setImageUploading] = useState(false);
+    
+    // File input ref for triggering file selection
+    const fileInputRef = useRef(null);
 
     const buttonsData = [{
         label: "Edit Profile",
@@ -59,8 +64,84 @@ const ProfilePage = () => {
         }
     };
 
+    // Handle image upload
+    const handleImageUpload = async (event) => {
+        const file = event.target.files[0];
+        
+        if (!file) return;
+
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+            showToast.error("Please select a valid image file (JPEG, PNG, WebP)");
+            return;
+        }
+
+        // Validate file size (max 5MB)
+        const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+        if (file.size > maxSize) {
+            showToast.error("Image size must be less than 5MB");
+            return;
+        }
+
+        setImageUploading(true);
+
+        try {
+            // Create FormData for file upload
+            const formData = new FormData();
+            formData.append('image', file);
+
+            // Upload image to server
+            const response = await privateRequest.put("/organisation-user/profile-image", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            // Update user details with new image URL
+            setUserDetails(prev => ({
+                ...prev,
+                profileImageUrl: response.data.profileImageUrl || response.data.imageUrl
+            }));
+
+            showToast.success("Profile image updated successfully!");
+
+        } catch (err) {
+            console.error("Image upload error:", err);
+            
+            if (err?.response?.status === 413) {
+                showToast.error("Image file is too large. Please choose a smaller image.");
+            } else if (err?.response?.status === 400) {
+                showToast.error("Invalid image format. Please select a valid image file.");
+            } else {
+                showToast.error(err?.response?.data?.message || "Failed to upload image. Please try again.");
+            }
+        } finally {
+            setImageUploading(false);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        }
+    };
+
+    
+    const triggerImageUpload = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
+
     return (
         <div className="min-h-screen">
+            {/* Hidden file input */}
+            <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/jpg,image/webp"
+                onChange={handleImageUpload}
+                className="hidden"
+            />
+
             {/* Mobile Header with Menu Button */}
             <div className="lg:hidden bg-white shadow-sm border-b border-gray-200 p-4 sticky top-0 z-50">
                 <div className="flex items-center justify-between">
@@ -125,17 +206,34 @@ const ProfilePage = () => {
                                     className="border border-slate-300 rounded-full object-cover w-full h-full"
                                     alt="Profile"
                                 />
+                                
+                                {/* Edit button with loading state */}
                                 <button
-                                    className="absolute -bottom-3 right-3 bg-slate-200 hover:bg-slate-300 transition-all duration-300 border border-gray-400 rounded-full p-2 shadow cursor-pointer"
+                                    onClick={triggerImageUpload}
+                                    disabled={imageUploading}
+                                    className={`
+                                        absolute -bottom-3 right-3 border border-gray-400 rounded-full p-2 shadow 
+                                        transition-all duration-300
+                                        ${imageUploading 
+                                            ? 'bg-gray-300 cursor-not-allowed opacity-75' 
+                                            : 'bg-slate-200 hover:bg-slate-300 cursor-pointer'
+                                        }
+                                    `}
+                                    title={imageUploading ? "Uploading..." : "Change profile picture"}
                                 >
-                                    <FaEdit />
+                                    {imageUploading ? (
+                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
+                                    ) : (
+                                        <FaEdit />
+                                    )}
                                 </button>
                             </div>
 
                             <h2 className="text-md lg:text-lg font-semibold mb-3 lg:mb-4 text-center break-words mt-4">
                                 {userDetails.username}
                             </h2>
-                            <p>{userDetails.email}</p>
+                            <p className="text-sm text-gray-600 mb-4">{userDetails.businessEmail}</p>
+                            
                             <div className="flex flex-col gap-2 lg:gap-3 w-full">
                                 {buttonsData.map((button, index) => (
                                     <button

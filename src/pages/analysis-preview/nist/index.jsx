@@ -10,12 +10,13 @@ import MultiLineChart from "../../../components/MultiLineChart";
 import MaturityLevelLegendNist from "../../../components/MaturityLevelLegendNist";
 import FunctionAnswerTable from "../../../components/FunctionAnswerTable";
 import { showToast } from "../../../lib/toast";
-import html2canvas from "html2canvas";
+import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 import Button from "../../../components/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BiGitCompare } from "react-icons/bi";
 import { IoDownloadOutline } from "react-icons/io5";
+import html2pdf from "html2pdf.js";
 
 const NistAnalysisPreview = () => {
     const location = useLocation();
@@ -43,9 +44,9 @@ const NistAnalysisPreview = () => {
                     }));
                     setAssessmentsList(formatted);
                     console.log("selected id is ", selectedId)
-                    if(selectedId) {
+                    if (selectedId) {
                         console.log("entering")
-                           handleAssessmentChange({value: selectedId})
+                        handleAssessmentChange({ value: selectedId })
                     }
                 } else {
                     throw new Error("Failed to fetch assessments.");
@@ -65,19 +66,46 @@ const NistAnalysisPreview = () => {
         setSelectedFunctionName(param);
     }
 
+    const handleDownloadPdf = async () => {
+        try {
+            document.body.classList.add("exporting");
+            showToast.info("PDF generation started...");
+
+            const canvas = await html2canvas(exportRef.current, {
+                useCORS: true,
+                scale: 2,
+                backgroundColor: "#0f172a",
+            });
+
+            const imgData = canvas.toDataURL("image/png");
+            const pdf = new jsPDF("p", "mm", "a4");
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+            pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+            pdf.save("evaluation_report.pdf");
+
+            showToast.success("PDF downloaded successfully!");
+        } catch (error) {
+            console.error("PDF download error:", error);
+            showToast.error("PDF download failed!");
+        } finally {
+            document.body.classList.remove("exporting");
+        }
+    };
+
     const handleAssessmentChange = async (option) => {
-        console.log("option is ", option)
         const id = option?.value;
         setSelectedId(id);
         setEvaluationStats(null);
         setFunctionWiseMarks([]);
-        setSelectedFunctionName(""); // Reset on new selection
+        setSelectedFunctionName("");
 
         if (!id) return;
-        
+
 
         try {
-            console.log("entring try and with ", id)
             const [statsRes, functionMarksRes] = await Promise.all([
                 privateRequest.get(`/nist-evaluation/stats/${id}`),
                 privateRequest.get(`/nist-evaluation/marks/function/${id}`),
@@ -93,45 +121,21 @@ const NistAnalysisPreview = () => {
         }
     };
 
-    const handleDownloadPdf = async () => {
-        try {
-            showToast.info("PDF generation started...");
-
-            const canvas = await html2canvas(exportRef.current, {
-                useCORS: true,
-                scale: 2,
-                backgroundColor: "#0f172a", // Same as bg-slate-950
-            });
 
 
-            const imgData = canvas.toDataURL("image/png");
-            const pdf = new jsPDF("p", "mm", "a4");
-
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-            pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-            pdf.save("evaluation_report.pdf");
-
-            showToast.success("PDF downloaded successfully!");
-        } catch (error) {
-            console.error("PDF download error:", error);
-            showToast.error("PDF download failed!");
-        }
-    };
 
     const navigate = useNavigate();
 
     return (
-        <div className="bg-slate-950 min-h-screen text-white p-8">
+        <div className="bg-[#0f172a] min-h-screen text-white p-8">
             {loading ? (
                 <p className="text-blue-300 text-md">Loading...</p>
             ) : error ? (
                 <p className="text-red-500">{error}</p>
             ) : (
-                <div className="flex flex-col gap-10">
+                <div className="flex flex-col gap-10" ref={exportRef}>
                     <p className="w-full text-center text-2xl font-semibold text-blue-200">Assessment result based on <strong className="text-blue-400">NIST CSF</strong></p>
-                    {/* Dropdown */}
+                    
                     <div className="flex justify-between items-center">
                         <CustomSelect
                             label="Select Assessment"
@@ -141,7 +145,7 @@ const NistAnalysisPreview = () => {
                             width="300px"
                         />
                         {evaluationStats && <div className="flex gap-3 items-between items-center">
-                            <Button onClick={() => navigate("/target-maturity/nist")}>
+                            <Button onClick={() => navigate("/roadmap-analysis/target-maturity/nist")}>
                                 <BiGitCompare size={22} />
                                 <span>Compare</span></Button>
                             <Button onClick={handleDownloadPdf}>
@@ -153,9 +157,9 @@ const NistAnalysisPreview = () => {
                         }
                     </div>
 
-                    <div ref={exportRef}>
+                    <div>
                         {evaluationStats && (
-                            <div className="flex flex-col gap-10 mt-7">
+                            <div className="flex flex-col gap-10 mt-7 p-3">
 
                                 <div className="flex flex-col lg:flex-row justify-between items-start gap-6">
 
@@ -190,16 +194,16 @@ const NistAnalysisPreview = () => {
                                     <div className="flex-1 bg-slate-900 p-4 rounded-md">
                                         <RadarChartComponent
                                             dataSets={
-                                                [{ name: "Function wise average", data: functionWiseMarks }]
+                                                [{ name: "Score", data: functionWiseMarks }]
                                             }
                                             label="Function-wise Maturity Radar"
-                                            notation="Each axis represents a function's average score (Max: 5)"
+                                        // notation="Each axis represents a function's average score (Max: 5)"
                                         />
                                     </div>
 
                                     <div className="flex-1 bg-slate-900 p-4 rounded-md">
                                         <CategorisedBarChart
-                                            datasets={[{ name: "", data: functionWiseMarks, color: "#22d3ee" }]}
+                                            datasets={[{ name: "Score", data: functionWiseMarks, color: "#22d3ee" }]}
                                             title="Function-Wise Scores"
                                             note="Average scores per function (0 to 5)"
                                             handleClick={handleBarClick}

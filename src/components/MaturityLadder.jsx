@@ -14,7 +14,7 @@ export default function MaturityLadder({ position = 0, target = null, levels = [
   const maxLevels = Math.max(levels.length, 1);
 
   return (
-    <div className="w-full h-full flex flex-col items-center p-6 bg-slate-900 rounded-[16px] m-0 py-10">
+    <div className="w-full h-full flex flex-col items-center px-6 pb-5 pt-10 bg-slate-900 rounded-[16px] m-0 border border-blue-400">
       {/* Bars and markers */}
       <div className="flex items-end justify-center gap-3">
         {levels.map((level, index) => {

@@ -1,27 +1,38 @@
-import { Routes, Route } from 'react-router-dom'
-import { Toaster } from 'react-hot-toast'
-import PublicRoute from './routes'
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
+import PublicRoute from './routes';
 
-import HomePage from './pages/home'
-import SignUp from './pages/auth/SignUp'
-import Signin from './pages/auth/SignIn'
-import RoadmapAnalysis from './pages/roadmap-analysis'
-import Questionairre from './pages/questionairre/nist'
-import NistAnalysisPreview from './pages/analysis-preview/nist'
-import TargetMaturityPageNist from './pages/target-maturity/nist'
-import TargetComparissonNist from './pages/target-comparison/nist'
-import HipaaQuestionsPage from './pages/questionairre/hipaa'
-import HipaaAnalysisPreview from './pages/analysis-preview/hipaa'
-import TargetMaturityPageHipaa from './pages/target-maturity/hipaa'
-import TargetComparisonHipaa from './pages/target-comparison/hipaa'
-import VulnerabilityManagementLayout from './layout/VulnerabilityManagementLayout'
-import VulnerabilityDashboard from './pages/dashboard'
-import ProfilePage from './pages/profile'
-import EvaluationsPage from './pages/evaluations'
-import NotFoundPage from './pages/not-found'
-import QuestionsFlow from './pages/home/QuestionsFlow'
+import HomePage from './pages/home';
+import SignUp from './pages/auth/SignUp';
+import Signin from './pages/auth/SignIn';
+import RoadmapAnalysis from './pages/roadmap-analysis';
+import Questionairre from './pages/questionairre/nist';
+import NistAnalysisPreview from './pages/analysis-preview/nist';
+import TargetMaturityPageNist from './pages/target-maturity/nist';
+import TargetComparissonNist from './pages/target-comparison/nist';
+import HipaaQuestionsPage from './pages/questionairre/hipaa';
+import HipaaAnalysisPreview from './pages/analysis-preview/hipaa';
+import TargetMaturityPageHipaa from './pages/target-maturity/hipaa';
+import TargetComparisonHipaa from './pages/target-comparison/hipaa';
+import VulnerabilityDashboard from './pages/dashboard';
+import ProfilePage from './pages/profile';
+import EvaluationsPage from './pages/evaluations';
+import NotFoundPage from './pages/not-found';
+import QuestionsFlow from './pages/home/QuestionsFlow';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import { scrollToTop } from './lib/scroll';
 
-function App() {
+import VulnerabilityManagementLayout from './layout/VulnerabilityManagementLayout';
+import RoadmapAnalysisLayout from './layout/RoadmapAnalysisLayout';
+
+function AppRoutes() {
+  const location = useLocation();
+
+  useEffect(() => {
+    scrollToTop();
+  }, [location.pathname]);
+
   return (
     <>
       <Toaster
@@ -33,8 +44,8 @@ function App() {
           },
         }}
       />
+
       <Routes>
-      
         <Route
           path="/"
           element={
@@ -59,17 +70,21 @@ function App() {
             </PublicRoute>
           }
         />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        <Route path="/roadmap-analysis" element={<RoadmapAnalysis />} />
-        <Route path="/evaluations" element={<EvaluationsPage />} />
-        <Route path="/questionnaire/nist" element={<Questionairre />} />
-        <Route path="/questionnaire/hipaa" element={<HipaaQuestionsPage />} />
-        <Route path="/analysis-preview/nist" element={<NistAnalysisPreview />} />
-        <Route path="/analysis-preview/hipaa" element={<HipaaAnalysisPreview />} />
-        <Route path="/target-maturity/nist" element={<TargetMaturityPageNist />} />
-        <Route path="/target-maturity/hipaa" element={<TargetMaturityPageHipaa />} />
-        <Route path="/target-comparison/nist" element={<TargetComparissonNist />} />
-        <Route path="/target-comparison/hipaa" element={<TargetComparisonHipaa />} />
+        <Route path="/roadmap-analysis" element={<RoadmapAnalysisLayout />}>
+          <Route index element={<RoadmapAnalysis />} />
+          <Route path="evaluations" element={<EvaluationsPage />} />
+          <Route path="questionnaire/nist" element={<Questionairre />} />
+          <Route path="questionnaire/hipaa" element={<HipaaQuestionsPage />} />
+          <Route path="analysis-preview/nist" element={<NistAnalysisPreview />} />
+          <Route path="analysis-preview/hipaa" element={<HipaaAnalysisPreview />} />
+          <Route path="target-maturity/nist" element={<TargetMaturityPageNist />} />
+          <Route path="target-maturity/hipaa" element={<TargetMaturityPageHipaa />} />
+          <Route path="target-comparison/nist" element={<TargetComparissonNist />} />
+          <Route path="target-comparison/hipaa" element={<TargetComparisonHipaa />} />
+        </Route>
+
         <Route path="/initial-questions" element={<QuestionsFlow />} />
 
         <Route path="/vulnerability-management" element={<VulnerabilityManagementLayout />}>
@@ -83,4 +98,4 @@ function App() {
   );
 }
 
-export default App;
+export default AppRoutes;

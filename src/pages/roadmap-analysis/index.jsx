@@ -61,7 +61,7 @@ export default function RoadmapAnalysis() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white px-6 py-10 flex flex-col items-center">
+    <div className="min-h-screen bg-[#0f172a] text-white px-6 py-10 flex flex-col items-center">
       {chosenOption !== "Maturity Assessment and Roadmap Analysis" || !proceeded ? (
         <>
           {/* Welcome Section */}

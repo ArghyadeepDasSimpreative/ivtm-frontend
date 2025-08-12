@@ -109,7 +109,7 @@ const TargetMaturityPageNist = () => {
     );
 
     function navigateToComparisonPage() {
-          navigate("/target-comparison/nist")
+          navigate("/roadmap-analysis/target-comparison/nist")
     }
 
     return (

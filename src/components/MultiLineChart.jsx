@@ -12,7 +12,7 @@ import {
 const lineColors = ['#3b82f6', '#f97316']; // Blue and Orange
 
 const MultiLineChart = ({ dataSets, title = "Function-wise Score Trend" }) => {
-  console.log("datasets ", dataSets);
+  
   if (!Array.isArray(dataSets) || dataSets.length === 0) {
     return <div>No data available</div>;
   }
@@ -39,6 +39,7 @@ const MultiLineChart = ({ dataSets, title = "Function-wise Score Trend" }) => {
         marginBottom: '30px',
         padding: '16px'
       }}
+      className='border border-slate-500'
     >
       <h3 style={{ marginBottom: '20px', color: '#f1f5f9', fontSize: '18px', fontWeight: '600' }}>
         {title}

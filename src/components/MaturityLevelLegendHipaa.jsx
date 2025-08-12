@@ -25,7 +25,7 @@ const hipaaLevels = [
 
 export default function MaturityLevelLegendHipaa() {
   return (
-    <div className="bg-slate-900 rounded-[15px] p-6 w-full h-full">
+    <div className="bg-slate-900 rounded-[15px] p-6 w-full h-full border border-blue-400">
       <div className="flex flex-col gap-6">
         {hipaaLevels.map((level, idx) => (
           <div key={idx} className="flex items-start gap-4">

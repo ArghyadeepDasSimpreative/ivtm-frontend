@@ -33,7 +33,7 @@ const RadarChartComponent = ({ dataSets = [], maxScore = 5, label = "Function-wi
   });
 
   return (
-    <div className="bg-slate-900 text-white p-4 rounded-md w-full max-w-3xl h-[500px]">
+    <div className="bg-slate-900 text-white p-4 rounded-md w-full max-w-3xl h-[500px] border border-slate-500">
       <h3 className="text-center text-lg font-semibold mb-4">{label}</h3>
       <ResponsiveContainer width="100%" height={400}>
         <RadarChart cx="50%" cy="50%" outerRadius="80%" data={mergedData}>

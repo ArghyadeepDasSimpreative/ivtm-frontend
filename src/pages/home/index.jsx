@@ -29,7 +29,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-950 flex flex-col justify-center items-center px-4 text-center transition-all duration-500 relative">
+    <div className="min-h-screen w-full bg-[#0f172a] flex flex-col justify-center items-center px-4 text-center transition-all duration-500 relative">
       <div className='absolute top-3 right-3 flex gap-4'>
         <Link className='text-blue-400 p-2' to="/signin">Sign In</Link>
         <Link className='text-white bg-blue-600 p-2 px-5 rounded-lg' to="/signup">Sign Up</Link>

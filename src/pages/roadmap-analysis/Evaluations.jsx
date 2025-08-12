@@ -95,12 +95,12 @@ const Evaluations = ({ type = "nist" }) => {
             row.status !== "submitted" ?
               <button
                 className="text-indigo-500 hover:text-indigo-600 bg-indigo-200 hover:bg-indigo-300 transition-all duration-300 p-2 rounded-full cursor-pointer"
-                onClick={() => navigate(`/questionnaire/nist/?evaluation-id=${row._id}`)}
+                onClick={() => navigate(`/roadmap-analysis/questionnaire/nist/?evaluation-id=${row._id}`)}
               >
                 <FaEdit />
               </button>
               :
-               <button className="text-blue-500 hover:text-blue-600 bg-blue-200 hover:bg-blue-300 transition-all duration-300 p-2 rounded-full cursor-pointer" onClick={()=>navigate(`/analysis-preview/nist/?evaluation-id=${row._id}`)}><FaEye /></button>
+               <button className="text-blue-500 hover:text-blue-600 bg-blue-200 hover:bg-blue-300 transition-all duration-300 p-2 rounded-full cursor-pointer" onClick={()=>navigate(`/roadmap-analysis/analysis-preview/nist/?evaluation-id=${row._id}`)}><FaEye /></button>
           }
          
         </div>)
@@ -141,7 +141,7 @@ const Evaluations = ({ type = "nist" }) => {
       render: (_, row) => {
         return (<div className="flex gap-2">
           
-               <button className="text-blue-500 hover:text-blue-600 bg-blue-200 hover:bg-blue-300 transition-all duration-300 p-2 rounded-full cursor-pointer" onClick={()=>navigate(`/analysis-preview/hipaa/?evaluation-id=${row._id}`)}><FaEye /></button>
+               <button className="text-blue-500 hover:text-blue-600 bg-blue-200 hover:bg-blue-300 transition-all duration-300 p-2 rounded-full cursor-pointer" onClick={()=>navigate(`/roadmap-analysis/analysis-preview/hipaa/?evaluation-id=${row._id}`)}><FaEye /></button>
          
         </div>)
 
@@ -153,12 +153,12 @@ const Evaluations = ({ type = "nist" }) => {
   const config = type === "nist" ? nistConfig : hipaaConfig;
 
   return (
-    <div className="bg-slate-950 py-10 px-6 w-screen min-h-screen text-white">
+    <div className="bg-[#0f172a] py-10 px-6 w-screen min-h-screen text-white">
       <div className="flex flex-row w-full justify-end mb-6">
         <Button
           variant="tertiary"
           onClick={() =>
-            navigate(type === "nist" ? "/questionnaire/nist" : "/questionnaire/hipaa")
+            navigate(type === "nist" ? "/roadmap-analysis/questionnaire/nist" : "/questionnaire/hipaa")
           }
         >
           <span>Launch New Assessment</span>

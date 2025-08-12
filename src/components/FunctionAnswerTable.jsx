@@ -53,14 +53,11 @@ const FunctionAnswerTable = ({ evaluationId, functionName, target = null }) => {
       };
     });
 
-    // Create a worksheet
     const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
 
-    // Create a workbook and append the sheet
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Assessment Summary");
 
-    // Download the Excel file
     XLSX.writeFile(workbook, `assessment_summary_${evaluationId}.xlsx`);
   };
 
@@ -105,8 +102,6 @@ const FunctionAnswerTable = ({ evaluationId, functionName, target = null }) => {
               target !== null && Array.isArray(q.options)
                 ? q.options[target - 1] || q.options[q.options.length - 1]
                 : null;
-
-                console.log("taregt assessingggggg", q.answer, " and mrk is ", q.marks )
 
             return (
               <tr

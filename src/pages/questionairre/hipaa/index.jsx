@@ -62,7 +62,7 @@ export default function HipaaQuestionsPage() {
       </div>
 
       {/* Right Section */}
-      <div className="w-full lg:w-2/3 px-4 py-8 lg:px-12 bg-slate-950 shadow-lg relative">
+      <div className="w-full lg:w-2/3 px-4 py-8 lg:px-12 bg-[#0f172a] shadow-lg relative">
         <div className="max-w-4xl mx-auto">
           {isSubmitted ? (
             <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
@@ -71,7 +71,7 @@ export default function HipaaQuestionsPage() {
                 <p className="mb-6 text-gray-300">
                   Your answers have been recorded. You can now view your analysis.
                 </p>
-                <Link to="/analysis-preview/hipaa">
+                <Link to="/roadmap-analysis/analysis-preview/hipaa">
                   <Button>View Analysis</Button>
                 </Link>
               </div>

@@ -85,7 +85,7 @@ export default function SignUp() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-slate-950 text-white flex flex-col md:flex-row items-center justify-center px-6 py-10">
+    <div className="min-h-screen w-full bg-[#0f172a] text-white flex flex-col md:flex-row items-center justify-center px-6 py-10">
       <div className="hidden md:block w-full max-w-md mr-10">
         <img
           src={imageOne}

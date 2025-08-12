@@ -8,7 +8,7 @@ import RadarChartComponent from "../../../components/RadarChartComponent";
 import CategorisedBarChart from "../../../components/CategorisedBarChart";
 import MultiLineChart from "../../../components/MultiLineChart";
 import { showToast } from "../../../lib/toast";
-import html2canvas from "html2canvas";
+import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 import Button from "../../../components/Button";
 import HipaaAnswerTable from "../../../components/HipaaAnswerTable";
@@ -25,7 +25,6 @@ const TargetComparisonHipaa = () => {
     const [evaluationStats, setEvaluationStats] = useState(null);
     const [categoryWiseScore, setCategoryWiseScore] = useState([]);
     const [categoryWiseTargetScore, setCategoryWiseTargetScore] = useState([]);
-    //   const [maturityDistribution, setMaturityDistribution] = useState([]);
     const [selectedCategoryName, setSelectedCategoryName] = useState("");
     const [answersGiven, setAnswersGiven] = useState([]);
 
@@ -37,14 +36,13 @@ const TargetComparisonHipaa = () => {
         hipaaTargetScore
     } = useTargetMaturity();
 
-    useEffect(function() {
-    console.log("hipaa target assessment is ", hipaaTargetScore)
-    console.log("hipaa target assessment changed ", hipaaTargetScore)
-    if(!hipaaTargetScore){
-      showToast.info("Please select you target maturity level first.")
-      navigate("/target-maturity/hipaa")
-    }
-  }, [])
+    useEffect(function () {
+       
+        if (!hipaaTargetScore) {
+            showToast.info("Please select you target maturity level first.")
+            navigate("/roadmap-analysis/target-maturity/hipaa")
+        }
+    }, [])
 
     useEffect(() => {
         const fetchAssessments = async () => {
@@ -124,6 +122,7 @@ const TargetComparisonHipaa = () => {
 
     const handleDownloadPdf = async () => {
         try {
+            document.body.classList.add("exporting");
             showToast.info("PDF generation started...");
 
             const canvas = await html2canvas(exportRef.current, {
@@ -139,25 +138,27 @@ const TargetComparisonHipaa = () => {
             const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
             pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-            pdf.save("hipaa_evaluation_report.pdf");
+            pdf.save("evaluation_report.pdf");
 
             showToast.success("PDF downloaded successfully!");
         } catch (error) {
             console.error("PDF download error:", error);
             showToast.error("PDF download failed!");
+        } finally {
+            document.body.classList.remove("exporting");
         }
     };
 
     return (
-        <div className="bg-slate-950 min-h-screen text-white p-8">
+        <div className="bg-[#0f172a] min-h-screen text-white p-8">
             {loading ? (
                 <p className="text-blue-300 text-md">Loading...</p>
             ) : error ? (
                 <p className="text-red-500">{error}</p>
             ) : (
-                <div className="flex flex-col gap-10">
+                <div className="flex flex-col gap-10"  ref={exportRef}>
                     <p className="w-full text-center text-2xl font-semibold text-blue-200">Assessment result based on <strong className="text-blue-400">HIPAA</strong> compliance</p>
-                    {/* Dropdown */}
+                    
                     <div className="flex justify-between items-center">
                         <CustomSelect
                             label="Select HIPAA Assessment"
@@ -166,19 +167,22 @@ const TargetComparisonHipaa = () => {
                             onSelect={handleAssessmentChange}
                             width="300px"
                         />
-                        {evaluationStats && (
+                        {evaluationStats && (<div className="flex justify-between gap-3 items-center">
+                            <Button variant="secondary" onClick={()=>navigate("/roadmap-analysis")}>Back to Home</Button>
                             <Button onClick={handleDownloadPdf}>
-                                 <IoDownloadOutline size={22} />
+                                <IoDownloadOutline size={22} />
                                 Download PDF</Button>
+                            
+                        </div>
                         )}
                     </div>
 
-                    <div ref={exportRef}>
+                    <div>
                         {evaluationStats && (
-                            <div className="flex flex-col gap-10 mt-7">
-                                {/* Top Row */}
+                            <div className="flex flex-col gap-10 mt-7 p-3">
+                                
                                 <div className="flex flex-col lg:flex-row justify-between items-start gap-6">
-                                    {/* Overall Score */}
+                                    
                                     <div className="flex flex-col justify-between items-center w-auto gap-10">
                                         <div className="bg-slate-900 border border-blue-400 rounded-md w-[300px] h-[130px] flex flex-col justify-center items-center shadow-lg shadow-blue-700/30">
                                             <h2 className="text-lg font-semibold text-blue-300">Overall Score</h2>
@@ -190,7 +194,6 @@ const TargetComparisonHipaa = () => {
                                         </div>
                                     </div>
 
-                                    {/* Maturity Chart */}
                                     <div className="flex gap-10 justify-end items-start">
                                         <MaturityLadder position={parseInt(evaluationStats.average)}
                                             levels={[
@@ -206,7 +209,6 @@ const TargetComparisonHipaa = () => {
                                     </div>
                                 </div>
 
-                                {/* Chart Row */}
                                 <div className="flex flex-col lg:flex-row justify-between gap-6 mt-6">
                                     {categoryWiseScore.length > 0 && (
                                         <div className="flex-1 bg-slate-900 p-4 rounded-md">
@@ -246,7 +248,6 @@ const TargetComparisonHipaa = () => {
                                     </div>
                                 </div>
 
-                                {/* Table */}
                                 <HipaaAnswerTable
                                     data={answersGiven}
                                     category={selectedCategoryName}

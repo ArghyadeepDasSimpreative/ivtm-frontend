@@ -86,7 +86,7 @@ const EvaluationsPage = () => {
           return (
             <button
               className="text-green-500 hover:text-green-600 bg-green-200 hover:bg-green-300 transition-all duration-300 p-2 rounded-full cursor-pointer"
-              onClick={() => navigate(`/questionnaire/nist/?evaluation-id=${row._id}`)}
+              onClick={() => navigate(`/roadmap-analysis/questionnaire/nist/?evaluation-id=${row._id}`)}
             >
               <FaEdit />
             </button>
@@ -98,10 +98,10 @@ const EvaluationsPage = () => {
   ];
 
   return (
-    <div className="bg-slate-950 py-10 px-6 w-screen min-h-screen text-white">
+    <div className="bg-[#0f172a] py-10 px-6 w-screen min-h-screen text-white">
       <div className="flex flex-row w-full justify-between mb-6">
         <h1 className="text-xl font-bold">Evaluations</h1>
-        <Button variant="tertiary" onClick={() => navigate("/questionnaire/nist")}>
+        <Button variant="tertiary" onClick={() => navigate("/roadmap-analysis/questionnaire/nist")}>
           <span>Launch New Assessment</span>
         </Button>
        

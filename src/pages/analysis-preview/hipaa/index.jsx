@@ -10,7 +10,7 @@ import MultiLineChart from "../../../components/MultiLineChart";
 // import MaturityLevelLegendNist from "../../../components/MaturityLevelLegendNist";
 // import FunctionAnswerTable from "../../../components/FunctionAnswerTable";
 import { showToast } from "../../../lib/toast";
-import html2canvas from "html2canvas";
+import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 import Button from "../../../components/Button";
 import HipaaAnswerTable from "../../../components/HipaaAnswerTable";
@@ -108,8 +108,9 @@ const HipaaAnalysisPreview = () => {
         }
     };
 
-    const handleDownloadPdf = async () => {
+   const handleDownloadPdf = async () => {
         try {
+            document.body.classList.add("exporting");
             showToast.info("PDF generation started...");
 
             const canvas = await html2canvas(exportRef.current, {
@@ -125,25 +126,27 @@ const HipaaAnalysisPreview = () => {
             const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
             pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-            pdf.save("hipaa_evaluation_report.pdf");
+            pdf.save("evaluation_report.pdf");
 
             showToast.success("PDF downloaded successfully!");
         } catch (error) {
             console.error("PDF download error:", error);
             showToast.error("PDF download failed!");
+        } finally {
+            document.body.classList.remove("exporting");
         }
     };
 
     const navigate = useNavigate();
 
     return (
-        <div className="bg-slate-950 min-h-screen text-white p-8">
+        <div className="bg-[#0f172a] min-h-screen text-white p-8">
             {loading ? (
                 <p className="text-blue-300 text-md">Loading...</p>
             ) : error ? (
                 <p className="text-red-500">{error}</p>
             ) : (
-                <div className="flex flex-col gap-10">
+                <div className="flex flex-col gap-10"  ref={exportRef}>
                     <p className="w-full text-center text-2xl font-semibold text-blue-200">Assessment result based on <strong className="text-blue-400">HIPAA</strong> compliance</p>
                     {/* Dropdown */}
                     <div className="flex justify-between items-center">
@@ -155,7 +158,7 @@ const HipaaAnalysisPreview = () => {
                             width="300px"
                         />
                         {evaluationStats && <div className="flex gap-3 items-between items-center">
-                            <Button onClick={() => navigate("/target-maturity/hipaa")}>
+                            <Button onClick={() => navigate("/roadmap-analysis/target-maturity/hipaa")}>
                                 <BiGitCompare size={22} />
                                 <span>Compare</span></Button>
                             <Button onClick={handleDownloadPdf}>
@@ -167,9 +170,9 @@ const HipaaAnalysisPreview = () => {
                         }
                     </div>
 
-                    <div ref={exportRef}>
+                    <div>
                         {evaluationStats && (
-                            <div className="flex flex-col gap-10 mt-7">
+                            <div className="flex flex-col gap-10 mt-7 p-3">
                                 {/* Top Row */}
                                 <div className="flex flex-col lg:flex-row justify-between items-start gap-6">
                                     {/* Overall Score */}

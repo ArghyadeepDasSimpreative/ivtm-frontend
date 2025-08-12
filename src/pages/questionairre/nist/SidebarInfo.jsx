@@ -59,7 +59,7 @@ export default function SidebarInfo({ current, index, total, onPrev, onNext, isS
             <div className="mt-6 bg-green-800/20 p-4 rounded-lg text-green-300 text-sm flex flex-col justify-between">
               <p>✅ Questionnaire completed !</p>
               <p className="mt-1 mb-4">You can now review or export the results.</p>
-              <Link to="/analysis-preview/nist" className="mx-auto mt-4">
+              <Link to="/roadmap-analysis/analysis-preview/nist" className="mx-auto mt-4">
                   <Button>View Analysis</Button>
                 </Link>
             </div>
