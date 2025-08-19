@@ -25,6 +25,10 @@ import { scrollToTop } from './lib/scroll';
 
 import VulnerabilityManagementLayout from './layout/VulnerabilityManagementLayout';
 import RoadmapAnalysisLayout from './layout/RoadmapAnalysisLayout';
+import C2m2Questionnaire from './pages/questionairre/c2m2';
+import C2m2AnalysisPreview from './pages/analysis-preview/c2m2';
+import TargetMaturityPageC2m2 from './pages/target-maturity/c2m2';
+import TargetComparisonC2m2 from './pages/target-comparison/c2m2';
 
 function AppRoutes() {
   const location = useLocation();
@@ -77,12 +81,16 @@ function AppRoutes() {
           <Route path="evaluations" element={<EvaluationsPage />} />
           <Route path="questionnaire/nist" element={<Questionairre />} />
           <Route path="questionnaire/hipaa" element={<HipaaQuestionsPage />} />
+          <Route path="questionnaire/c2m2" element={<C2m2Questionnaire />} />
           <Route path="analysis-preview/nist" element={<NistAnalysisPreview />} />
           <Route path="analysis-preview/hipaa" element={<HipaaAnalysisPreview />} />
+          <Route path="analysis-preview/c2m2" element={<C2m2AnalysisPreview />} />
           <Route path="target-maturity/nist" element={<TargetMaturityPageNist />} />
           <Route path="target-maturity/hipaa" element={<TargetMaturityPageHipaa />} />
+          <Route path="target-maturity/c2m2" element={<TargetMaturityPageC2m2 />} />
           <Route path="target-comparison/nist" element={<TargetComparissonNist />} />
           <Route path="target-comparison/hipaa" element={<TargetComparisonHipaa />} />
+          <Route path="target-comparison/c2m2" element={<TargetComparisonC2m2 />} />
         </Route>
 
         <Route path="/initial-questions" element={<QuestionsFlow />} />

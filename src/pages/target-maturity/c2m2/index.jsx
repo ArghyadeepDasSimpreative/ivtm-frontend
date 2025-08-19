@@ -1,57 +1,41 @@
 import { useEffect, useState } from "react";
 import { privateRequest } from "../../../api/config";
 import CustomSelect from "../../../components/Select";
-import {
-    FaShieldAlt,
-    FaEye,
-    FaBullseye,
-    FaSyncAlt,
-    FaLock,
-    FaBalanceScale
-} from "react-icons/fa";
 import { showToast } from "../../../lib/toast";
 import { format } from "date-fns";
 import Button from "../../../components/Button";
 import { VscDebugStart } from "react-icons/vsc";
-import { useTargetMaturity } from "../../../context/TargetMaturityContext"; // adjust path if needed
+import { useTargetMaturity } from "../../../context/TargetMaturityContext";
 import { useNavigate } from "react-router-dom";
 
-
-const functionIcons = {
-    IDENTIFY: <FaEye size={28} />,
-    PROTECT: <FaShieldAlt size={28} />,
-    DETECT: <FaBullseye size={28} />,
-    RESPOND: <FaSyncAlt size={28} />,
-    RECOVER: <FaLock size={28} />,
-    GOVERN: <FaBalanceScale size={28} />,
-};
-
-const TargetMaturityPageNist = () => {
+const TargetMaturityPageC2m2 = () => {
     const navigate = useNavigate();
 
     const [assessments, setAssessments] = useState([]);
-    // const [selectedAssessment, setSelectedAssessment] = useState(null);
     const [currentLevel, setCurrentLevel] = useState(null);
-    // const [targetLevel, setTargetLevel] = useState(null);
-    // const [functionMarks, setFunctionMarks] = useState({});
     const [targetOptions, setTargetOptions] = useState([]);
-    const [averages, setAverages] = useState([]);
+    const [domainWiseData, setDomainWiseData] = useState([]);
 
     const [loadingAssessments, setLoadingAssessments] = useState(false);
     const [loadingAssessmentDetails, setLoadingAssessmentDetails] = useState(false);
+
+    const {
+        targetLevelName, 
+        setTargetAssessment,
+        setTargetLevelName,
+    } = useTargetMaturity();
 
     useEffect(() => {
         const loadAssessments = async () => {
             setLoadingAssessments(true);
             try {
-                const { data } = await privateRequest.get("/nist-evaluation/assessments");
+                const { data } = await privateRequest.get("/c2m2-evaluations/assessments");
                 const formatted = data.data.map((item) => ({
                     label: `📝 ${format(new Date(item.evaluationTime), "dd MMM yyyy, HH:mm")}`,
                     value: item._id,
                 }));
                 setAssessments(formatted);
             } catch (err) {
-                console.log(err)
                 showToast.error("Failed to load assessments");
             } finally {
                 setLoadingAssessments(false);
@@ -60,63 +44,71 @@ const TargetMaturityPageNist = () => {
         loadAssessments();
     }, []);
 
-    const {
-        setTargetAssessment,
-        targetLevelName,
-        setTargetLevelName,
-        setTargetAverages,
-        setTargetFunctionMarks,
-    } = useTargetMaturity();
-
-
-    const handleAssessmentSelect = async (assessment) => {
-        const { value: id, label } = assessment;
+    const handleAssessmentSelect = async (option) => {
+        const { value: id, label } = option;
 
         setTargetAssessment({ id, label });
         setTargetLevelName(null);
         setLoadingAssessmentDetails(true);
 
+        if (!id) return;
+
         try {
-            const avgRes = await privateRequest.get(`/nist-evaluation/marks/function/${id}`);
-            setTargetAverages(avgRes.data.result);
+            const res = await privateRequest.get(`/c2m2-evaluations/average/${id}`);
+            if (res.status === 200) {
+                const data = res.data.data || [];
 
-            const marksRes = await privateRequest.get(`/nist-evaluation/stats/${id}`);
-            const avg = Math.floor(marksRes.data.average || 1);
-            setCurrentLevel(avg);
+                const domainMap = {};
+                data.forEach((q) => {
+                    if (!domainMap[q.domain]) domainMap[q.domain] = [];
+                    domainMap[q.domain].push(q);
+                });
 
-            setTargetFunctionMarks(marksRes.data.answersGiven || []);
+                const domainData = Object.entries(domainMap).map(([domain, qs]) => {
+                    const total = qs.reduce((sum, q) => sum + (q.marks || 0), 0);
+                    return {
+                        functionName: domain,
+                        averageScore: parseFloat((total / qs.length).toFixed(2)),
+                    };
+                });
 
-            const newLevels = [];
-            for (let i = avg + 1; i <= 4; i++) {
-                newLevels.push({ label: `Level ${i} to ${i + 1}`, value: i });
+                const wholeTotalMarks = data.reduce((sum, q) => sum + (q.marks || 0), 0);
+                const numberOfQuestions = data.length;
+                const avg = Math.floor(wholeTotalMarks / numberOfQuestions);
+
+                setDomainWiseData(domainData);
+                setCurrentLevel(avg);
+
+                const newLevels = [];
+                for (let i = avg + 1; i <= 2; i++) {
+                    newLevels.push({ label: `Level ${i} to ${i + 1}`, value: i });
+                }
+                setTargetOptions(newLevels);
             }
-            setTargetOptions(newLevels);
         } catch (err) {
-            showToast.error("Failed to load maturity data");
+            console.error(err);
+            setDomainWiseData([]);
         } finally {
             setLoadingAssessmentDetails(false);
         }
     };
 
-
-    const getAveragePerFunction = (functionName) => {
-        const found = averages?.find(avg => avg.functionName === functionName.toUpperCase());
-        return found?.averageScore || "0.00";
-    };
+    function navigateToComparisonPage() {
+        navigate("/roadmap-analysis/target-comparison/c2m2");
+    }
 
     const shimmerBox = (
         <div className="bg-slate-800 rounded-lg p-5 flex flex-col items-center text-center border border-slate-700 animate-pulse h-[150px]"></div>
     );
 
-    function navigateToComparisonPage() {
-          navigate("/roadmap-analysis/target-comparison/nist")
-    }
-
     return (
-        <div className="p-6 max-w-6xl mx-auto bg-slate-900 min-h-screen text-white min-w-screen">
-            <h1 className="text-2xl font-bold mb-6 text-center text-blue-300">🎯 Set Your Target Maturity</h1>
+        <div className="p-6 mx-auto bg-slate-900 min-h-screen text-white w-full">
+            <h1 className="text-2xl font-bold mb-6 text-center text-blue-300">
+                🎯 Set Your Target Maturity (C2M2)
+            </h1>
 
-            <div className="grid sm:grid-cols-2 gap-6 mb-6">
+            {/* Select Assessment */}
+            <div className="grid sm:grid-cols-2 gap-6 mb-6 w-full">
                 {loadingAssessments ? (
                     <>
                         <div className="h-[70px] bg-slate-800 rounded animate-pulse"></div>
@@ -132,7 +124,6 @@ const TargetMaturityPageNist = () => {
                             width="100%"
                             config={{ label: "label", key: "value" }}
                         />
-
                         {currentLevel !== null && (
                             <CustomSelect
                                 label="Target Maturity Level"
@@ -157,10 +148,11 @@ const TargetMaturityPageNist = () => {
                 </div>
             ) : null}
 
-            {targetLevelName && currentLevel && (
+
+            {targetLevelName && domainWiseData.length > 0 && (
                 <div className="flex flex-col gap-4 items-center justify-between mb-6">
                     <div className="bg-blue-800 text-blue-100 rounded p-4 text-center shadow">
-                        🎯 You selected <strong className="bg-blue-300 px-2 py-1 text-blue-950 font-semibold mx-1 rounded-md">{targetLevelName} - {targetLevelName+1} </strong> as your target maturity. Let’s work toward it!
+                        🎯 You selected <strong className="bg-blue-300 px-2 py-1 text-blue-950 font-semibold mx-1 rounded-md">{targetLevelName} - {targetLevelName + 1} </strong> as your target maturity. Let’s work toward it!
                     </div>
                     <Button onClick={navigateToComparisonPage}>
                         <VscDebugStart className="h-5 w-5" />
@@ -169,24 +161,28 @@ const TargetMaturityPageNist = () => {
                 </div>
             )}
 
+            {/* Domain Wise Data Display */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
                 {loadingAssessmentDetails
-                    ? Array(6)
-                        .fill(0)
-                        .map((_, i) => <div key={i}>{shimmerBox}</div>)
-                    : ["IDENTIFY", "PROTECT", "DETECT", "RESPOND", "RECOVER", "GOVERN"].map((fn) => (
-                        <div
-                            key={fn}
-                            className="bg-slate-800 rounded-lg p-5 flex flex-col items-center text-center border border-slate-700 hover:shadow-xl transition duration-200"
-                        >
-                            <div className="mb-3 text-blue-400">{functionIcons[fn]}</div>
-                            <h2 className="text-lg font-semibold text-slate-200 mb-1">{fn}</h2>
-                            <p className="text-sm text-slate-400">Avg Score: {getAveragePerFunction(fn)}</p>
-                        </div>
-                    ))}
+                    ? Array(6).fill(0).map((_, i) => <div key={i}>{shimmerBox}</div>)
+                    : domainWiseData.map((d) => {
+
+                        return (
+                            <div
+                                key={d.functionName}
+                                className="bg-slate-800 rounded-lg p-5 flex flex-col items-center text-center border border-slate-700 hover:shadow-xl transition duration-200"
+                            >
+                                <h2 className="text-lg font-semibold text-slate-200 mb-1">{d.functionName}</h2>
+                                <p className="text-sm text-slate-400">Avg Score:</p>
+                                <p className="text-green-400 font-bold text-lg">{d.averageScore}</p>
+                            </div>
+                        )
+                    }
+                    )}
             </div>
+
         </div>
     );
 };
 
-export default TargetMaturityPageNist;
+export default TargetMaturityPageC2m2;

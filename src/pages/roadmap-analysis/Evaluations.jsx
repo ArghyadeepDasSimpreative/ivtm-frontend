@@ -36,11 +36,13 @@ const Evaluations = ({ type = "nist" }) => {
   const [evaluations, setEvaluations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [newAssessmentDisabled, setNewAssessmentDisabled] = useState(true)
 
   // API endpoint selection based on type
   const endpointMap = {
     nist: "/nist-evaluation/assessments",
-    hipaa: "/hipaa-evaluations/assessments"
+    hipaa: "/hipaa-evaluations/assessments",
+    c2m2: "/c2m2-evaluations/assessments"
   };
 
   useEffect(() => {
@@ -49,6 +51,13 @@ const Evaluations = ({ type = "nist" }) => {
         setLoading(true);
         const res = await privateRequest.get(endpointMap[type]);
         setEvaluations(type == "nist" ? res.data.data : res.data.data);
+        if(res.data.data.some(assessment=>assessment.status != "submitted"))
+        {
+          setNewAssessmentDisabled(true);
+        }
+        else {
+          setNewAssessmentDisabled(false);
+        }
         setError(null);
       } catch (error) {
         setError(`Failed to fetch ${type.toUpperCase()} evaluations. Please try again.`);
@@ -149,8 +158,56 @@ const Evaluations = ({ type = "nist" }) => {
     }
   ];
 
+  const c2m2Config = [
+    {
+      key: "index",
+      label: "No.",
+      render: (_, __, idx) => idx + 1
+    },
+    {
+      key: "evaluationTime",
+      label: "Evaluation Time",
+      render: (value) => new Date(value).toLocaleString()
+    },
+    {
+      key: "status",
+      label: "Status",
+      render: (value) => (
+        <span
+          className={`my-2 px-2 py-1 rounded-full text-sm font-medium ${value === "submitted"
+            ? "bg-green-300 text-green-800 font-semibold border-green-800"
+            : "bg-orange-300 text-orange-700 font-semibold border-orange-700"
+            }`}
+        >
+          {capitalizeFirstLetter(value)}
+        </span>
+      )
+    },
+    {
+      key: "actions",
+      label: "Actions",
+      render: (_, row) => {
+        return (<div className="flex gap-2">
+          {
+            row.status !== "submitted" ?
+              <button
+                className="text-indigo-500 hover:text-indigo-600 bg-indigo-200 hover:bg-indigo-300 transition-all duration-300 p-2 rounded-full cursor-pointer"
+                onClick={() => navigate(`/roadmap-analysis/questionnaire/c2m2/?evaluation-id=${row._id}`)}
+              >
+                <FaEdit />
+              </button>
+              :
+               <button className="text-blue-500 hover:text-blue-600 bg-blue-200 hover:bg-blue-300 transition-all duration-300 p-2 rounded-full cursor-pointer" onClick={()=>navigate(`/roadmap-analysis/analysis-preview/c2m2/?evaluation-id=${row._id}`)}><FaEye /></button>
+          }
+         
+        </div>)
+
+      }
+    }
+  ];
+
   // Pick config dynamically
-  const config = type === "nist" ? nistConfig : hipaaConfig;
+  const config = type === "nist" ? nistConfig : type == "hipaa" ?  hipaaConfig : c2m2Config;
 
   return (
     <div className="bg-[#0f172a] py-10 px-6 w-screen min-h-screen text-white">
@@ -158,8 +215,9 @@ const Evaluations = ({ type = "nist" }) => {
         <Button
           variant="tertiary"
           onClick={() =>
-            navigate(type === "nist" ? "/roadmap-analysis/questionnaire/nist" : "/questionnaire/hipaa")
+            navigate(type === "nist" ? "/roadmap-analysis/questionnaire/nist" : type == "hipaa" ? "/roadmap-analysis/questionnaire/hipaa" : "/roadmap-analysis/questionnaire/c2m2")
           }
+          disabled={newAssessmentDisabled}
         >
           <span>Launch New Assessment</span>
         </Button>

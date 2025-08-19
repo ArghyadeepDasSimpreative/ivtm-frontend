@@ -13,7 +13,7 @@ const colors = [
 
 const RadarChartComponent = ({ dataSets = [], maxScore = 5, label = "Function-wise Score", notation }) => {
   console.log("radar datasets ", dataSets)
-  // Prepare merged data for all sets
+
   const mergedData = [];
   const allSubjects = new Set();
 
@@ -22,15 +22,18 @@ const RadarChartComponent = ({ dataSets = [], maxScore = 5, label = "Function-wi
     set.data.forEach(item => allSubjects.add(item.functionName));
   });
 
-  // Create data object per subject
   allSubjects.forEach(subject => {
-    const obj = { subject };
+    console.log("subject is ", subject)
+    const obj = {
+      subject: subject.length > 5 ? subject.slice(0, 5) + '..  ' : subject
+    };
     dataSets.forEach(set => {
       const found = set.data.find(item => item.functionName === subject);
       obj[set.name] = found ? parseFloat(found.averageScore) : 0;
     });
     mergedData.push(obj);
   });
+
 
   return (
     <div className="bg-slate-900 text-white p-4 rounded-md w-full max-w-3xl h-[500px] border border-slate-500">

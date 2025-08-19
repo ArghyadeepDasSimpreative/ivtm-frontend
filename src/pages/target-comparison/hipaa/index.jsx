@@ -13,7 +13,7 @@ import jsPDF from "jspdf";
 import Button from "../../../components/Button";
 import HipaaAnswerTable from "../../../components/HipaaAnswerTable";
 import { useTargetMaturity } from "../../../context/TargetMaturityContext";
-import MaturityLevelLegendHipaa from "../../../components/MaturityLevelLegendHipaa";
+import MaturityLevelLegendHipaa from "../../../components/MAturityLevelLegendHipaa";
 import { useNavigate } from "react-router-dom";
 import { IoDownloadOutline } from "react-icons/io5";
 
@@ -159,7 +159,7 @@ const TargetComparisonHipaa = () => {
                 <div className="flex flex-col gap-10"  ref={exportRef}>
                     <p className="w-full text-center text-2xl font-semibold text-blue-200">Assessment result based on <strong className="text-blue-400">HIPAA</strong> compliance</p>
                     
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center px-4">
                         <CustomSelect
                             label="Select HIPAA Assessment"
                             data={assessmentsList}

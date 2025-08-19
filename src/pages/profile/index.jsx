@@ -202,7 +202,7 @@ const ProfilePage = () => {
                         <div className="flex flex-col items-center">
                             <div className="relative w-20 h-20 lg:w-24 lg:h-24 xl:w-32 xl:h-32">
                                 <img
-                                    src={userDetails.profileImageUrl || defaultUserImage}
+                                    src={userDetails?.profileImageUrl ? userDetails?.profileImageUrl : defaultUserImage}
                                     className="border border-slate-300 rounded-full object-cover w-full h-full"
                                     alt="Profile"
                                 />

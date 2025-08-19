@@ -136,7 +136,7 @@ const NistAnalysisPreview = () => {
                 <div className="flex flex-col gap-10" ref={exportRef}>
                     <p className="w-full text-center text-2xl font-semibold text-blue-200">Assessment result based on <strong className="text-blue-400">NIST CSF</strong></p>
                     
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-end px-4">
                         <CustomSelect
                             label="Select Assessment"
                             data={assessmentsList}

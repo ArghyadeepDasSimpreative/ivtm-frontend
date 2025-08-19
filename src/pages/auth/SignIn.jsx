@@ -4,6 +4,7 @@ import imageItem from "../../assets/welcome-image-two.jpg";
 import InputField from "../../components/Input";
 import Button from "../../components/Button";
 import { publicRequest } from "../../api/config";
+import { showToast } from "../../lib/toast";
 
 export default function Signin() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -69,6 +70,7 @@ export default function Signin() {
       
       if (response.status === 200) {
         localStorage.setItem("userToken", response.data.token);
+        showToast.success("Logged in successfully.")
         navigate("/roadmap-analysis");
       }
     } catch (err) {

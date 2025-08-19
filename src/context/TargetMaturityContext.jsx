@@ -13,8 +13,9 @@ export const TargetMaturityProvider = ({ children }) => {
     // 🆕 HIPAA specific context variables
     const [hipaaTargetAssessment, setHipaaTargetAssessment] = useState([]);
     const [hipaaTargetScore, setHipaaTargetScore] = useState("");
-    
-    
+
+    const [c2m2TargetAssessment, setC2m2TargetAssessment] = useState([]);
+    const [c2m2TargetScore, setC2m2TargetScore] = useState("");
 
     // useEffect(() => {
     //     console.log("🔁 Target Maturity Context State Changed:");
@@ -50,6 +51,10 @@ export const TargetMaturityProvider = ({ children }) => {
                 setHipaaTargetAssessment,
                 hipaaTargetScore,
                 setHipaaTargetScore,
+                c2m2TargetAssessment,
+                setC2m2TargetAssessment,
+                c2m2TargetScore,
+                setC2m2TargetScore,
                 debugMessage: "🧪 Target Maturity Context ready ✅"
             }}
         >

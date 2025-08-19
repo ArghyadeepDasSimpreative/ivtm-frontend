@@ -150,12 +150,12 @@ const TargetMaturityPageHipaa = () => {
         </div>
       ) : null}
 
-      {hipaaTargetAssessment && (
+      {hipaaTargetAssessment && currentLevel && (
         <div className="flex flex-col gap-4 items-center justify-between mb-6">
           {
             hipaaTargetScore &&
             <><div className="bg-blue-800 text-blue-100 rounded p-4 text-center shadow">
-              🎯 You selected <strong>{hipaaTargetScore} - {hipaaTargetScore + 1}</strong> as your
+              🎯 You selected <strong className="bg-blue-300 px-2 py-1 mx-1 text-blue-950 font-semibold rounded-md">{hipaaTargetScore} - {hipaaTargetScore + 1}</strong> as your
               target maturity. Let’s work toward it!
             </div>
               <Button onClick={navigateToComparisonPage}>

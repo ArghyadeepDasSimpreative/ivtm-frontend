@@ -14,7 +14,7 @@ import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 import Button from "../../../components/Button";
 import HipaaAnswerTable from "../../../components/HipaaAnswerTable";
-import MaturityLevelLegendHipaa from "../../../components/MaturityLevelLegendHipaa";
+import MaturityLevelLegendHipaa from "../../../components/MAturityLevelLegendHipaa";
 import { BiGitCompare } from "react-icons/bi";
 import { IoDownloadOutline } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -149,7 +149,7 @@ const HipaaAnalysisPreview = () => {
                 <div className="flex flex-col gap-10"  ref={exportRef}>
                     <p className="w-full text-center text-2xl font-semibold text-blue-200">Assessment result based on <strong className="text-blue-400">HIPAA</strong> compliance</p>
                     {/* Dropdown */}
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-end px-4">
                         <CustomSelect
                             label="Select HIPAA Assessment"
                             data={assessmentsList}

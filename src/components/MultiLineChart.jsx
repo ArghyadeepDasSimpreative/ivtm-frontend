@@ -19,14 +19,18 @@ const MultiLineChart = ({ dataSets, title = "Function-wise Score Trend" }) => {
 
   const labels = dataSets[0].data.map(item => item.functionName);
 
-  const chartData = labels.map(label => {
-    const row = { functionName: label };
-    dataSets.forEach((set) => {
-      const match = set.data.find(d => d.functionName === label);
-      row[set.label] = parseFloat(match?.averageScore || 0);
-    });
-    return row;
+  const MAX_LABEL_LENGTH = 4;
+
+const chartData = labels.map(label => {
+  const shortenedLabel = label.length > MAX_LABEL_LENGTH ? label.slice(0, MAX_LABEL_LENGTH) + '..' : label;
+  const row = { functionName: shortenedLabel };
+  dataSets.forEach((set) => {
+    const match = set.data.find(d => d.functionName === label); // match with full label to get score
+    row[set.label] = parseFloat(match?.averageScore || 0);
   });
+  return row;
+});
+
 
   return (
     <div

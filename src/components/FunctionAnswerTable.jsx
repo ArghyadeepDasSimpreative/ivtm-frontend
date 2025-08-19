@@ -4,14 +4,14 @@ import * as XLSX from "xlsx"; // install via: npm install xlsx
 import Button from "./Button";
 import { FaRegFileExcel } from "react-icons/fa";
 
-const FunctionAnswerTable = ({ evaluationId, functionName, target = null }) => {
+const FunctionAnswerTable = ({ evaluationId, functionName, target = null, variant="nist" }) => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAnswers = async () => {
       try {
-        const res = await privateRequest(`/nist-evaluation/answers/${evaluationId}`);
+        const res = await privateRequest(`/${variant}-evaluation/answers/${evaluationId}`);
         const allQuestions = res.data.data || [];
         const filteredQuestions = functionName
           ? allQuestions.filter(q => q.function === functionName)
@@ -81,16 +81,16 @@ const FunctionAnswerTable = ({ evaluationId, functionName, target = null }) => {
       <table className="w-full table-auto border-collapse">
         <thead>
           <tr className="bg-slate-700 text-left">
-            <th className="p-2">#</th>
-            <th className="p-2">Subcategory Domain</th>
-            <th className="p-2">Sub category code</th>
-            <th className="p-2">Subcategory Description</th>
-            <th className="p-2">Response</th>
-            <th className="p-2">Score</th>
+            <th className="p-2" style={{fontSize: "14px"}}>#</th>
+            <th className="p-2" style={{fontSize: "14px"}}>Subcategory Domain</th>
+            <th className="p-2" style={{fontSize: "14px"}}>Sub category code</th>
+            <th className="p-2" style={{fontSize: "14px"}}>Subcategory Description</th>
+            <th className="p-2" style={{fontSize: "14px"}}>Response</th>
+            <th className="p-2" style={{fontSize: "14px"}}>Score</th>
             {target !== null && (
               <>
-                <th className="p-2">Target Value</th>
-                <th className="p-2">Target Solution</th>
+                <th className="p-2" style={{fontSize: "14px"}}>Target Value</th>
+                <th className="p-2" style={{fontSize: "14px"}}>Target Solution</th>
               </>
             )}
           </tr>
@@ -108,16 +108,16 @@ const FunctionAnswerTable = ({ evaluationId, functionName, target = null }) => {
                 key={q.questionId}
                 className={index % 2 === 0 ? "bg-slate-800" : "bg-slate-700"}
               >
-                <td className="p-2">{index + 1}</td>
-                <td className="p-2">{q.function}</td>
-                <td className="p-2">{q.subcategory}</td>
-                <td className="p-2">{q.subcategoryDescription}</td>
-                <td className="p-2">{q.answer || "No"}</td>
-                <td className="p-2">{q.marks}</td>
+                <td className="p-2" style={{fontSize: "14px"}}>{index + 1}</td>
+                <td className="p-2" style={{fontSize: "14px"}}>{q.function}</td>
+                <td className="p-2" style={{fontSize: "14px"}}>{q.subcategory}</td>
+                <td className="p-2" style={{fontSize: "14px"}}>{q.subcategoryDescription}</td>
+                <td className="p-2" style={{fontSize: "14px"}}>{q.answer || "No"}</td>
+                <td className="p-2" style={{fontSize: "14px"}}>{q.marks}</td>
                 {target !== null && (
                   <>
-                    <td className="p-2">{target}</td>
-                    <td className="p-2">{targetSolution || "N/A"}</td>
+                    <td className="p-2" style={{fontSize: "14px"}}>{target}</td>
+                    <td className="p-2" style={{fontSize: "14px"}}>{targetSolution || "N/A"}</td>
                   </>
                 )}
               </tr>

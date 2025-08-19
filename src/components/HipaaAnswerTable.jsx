@@ -35,15 +35,15 @@ const HipaaAnswerTable = ({ data, target = null, category }) => {
       <table className="w-full table-auto border-collapse">
         <thead>
           <tr className="bg-slate-700 text-left">
-            <th className="p-2">#</th>
-            <th className="p-2">Category</th>
-            <th className="p-2">Description</th>
-            <th className="p-2">Response</th>
-            <th className="p-2">Score</th>
+            <th className="p-2" style={{fontSize: "14px"}}>#</th>
+            <th className="p-2" style={{fontSize: "14px"}}>Category</th>
+            <th className="p-2" style={{fontSize: "14px"}}>Description</th>
+            <th className="p-2" style={{fontSize: "14px"}}>Response</th>
+            <th className="p-2" style={{fontSize: "14px"}}>Score</th>
             {target !== null && (
               <>
-                <th className="p-2">Target Value</th>
-                <th className="p-2">Target Solution</th>
+                <th className="p-2" style={{fontSize: "14px"}}>Target Value</th>
+                <th className="p-2" style={{fontSize: "14px"}}>Target Solution</th>
               </>
             )}
           </tr>
@@ -60,17 +60,17 @@ const HipaaAnswerTable = ({ data, target = null, category }) => {
                 key={q.questionId || index}
                 className={index % 2 === 0 ? "bg-slate-800" : "bg-slate-700"}
               >
-                <td className="p-2">{index + 1}</td>
-                <td className="p-2">{q.category || "N/A"}</td>
-                <td className="p-2">{q.description || "N/A"}</td>
-                <td className="p-2">
+                <td className="p-2" style={{fontSize: "14px"}}>{index + 1}</td>
+                <td className="p-2" style={{fontSize: "14px"}}>{q.category || "N/A"}</td>
+                <td className="p-2" style={{fontSize: "14px"}}>{q.description || "N/A"}</td>
+                <td className="p-2" style={{fontSize: "14px"}}>
                   {q.selectedAnswer === "None of the below" ? "Yes" : q.selectedAnswer || "No"}
                 </td>
-                <td className="p-2">{q.marks || 0}</td>
+                <td className="p-2" style={{fontSize: "14px"}}>{q.marks || 0}</td>
                 {target !== null && (
                   <>
-                    <td className="p-2">{target}</td>
-                    <td className="p-2">
+                    <td className="p-2" style={{fontSize: "14px"}}>{target}</td>
+                    <td className="p-2" style={{fontSize: "14px"}}>
                       {targetAnswer === "None of the below" ? "Yes" : targetAnswer || "N/A"}
                     </td>
                   </>

@@ -12,13 +12,13 @@ export default function ForgotPassword() {
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [step, setStep] = useState("email"); // "email" | "otp" | "reset"
-  
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
-  
+
   const handleSendOtp = async () => {
     if (!email) {
       setError("Email is required");
@@ -36,7 +36,7 @@ export default function ForgotPassword() {
     }
   };
 
-  
+
   const handleVerifyOtp = async () => {
     if (otp.length !== 6) {
       setError("Please enter the full 6-digit OTP");
@@ -67,12 +67,12 @@ export default function ForgotPassword() {
       await publicRequest.post("/organisation-user/reset-password", { businessEmail: email, otp, newPassword });
       setError("");
       showToast.success("Password reset successful! You can now log in with your new password.");
-      
+
       setStep("email");
       setEmail("");
       setOtp("");
       setNewPassword("");
-      setTimeout(()=>navigate("/signin"), 1000)
+      setTimeout(() => navigate("/signin"), 1000)
     } catch (err) {
       setError(err?.response?.data?.message || "Failed to reset password");
     } finally {
@@ -122,19 +122,44 @@ export default function ForgotPassword() {
               <p className="text-gray-400">
                 We sent a 6-digit code to <span className="text-blue-400">{email}</span>
               </p>
-              <OtpInput
-                value={otp}
-                onChange={setOtp}
-                numInputs={6}
-                shouldAutoFocus
-                renderInput={(props) => (
-                  <input
-                    {...props}
-                    className="w-14 h-14 rounded-md bg-slate-900 border border-gray-600
-                               text-center text-white text-xl focus:outline-none focus:border-blue-500"
-                  />
-                )}
-              />
+              <div className="flex justify-center mb-6">
+                <OtpInput
+                  value={otp}
+                  onChange={setOtp}
+                  numInputs={6}
+                  inputType="tel"
+                  containerStyle={{ gap: "0.5rem" }}
+                  renderInput={(props, index) => (
+                    <input
+                      {...props}
+                      key={index}
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      onWheel={(e) => e.target.blur()}
+                      style={{
+                        ...props.style,
+                        width: "3rem",
+                        height: "3rem",
+                        borderRadius: "0.5rem",
+                        border: "1px solid white",
+                        backgroundColor: "#1e293b",
+                        color: "#fff",
+                        fontSize: "1.25rem",
+                        outline: "none",
+                        transition: "border 0.2s ease",
+                        marginBottom: "0.5rem",
+                        marginTop: "0.5rem",
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.border = "1px solid #38bdf8"; // Light blue focus border
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.border = "1px solid white"; // Revert border
+                      }}
+                    />
+                  )}
+                />
+              </div>
               {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
               <Button loading={loading} onClick={handleVerifyOtp} variant="primary" disabled={otp.length !== 6}>
                 Verify OTP
