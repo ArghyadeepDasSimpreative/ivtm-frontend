@@ -14,19 +14,24 @@ import Button from "../../../components/Button";
 import HipaaAnswerTable from "../../../components/HipaaAnswerTable";
 import { useTargetMaturity } from "../../../context/TargetMaturityContext";
 import MaturityLevelLegendHipaa from "../../../components/MAturityLevelLegendHipaa";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { IoDownloadOutline } from "react-icons/io5";
 
 const TargetComparisonHipaa = () => {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const evaluationIdFromUrl = queryParams.get("evaluation-id");
+    
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [assessmentsList, setAssessmentsList] = useState([]);
-    const [selectedId, setSelectedId] = useState("");
+    const [selectedId, setSelectedId] = useState(evaluationIdFromUrl);
     const [evaluationStats, setEvaluationStats] = useState(null);
     const [categoryWiseScore, setCategoryWiseScore] = useState([]);
     const [categoryWiseTargetScore, setCategoryWiseTargetScore] = useState([]);
     const [selectedCategoryName, setSelectedCategoryName] = useState("");
     const [answersGiven, setAnswersGiven] = useState([]);
+    const [defaultAssessment, setDefaultAssessment] = useState(null)
 
     const navigate = useNavigate()
 
@@ -37,7 +42,7 @@ const TargetComparisonHipaa = () => {
     } = useTargetMaturity();
 
     useEffect(function () {
-       
+
         if (!hipaaTargetScore) {
             showToast.info("Please select you target maturity level first.")
             navigate("/roadmap-analysis/target-maturity/hipaa")
@@ -55,6 +60,12 @@ const TargetComparisonHipaa = () => {
                         value: item._id,
                     }));
                     setAssessmentsList(formatted);
+
+                    if (selectedId) {
+                        let defAssessment = formatted.find(assessment => assessment.value == selectedId);
+                         setDefaultAssessment({value:defAssessment.value, label:defAssessment.formattedDate});
+                        handleAssessmentChange({ value: selectedId });
+                    }
                 } else {
                     throw new Error("Failed to fetch HIPAA assessments.");
                 }
@@ -99,9 +110,6 @@ const TargetComparisonHipaa = () => {
                 }));
 
                 setCategoryWiseTargetScore(categoryWiseTarget);
-
-
-
                 const maturityData = Object.entries(data.maturityDistribution || {}).map(
                     ([level, count]) => ({ level, count })
                 );
@@ -156,9 +164,9 @@ const TargetComparisonHipaa = () => {
             ) : error ? (
                 <p className="text-red-500">{error}</p>
             ) : (
-                <div className="flex flex-col gap-10"  ref={exportRef}>
+                <div className="flex flex-col gap-10" ref={exportRef}>
                     <p className="w-full text-center text-2xl font-semibold text-blue-200">Assessment result based on <strong className="text-blue-400">HIPAA</strong> compliance</p>
-                    
+
                     <div className="flex justify-between items-center px-4">
                         <CustomSelect
                             label="Select HIPAA Assessment"
@@ -166,13 +174,14 @@ const TargetComparisonHipaa = () => {
                             config={{ key: "_id", label: "formattedDate" }}
                             onSelect={handleAssessmentChange}
                             width="300px"
+                            defaultValue={defaultAssessment}
                         />
                         {evaluationStats && (<div className="flex justify-between gap-3 items-center">
-                            <Button variant="secondary" onClick={()=>navigate("/roadmap-analysis")}>Back to Home</Button>
+                            <Button variant="secondary" onClick={() => navigate("/roadmap-analysis")}>Back to Home</Button>
                             <Button onClick={handleDownloadPdf}>
                                 <IoDownloadOutline size={22} />
                                 Download PDF</Button>
-                            
+
                         </div>
                         )}
                     </div>
@@ -180,9 +189,9 @@ const TargetComparisonHipaa = () => {
                     <div>
                         {evaluationStats && (
                             <div className="flex flex-col gap-10 mt-7 p-3">
-                                
+
                                 <div className="flex flex-col lg:flex-row justify-between items-start gap-6">
-                                    
+
                                     <div className="flex flex-col justify-between items-center w-auto gap-10">
                                         <div className="bg-slate-900 border border-blue-400 rounded-md w-[300px] h-[130px] flex flex-col justify-center items-center shadow-lg shadow-blue-700/30">
                                             <h2 className="text-lg font-semibold text-blue-300">Overall Score</h2>
@@ -227,7 +236,7 @@ const TargetComparisonHipaa = () => {
                                             { name: "Target score", data: categoryWiseTargetScore }
                                             ]}
                                             label="Domain wise distribution"
-                                            notation="Each axis shows a function's average score (Max: 5)"
+                                        // notation="Each axis shows a function's average score (Max: 5)"
                                         />
                                     </div>
 
@@ -251,7 +260,7 @@ const TargetComparisonHipaa = () => {
                                 <HipaaAnswerTable
                                     data={answersGiven}
                                     category={selectedCategoryName}
-                                    target={hipaaTargetScore + 1}
+                                    target={hipaaTargetScore}
                                 />
                             </div>
                         )}

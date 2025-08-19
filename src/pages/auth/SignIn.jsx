@@ -70,6 +70,7 @@ export default function Signin() {
       
       if (response.status === 200) {
         localStorage.setItem("userToken", response.data.token);
+        localStorage.setItem("userDetails", JSON.stringify(response.data.user));
         showToast.success("Logged in successfully.")
         navigate("/roadmap-analysis");
       }

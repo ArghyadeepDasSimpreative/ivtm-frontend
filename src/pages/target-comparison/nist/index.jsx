@@ -14,18 +14,24 @@ import { showToast } from "../../../lib/toast";
 import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 import Button from "../../../components/Button";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { IoDownloadOutline } from "react-icons/io5";
 
 const TargetComparisonNist = () => {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const evaluationIdFromUrl = queryParams.get("evaluation-id");
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [assessmentsList, setAssessmentsList] = useState([]);
-    // const [selectedId, setSelectedId] = useState("");
+    const [selectedId, setSelectedId] = useState(evaluationIdFromUrl);
     const [evaluationStats, setEvaluationStats] = useState(null);
     const [functionWiseMarks, setFunctionWiseMarks] = useState([]);
     const [selectedFunctionName, setSelectedFunctionName] = useState("");
     const [targetData, setTargetData] = useState([])
+    const [defaultAssessment, setDefaultAssessment] = useState(null)
+
     const exportRef = useRef();
 
     const navigate = useNavigate();
@@ -40,7 +46,7 @@ const TargetComparisonNist = () => {
     useEffect(function () {
         if (!targetLevelName) {
             showToast.info("Please select you target maturity level first.")
-            navigate("/target-maturity/nist");
+            navigate("/roadmap-analysis/target-maturity/nist");
         }
         setTargetData([
             {
@@ -81,6 +87,11 @@ const TargetComparisonNist = () => {
                         value: item._id,
                     }));
                     setAssessmentsList(formatted);
+                    if (selectedId) {
+                        let defAssessment = formatted.find(assessment => assessment.value == selectedId);
+                         setDefaultAssessment({value:defAssessment.value, label:defAssessment.formattedDate});
+                        handleAssessmentChange({ value: selectedId });
+                    }
                 } else {
                     throw new Error("Failed to fetch assessments.");
                 }
@@ -160,7 +171,7 @@ const TargetComparisonNist = () => {
             ) : error ? (
                 <p className="text-red-500">{error}</p>
             ) : (
-                <div className="flex flex-col gap-10"  ref={exportRef}>
+                <div className="flex flex-col gap-10" ref={exportRef}>
                     <p className="w-full text-center text-2xl font-semibold text-blue-200">Assessment result based on <strong className="text-blue-400">NIST CSF</strong></p>
                     <div className="flex justify-between items-center px-4">
                         <CustomSelect
@@ -169,6 +180,7 @@ const TargetComparisonNist = () => {
                             config={{ key: "_id", label: "formattedDate" }}
                             onSelect={handleAssessmentChange}
                             width="300px"
+                            defaultValue={defaultAssessment}
                         />
                         {evaluationStats && (<div className="flex justify-between gap-3 items-center">
                             <Button variant="secondary" onClick={() => navigate("/roadmap-analysis")}>Back to Home</Button>

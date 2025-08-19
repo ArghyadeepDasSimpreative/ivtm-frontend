@@ -20,6 +20,7 @@ const TargetMaturityPageC2m2 = () => {
     const [loadingAssessmentDetails, setLoadingAssessmentDetails] = useState(false);
 
     const {
+        targetAssessment,
         targetLevelName, 
         setTargetAssessment,
         setTargetLevelName,
@@ -94,7 +95,7 @@ const TargetMaturityPageC2m2 = () => {
     };
 
     function navigateToComparisonPage() {
-        navigate("/roadmap-analysis/target-comparison/c2m2");
+        navigate(`/roadmap-analysis/target-comparison/c2m2/?evaluation-id=${targetAssessment.id}`);
     }
 
     const shimmerBox = (

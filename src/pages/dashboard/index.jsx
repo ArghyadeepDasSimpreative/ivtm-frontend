@@ -155,7 +155,7 @@ const VulnerabilityDashboard = () => {
             showToast.success("File uploaded successfully!");
             fetchBatchesReport();
         } catch (err) {
-            showToast.error("Upload failed!");
+            showToast.error(err?.response?.data?.message || "Upload failed!");
         } finally {
             setUploadLoading(false);
             e.target.value = null;
@@ -236,7 +236,7 @@ const VulnerabilityDashboard = () => {
 
     return (
         <div className="w-full min-h-screen">
-            <div className="w-full flex justify-between items-center mb-6">
+            <div className="w-full flex justify-between items-end mb-6">
                 <CustomSelect
                     data={batchReports}
                     config={{ key: "value", label: "label" }}
@@ -280,11 +280,11 @@ const VulnerabilityDashboard = () => {
                         <div className="flex justify-between gap-3 mb-6 max-h-[80vh] overflow-y-auto">
                             <div className="flex flex-col w-[72%] border border-zinc-200 shadow-md h-full rounded-xl p-4">
                                 <div className="text-gray-800 bg-white">
-                                    <h2 className="text-lg font-semibold m-4">Vulnerability summary</h2>
+                                    <h2 className="text-md font-semibold m-4">Vulnerability summary</h2>
 
                                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
                                         <div className="bg-white p-4 rounded-xl shadow">
-                                            <h3 className="font-bold mb-2 text-black">Ageing Analysis</h3>
+                                            <h3 className="font-bold mb-2 text-black text-sm">Ageing Analysis</h3>
                                             <ResponsiveContainer width="100%" height={250}>
                                                 <AreaChart data={ageingData}>
                                                     <CartesianGrid strokeDasharray="3 3" />
@@ -316,7 +316,7 @@ const VulnerabilityDashboard = () => {
                                         </div>
 
                                         <div className="bg-white p-4 rounded-xl shadow">
-                                            <h3 className="font-bold mb-2 text-black">Severity Analysis</h3>
+                                            <h3 className="font-bold mb-2 text-black text-sm">Severity Analysis</h3>
                                             <ResponsiveContainer width="100%" height={250}>
                                                 <PieChart>
                                                     <Pie
@@ -340,7 +340,7 @@ const VulnerabilityDashboard = () => {
                                         </div>
 
                                         <div className="bg-white p-4 rounded-xl shadow">
-                                            <h3 className="font-bold mb-2 text-black">Assessment Area wise</h3>
+                                            <h3 className="font-bold mb-2 text-black text-sm">Assessment Area wise</h3>
                                             <ResponsiveContainer width="100%" height={250}>
                                                 <BarChart data={areaData}>
                                                     <CartesianGrid strokeDasharray="3 3" />

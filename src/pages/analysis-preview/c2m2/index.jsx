@@ -201,8 +201,7 @@ const C2m2AnalysisPreview = () => {
                     levels={[
                       { label: "Physical" },
                       { label: "Administrative" },
-                      { label: "Technical" },
-                      { label: "Policy, Procedure and Documentation" }
+                      { label: "Technical" }
                     ]}
                   />
                   <MaturityLevelLegendC2m2 />

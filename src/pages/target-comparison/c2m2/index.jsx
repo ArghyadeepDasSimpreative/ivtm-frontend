@@ -33,6 +33,8 @@ const TargetComparissonC2m2 = () => {
     const [totalAnswers, setTotalAnswers] = useState([]);
     const [tempTotalAnswers, setTempTotalAnswers] = useState([]);
     const [targetData, setTargetData] = useState(null);
+    const [defaultAssessment, setDefaultAssessment] = useState(null)
+
     const exportRef = useRef();
 
     const navigate = useNavigate();
@@ -51,6 +53,8 @@ const TargetComparissonC2m2 = () => {
                     setAssessmentsList(formatted);
 
                     if (selectedId) {
+                        let defAssessment = formatted.find(assessment => assessment.value == selectedId);
+                        setDefaultAssessment({value:defAssessment.value, label:defAssessment.formattedDate});
                         handleAssessmentChange({ value: selectedId });
                     }
                 } else {
@@ -196,6 +200,7 @@ const TargetComparissonC2m2 = () => {
                             config={{ key: "_id", label: "formattedDate" }}
                             onSelect={handleAssessmentChange}
                             width="300px"
+                            defaultValue={defaultAssessment}
                         />
                         {evaluationStats && (
                             <div className="flex gap-3 items-center">
@@ -225,12 +230,12 @@ const TargetComparissonC2m2 = () => {
                                     <MaturityLadder
                                         position={parseInt(evaluationStats.average)}
                                         levels={[
-                                            { label: "Physical" },
-                                            { label: "Administrative" },
-                                            { label: "Technical" },
-                                            { label: "Policy, Procedure and Documentation" }
+                                            { label: "Adhoc" },
+                                            { label: "Define" },
+                                            { label: "Manage" },
+
                                         ]}
-                                        target={targetLevelName + 1}
+                                        target={targetLevelName}
                                     />
                                     <MaturityLevelLegendC2m2 />
                                 </div>

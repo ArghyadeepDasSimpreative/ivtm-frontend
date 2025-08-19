@@ -87,7 +87,7 @@ const TargetMaturityPageHipaa = () => {
   );
 
   const navigateToComparisonPage = () => {
-    navigate("/roadmap-analysis/target-comparison/hipaa");
+    navigate(`/roadmap-analysis/target-comparison/hipaa/?evaluation-id=${hipaaTargetAssessment.id}`);
   };
 
   const HIPAA_CATEGORIES = [

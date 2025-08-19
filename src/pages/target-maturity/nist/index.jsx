@@ -61,6 +61,7 @@ const TargetMaturityPageNist = () => {
     }, []);
 
     const {
+        targetAssessment,
         setTargetAssessment,
         targetLevelName,
         setTargetLevelName,
@@ -109,7 +110,7 @@ const TargetMaturityPageNist = () => {
     );
 
     function navigateToComparisonPage() {
-          navigate("/roadmap-analysis/target-comparison/nist")
+          navigate(`/roadmap-analysis/target-comparison/nist/?evaluation-id=${targetAssessment.id}`)
     }
 
     return (

@@ -174,14 +174,14 @@ select:focus {
 
 /* Reduce axis tick labels */
 .recharts-cartesian-axis-tick-value {
-  font-size: 13px !important;
+  font-size: 10px !important;
   margin-right: 5px;
   margin-left: 5px;
 }
 
 /* Reduce legend text size */
 .recharts-default-legend {
-  font-size: 14px !important;
+  font-size: 13px !important;
 }
 
 

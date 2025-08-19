@@ -211,7 +211,7 @@ const HipaaAnalysisPreview = () => {
                                         <RadarChartComponent
                                             dataSets={[{ name: "", data: functionWiseMarks }]}
                                             label="Domain wise distribution"
-                                            notation="Each axis shows a function's average score (Max: 5)"
+                                            // notation="Each axis shows a function's average score (Max: 5)"
                                         />
                                     </div>
 

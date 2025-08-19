@@ -29,10 +29,10 @@ export default function MaturityLevelLegendHipaa() {
       <div className="flex flex-col gap-6">
         {hipaaLevels.map((level, idx) => (
           <div key={idx} className="flex items-start gap-4">
-            <FaRegCircle className={`${level.color} mt-1 text-md`} />
+            <FaRegCircle className={`${level.color} mt-1 text-sm`} />
             <div>
-              <div className="text-md font-semibold text-white">{level.label}</div>
-              <div className="text-gray-400 text-md leading-relaxed">{level.description}</div>
+              <div className="text-sm font-semibold text-white">{level.label}</div>
+              <div className="text-gray-400 text-sm leading-relaxed">{level.description}</div>
             </div>
           </div>
         ))}

@@ -30,11 +30,11 @@ const maturityLevels = [
 
 export default function MaturityLevelLegendNist() {
   return (
-    <div className="bg-slate-900 rounded-[15px] p-6 w-full h-full border border-blue-400">
-      <div className="flex flex-col gap-2">
+    <div className="bg-slate-900 rounded-[15px] p-6 w-full h-full border border-blue-400 text-sm">
+      <div className="flex flex-col gap-2 h-auto">
         {maturityLevels.map((level, idx) => (
           <div key={idx} className="flex items-start gap-4">
-            <FaRegCircle className={`${level.color} mt-1 text-lg`} />
+            <FaRegCircle className={`${level.color} mt-1 text-sm`} />
             <div>
               <div className="text-sm font-semibold text-white">{level.label}</div>
               <div className="text-gray-400 text-sm leading-relaxed">{level.description}</div>
