@@ -86,13 +86,11 @@ const TargetComparissonC2m2 = () => {
 
     }, [targetLevelName])
 
-    // Handle domain chart click
     function handleBarClick(domain) {
         showToast.success(`Showing data for domain ${domain}`);
         setTempTotalAnswers(totalAnswers.filter(answer => answer.domain.toLowerCase() == domain.toLowerCase()))
     }
 
-    // Download as PDF
     const handleDownloadPdf = async () => {
         try {
             document.body.classList.add("exporting");
@@ -132,7 +130,6 @@ const TargetComparissonC2m2 = () => {
         if (!id) return;
 
         try {
-            // Get questions + answers
             const res = await privateRequest.get(`/c2m2-evaluations/average/${id}`);
             if (res.status === 200) {
                 const questionsWithAnswers = res.data.data || [];

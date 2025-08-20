@@ -5,6 +5,7 @@ import CustomSelect from "../../../components/Select";
 import { MdContentCopy, MdCheck } from "react-icons/md";
 import { showToast } from "../../../lib/toast";
 import Button from "../../../components/Button";
+import { getUserRole } from "../../../lib/auth";
 
 const CreateUser = ({ showUsers }) => {
     const [formData, setFormData] = useState({
@@ -150,7 +151,7 @@ const CreateUser = ({ showUsers }) => {
 
             const response = await privateRequest.post("/organisation-user/create-user", payload);
             showToast.success("User created successfully");
-            
+
             // Reset form
             setFormData({
                 businessEmail: "",
@@ -164,7 +165,7 @@ const CreateUser = ({ showUsers }) => {
 
         } catch (err) {
             console.error("Error creating user:", err);
-            
+
             if (err.response?.data?.message) {
                 setApiError(err.response.data.message);
             } else if (err.response?.status === 400) {
@@ -204,91 +205,97 @@ const CreateUser = ({ showUsers }) => {
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-                {/* First Row - Email and Phone */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <InputField
-                        label="Business Email"
-                        type="email"
-                        value={formData.businessEmail}
-                        onChange={handleInputChange("businessEmail")}
-                        placeholder="Enter business email"
-                        error={errors.businessEmail}
-                    />
+            {
+                getUserRole != "admin" ? <p className=" p-4 bg-zinc-200 rounded-md">Sorry, you don't have access to this section</p>
+                    :
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* First Row - Email and Phone */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <InputField
+                                label="Business Email"
+                                type="email"
+                                value={formData.businessEmail}
+                                onChange={handleInputChange("businessEmail")}
+                                placeholder="Enter business email"
+                                error={errors.businessEmail}
+                            />
 
-                    <InputField
-                        label="Phone Number"
-                        type="tel"
-                        value={formData.phoneNumber}
-                        onChange={handleInputChange("phoneNumber")}
-                        placeholder="Enter 10-digit phone number"
-                        error={errors.phoneNumber}
-                    />
-                </div>
+                            <InputField
+                                label="Phone Number"
+                                type="tel"
+                                value={formData.phoneNumber}
+                                onChange={handleInputChange("phoneNumber")}
+                                placeholder="Enter 10-digit phone number"
+                                error={errors.phoneNumber}
+                            />
+                        </div>
 
-                {/* Second Row - Username and Role */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <InputField
-                        label="Username"
-                        type="text"
-                        value={formData.username}
-                        onChange={handleInputChange("username")}
-                        placeholder="Enter username"
-                        error={errors.username}
-                    />
+                        {/* Second Row - Username and Role */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <InputField
+                                label="Username"
+                                type="text"
+                                value={formData.username}
+                                onChange={handleInputChange("username")}
+                                placeholder="Enter username"
+                                error={errors.username}
+                            />
 
-                    <div>
-                        <CustomSelect
-                            data={roleOptions}
-                            config={roleConfig}
-                            label="User Role"
-                            onSelect={handleRoleSelect}
-                            defaultValue={formData.role ? { value: formData.role, label: formData.role.charAt(0).toUpperCase() + formData.role.slice(1) } : null}
-                            width="100%"
-                            style="light"
-                        />
-                        {errors.role && (
-                            <p className="text-red-500 text-md mt-1 ml-1">{errors.role}</p>
-                        )}
-                    </div>
-                </div>
+                            <div>
+                                <CustomSelect
+                                    data={roleOptions}
+                                    config={roleConfig}
+                                    label="User Role"
+                                    onSelect={handleRoleSelect}
+                                    defaultValue={formData.role ? { value: formData.role, label: formData.role.charAt(0).toUpperCase() + formData.role.slice(1) } : null}
+                                    width="100%"
+                                    style="light"
+                                />
+                                {errors.role && (
+                                    <p className="text-red-500 text-md mt-1 ml-1">{errors.role}</p>
+                                )}
+                            </div>
+                        </div>
 
-                {/* Third Row - Password (Full Width) */}
-                <div className="w-full">
-                    <label className="block text-md text-gray-600 mb-2">Default Password</label>
-                    <div className="relative w-full max-w-md">
-                        <input
-                            type="text"
-                            value={formData.defaultPassword}
-                            readOnly
-                            className="w-full px-3 py-2 pr-12 border border-gray-300 rounded-md text-md bg-gray-50 focus:outline-none cursor-not-allowed"
-                        />
-                        <button
-                            type="button"
-                            onClick={copyPassword}
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 text-gray-500 hover:text-blue-600 transition-colors"
-                            title="Copy password"
-                        >
-                            {copied ? (
-                                <MdCheck size={20} className="text-green-600" />
-                            ) : (
-                                <MdContentCopy size={20} />
+                        {/* Third Row - Password (Full Width) */}
+                        <div className="w-full">
+                            <label className="block text-md text-gray-600 mb-2">Default Password</label>
+                            <div className="relative w-full max-w-md">
+                                <input
+                                    type="text"
+                                    value={formData.defaultPassword}
+                                    readOnly
+                                    className="w-full px-3 py-2 pr-12 border border-gray-300 rounded-md text-md bg-gray-50 focus:outline-none cursor-not-allowed"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={copyPassword}
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 text-gray-500 hover:text-blue-600 transition-colors"
+                                    title="Copy password"
+                                >
+                                    {copied ? (
+                                        <MdCheck size={20} className="text-green-600" />
+                                    ) : (
+                                        <MdContentCopy size={20} />
+                                    )}
+                                </button>
+                            </div>
+                            {copied && (
+                                <p className="text-green-600 text-sm mt-1">Password copied to clipboard!</p>
                             )}
-                        </button>
-                    </div>
-                    {copied && (
-                        <p className="text-green-600 text-sm mt-1">Password copied to clipboard!</p>
-                    )}
-                    {errors.defaultPassword && (
-                        <p className="text-red-500 text-md mt-1">{errors.defaultPassword}</p>
-                    )}
-                </div>
+                            {errors.defaultPassword && (
+                                <p className="text-red-500 text-md mt-1">{errors.defaultPassword}</p>
+                            )}
+                        </div>
 
-                {/* Action Buttons */}
-                <div className="flex gap-4 pt-6">
-                    <Button loading={isLoading} onClick={handleSubmit}>Save User</Button> 
-                </div>
-            </form>
+                        {/* Action Buttons */}
+                        <div className="flex gap-4 pt-6">
+                            <Button loading={isLoading} onClick={handleSubmit}>Save User</Button>
+                        </div>
+                    </form>
+            }
+
+
         </div>
     );
 };

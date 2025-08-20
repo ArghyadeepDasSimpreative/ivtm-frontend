@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FaCheckCircle } from "react-icons/fa";
 import { ClipLoader } from "react-spinners";
+import QuestionPagination from "../../../components/QuestionPagination";
 
 export default function QuestionCard({
   questions,
@@ -83,6 +83,16 @@ export default function QuestionCard({
     }
   };
 
+  const goToQuestion = async (index) => {
+    if (index < 0 || index >= questions.length) return;
+    if (index === currentIndex) return; // no-op if same page
+    setSubmissionLoading(true);
+    await handleSubmission();
+    setCurrentIndex(index);
+    setSubmissionLoading(false);
+  };
+
+
   const handleSubmit = async () => {
     setSubmissionLoading(true);
     const response = await calculateAndSubmitScore(true);
@@ -161,7 +171,7 @@ export default function QuestionCard({
                 className="bg-green-600 w-30 px-4 py-2 mb-6 hover:bg-green-800 transition-all cursor-pointer rounded-md"
               >
                 {
-                  submissionLoading ? <ClipLoader size={18} color="white"/> : " Submit"
+                  submissionLoading ? <ClipLoader size={18} color="white" /> : " Submit"
                 }
 
               </button>
@@ -186,9 +196,15 @@ export default function QuestionCard({
           Default Option Notice
         </h2> */}
         <p className="text-slate-100 text-sm">
-         If nothing is selected, all questions of this section will have a default option selected.
+          If nothing is selected, all questions of this section will have a default option selected.
         </p>
       </div>
+      <QuestionPagination
+        questions={questions}
+        currentIndex={currentIndex}
+        onSelect={goToQuestion}
+        loading={submissionLoading}
+      />
     </div>
   );
 }

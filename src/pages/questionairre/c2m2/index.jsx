@@ -1,64 +1,112 @@
 import { useEffect, useState, useCallback } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { privateRequest } from "../../../api/config";
 import QuestionCard from "./QuestionCard";
 import SidebarInfo from "./SidebarInfo";
+import QuestionPagination from "../../../components/QuestionPagination";
+import Button from "../../../components/Button";
 import { showToast } from "../../../lib/toast";
 
 export default function C2m2Questionnaire() {
+    
+    function useQuery() {
+        return new URLSearchParams(useLocation().search);
+    }
+
+    const query = useQuery();
+    const navigate = useNavigate();
+    const evaluationId = query.get("evaluation-id");
+
     const [domains, setDomains] = useState([]);
     const [currentDomainIndex, setCurrentDomainIndex] = useState(0);
-    const [questions, setQuestions] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [isSubmitted, setIsSubmitted] = useState(false);
 
+    const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState({});
-    const [submitLoading, setSubmitLoading] = useState(false);
     const [marksResponse, setMarksResponse] = useState(null);
 
-    const [evaluationId, setEvaluationId] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [submitLoading, setSubmitLoading] = useState(false);
+    const [questionNavigationLoading, setQuestionNavigationLoading] = useState(false)
+
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
     const currentDomain = domains[currentDomainIndex];
 
-    // Fetch available domains
+    console.log("from parent questionLaoding is ", questionNavigationLoading)
+
     useEffect(() => {
-        async function loadDomains() {
+        async function loadData() {
             try {
-                const res = await privateRequest.get("/c2m2-questions/questions/domains");
-                setDomains(res.data.domains || []);
+                // First API call to get domains
+                const resDomains = await privateRequest.get("/c2m2-questions/questions/domains");
+                setDomains(resDomains.data.domains || []);
+
+                // Second API call to check draft exists
+                const resDraft = await privateRequest.get("/c2m2-evaluations/assessments/draft-exists");
+                if (resDraft.data.status === true && !evaluationId) {
+                    showToast.info("You have an existing draft assessment. Please complete it before starting a new one.");
+                    navigate('/roadmap-analysis'); // Assuming you have useNavigate hook
+                }
             } catch (err) {
-                console.error("Error fetching domains", err);
+                console.error("Error fetching data", err);
+                showToast.error("Error loading data");
             }
         }
-        loadDomains();
+
+        loadData();
     }, []);
 
+    // On domain change, load questions and prefill answers if eval id
     useEffect(() => {
         if (!currentDomain) return;
         setLoading(true);
-        async function loadQuestions() {
+        setCurrentQuestionIndex(0);
+        async function fetchData() {
             try {
                 const res = await privateRequest.get(`/c2m2-questions/${currentDomain}`);
-                setQuestions(res.data.questions || []);
+                const fetchedQuestions = res.data.questions || [];
+                setQuestions(fetchedQuestions);
+                // If evaluationId present, fetch previous answers and set default answers
+                if (evaluationId) {
+                    const ansRes = await privateRequest.get(`/c2m2-evaluations/average/${evaluationId}`);
+                    const prevAnswers = ansRes.data.data || [];
+                    const ansMap = {};
+                    prevAnswers.forEach(a => {
+                        ansMap[a.questionId] = {
+                            primary: a.answer,
+                            followUp: a.followUp || "",
+                            marks: a.marks || 0,
+                            domain: a.domain
+                        };
+                    });
+                    // Merge with current questions (won't override unless present)
+                    setAnswers((prev) => {
+                        const merged = { ...prev };
+                        fetchedQuestions.forEach(q => {
+                            if (ansMap[q._id]) merged[q._id] = ansMap[q._id];
+                        });
+                        return merged;
+                    });
+                }
             } catch (err) {
-                console.error("Error fetching questions", err);
                 setQuestions([]);
+                console.error("Error fetching questions or answers", err);
             } finally {
                 setLoading(false);
             }
         }
-        loadQuestions();
-    }, [currentDomain]);
+        fetchData();
+        // eslint-disable-next-line
+    }, [currentDomain, evaluationId]);
 
     const saveEvaluation = useCallback(async (submitting = false) => {
         if (Object.keys(answers).length === 0) return;
-
         const transformedAnswers = Object.entries(answers).map(([questionId, data]) => ({
             questionId,
             ...data
         }));
-
         const payload = { answers: transformedAnswers, status: submitting };
-
         try {
             let res;
             if (evaluationId) {
@@ -66,11 +114,13 @@ export default function C2m2Questionnaire() {
             } else {
                 res = await privateRequest.post(`/c2m2-evaluations`, payload);
             }
-
             if (res.status === 200) {
-                if (!evaluationId) {
-                    setEvaluationId(res.data.data._id);
+                // Only store returned _id if missing before
+                if (!evaluationId && res.data.data?._id) {
+                    query.set("evaluation-id", res.data.data._id);
+                    navigate({ search: query.toString() }, { replace: true });
                 }
+
                 if (res.data.averageScore !== undefined) {
                     setMarksResponse(res.data.averageScore);
                 } else if (res.data.data?.averageScore) {
@@ -79,43 +129,57 @@ export default function C2m2Questionnaire() {
                 if (submitting) showToast.success("Response recorded successfully.");
             }
         } catch (err) {
-            console.error("Error saving evaluation:", err);
             if (submitting) showToast.error("Failed to submit responses");
+            console.error("Error saving evaluation:", err);
         }
-    }, [answers, evaluationId]);
+        
+    }, [answers, evaluationId, query]);
 
-    // Triggered whenever answer changes
+
     const handleAnswerChange = (questionId, answerData) => {
-        setAnswers(prev => {
-            const updated = { ...prev, [questionId]: answerData };
-            return updated;
-        });
+        setAnswers(prev => ({
+            ...prev,
+            [questionId]: answerData
+        }));
     };
 
     const goToNextDomain = async () => {
-        setSubmitLoading(true)
+        setSubmitLoading(true);
         await saveEvaluation(false);
-        if (currentDomainIndex < domains.length - 1) {
-            setCurrentDomainIndex(prev => prev + 1);
-        }
-        setSubmitLoading(false)
+        setCurrentDomainIndex(prev => prev + 1);
+        setSubmitLoading(false);
     };
 
     const goToPreviousDomain = async () => {
-        setSubmitLoading(true)
+        setSubmitLoading(true);
         await saveEvaluation(false);
-        if (currentDomainIndex > 0) {
-            setCurrentDomainIndex(prev => prev - 1);
-        }
-        setSubmitLoading(false)
+        setCurrentDomainIndex(prev => prev - 1);
+        setSubmitLoading(false);
+    };
+
+    const goToQuestion = async (targetIndex) => {
+        setSubmitLoading(true);
+        setQuestionNavigationLoading(true);
+        await saveEvaluation(false);
+        setCurrentQuestionIndex(targetIndex);
+        setQuestionNavigationLoading(false);
+        setSubmitLoading(false);
     };
 
     const handleFinalSubmit = async () => {
         setSubmitLoading(true);
         await saveEvaluation(true);
-        setSubmitLoading(false);
         setIsSubmitted(true);
+        setSubmitLoading(false);
     };
+
+    const selectDomain = async (targetIndex) => {
+        setSubmitLoading(true);
+        await saveEvaluation(false);
+        setCurrentDomainIndex(targetIndex);
+        setSubmitLoading(false);
+    };
+
 
     return (
         <div className="min-h-screen w-full bg-[#0f172a] text-white flex">
@@ -123,14 +187,16 @@ export default function C2m2Questionnaire() {
                 current={currentDomain}
                 index={currentDomainIndex}
                 total={domains.length}
-                onPrev={goToPreviousDomain}
-                onNext={goToNextDomain}
+                onPrev={currentDomainIndex > 0 ? goToPreviousDomain : undefined}
+                onNext={currentDomainIndex < domains.length - 1 ? goToNextDomain : undefined}
+                onSelectDomain={selectDomain}
                 isSubmitted={isSubmitted}
                 submitLoading={submitLoading}
                 navigationLoading={submitLoading}
+                Button={Button}
             />
 
-            <div className="flex-1 p-6 md:p-10 overflow-auto">
+            <div className="flex-1 flex flex-col justify-between p-6 md:p-10 overflow-auto">
                 {loading ? (
                     <div className="h-full flex items-center justify-center">
                         <p className="text-gray-400 animate-pulse">Loading questions...</p>
@@ -158,18 +224,43 @@ export default function C2m2Questionnaire() {
                             domain={currentDomain}
                             answersParent={answers}
                             onAnswerChange={handleAnswerChange}
-                            onAutoSave={() => saveEvaluation(false)} // auto-save without marking submitted
+                            onAutoSave={() => saveEvaluation(false)}
+                            currentQuestionIndex={currentQuestionIndex}
+                            setCurrentQuestionIndex={setCurrentQuestionIndex}
+                            Button={Button}
+                            submitLoading={submitLoading}
+                            pageLoading={questionNavigationLoading}
+                            setPageLoading={(param)=>
+                            {
+                                console.log("guyana");
+                                 setQuestionNavigationLoading(param)
+                            }
+                               }
                         />
-
-                        {currentDomainIndex === domains.length - 1 && (
-                            <div className="mt-6 text-center">
-                                <button
+                        <div className="rounded-lg border border-blue-500 bg-slate-900 px-6 py-4 shadow-md w-[80%] mx-auto mt-10">
+                            {/* <h2 className="text-blue-400 font-semibold text-md mb-1">
+          Default Option Notice
+        </h2> */}
+                            <p className="text-slate-100 text-sm">
+                                If nothing is selected, all questions of this section will have a default option selected.
+                            </p>
+                        </div>
+                        <QuestionPagination
+                            questions={questions}
+                            currentIndex={currentQuestionIndex}
+                            onSelect={goToQuestion}
+                            loading={submitLoading || questionNavigationLoading}
+                        />
+                        {currentDomainIndex === domains.length - 1 && currentQuestionIndex === questions.length - 1 && (
+                            <div className="mt-10 text-center">
+                                <Button
+                                    variant="primary"
                                     onClick={handleFinalSubmit}
                                     disabled={submitLoading}
-                                    className="bg-green-600 px-4 py-2 rounded hover:bg-green-800 transition-all"
+                                    loading={submitLoading}
                                 >
-                                    {submitLoading ? "Submitting..." : "Submit All Domains"}
-                                </button>
+                                    Submit All Domains
+                                </Button>
                             </div>
                         )}
                     </>

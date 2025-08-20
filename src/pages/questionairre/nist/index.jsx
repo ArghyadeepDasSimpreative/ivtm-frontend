@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { privateRequest } from "../../../api/config";
 import QuestionCard from "./QuestionCard";
 import SidebarInfo from "./SidebarInfo";
 import { showToast } from "../../../lib/toast";
+import QuestionPagination from "../../../components/QuestionPagination";
 
 const NIST_FUNCTIONS = [
   "IDENTIFY",
@@ -15,8 +16,10 @@ const NIST_FUNCTIONS = [
 ];
 
 export default function Questionnaire() {
+  const navigate = useNavigate();
+
   const [searchParams] = useSearchParams();
-  const[evaluationId, setEvaluationId] = useState(searchParams.get("evaluation-id"));
+  const [evaluationId, setEvaluationId] = useState(searchParams.get("evaluation-id"));
 
   const [currentFunctionIndex, setCurrentFunctionIndex] = useState(0);
   const [questions, setQuestions] = useState([]);
@@ -76,7 +79,7 @@ export default function Questionnaire() {
 
             mappedAnswers[entry.questionId] = {
               primary: entry.marks > 1 ? "Yes" : "No",
-              followUp: answer.slice(0,3) == "Yes" ? "None of the below" : answer || "",
+              followUp: answer.slice(0, 3) == "Yes" ? "None of the below" : answer || "",
               marks: primaryIndex,
               functionName: entry.functionName,
             };
@@ -103,37 +106,52 @@ export default function Questionnaire() {
     fetchQuestionsAndAnswers();
   }, [currentFunction, evaluationId]);
 
+  useEffect(() => {
+    async function checkDraftExists() {
+      try {
+        const res = await privateRequest.get("/nist-evaluation/assessments/draft-exists");
+        if (res.data.status && !evaluationId) {
+          showToast.info("You have an existing draft assessment. Please complete it before starting a new one.");
+          navigate("/roadmap-analysis", { replace: true });
+        }
+      } catch (err) {
+        console.error("Error checking draft existence:", err);
+      }
+    }
+    checkDraftExists();
+  }, [navigate]);
 
-const goToNextFunction = async () => {
-  setSubmitLoadidng(true);
-  await calculateAndSubmitScore(false);
-  setSubmitLoadidng(false);
 
-  if (currentFunctionIndex < NIST_FUNCTIONS.length - 1) {
-    setCurrentFunctionIndex((prev) => prev + 1);
-    setIsSubmitted(false);
-  }
-};
+  const goToNextFunction = async () => {
+    setSubmitLoadidng(true);
+    await calculateAndSubmitScore(false);
+    setSubmitLoadidng(false);
 
-const goToPreviousFunction = async () => {
-  setSubmitLoadidng(true);
-  await calculateAndSubmitScore(false);
-  setSubmitLoadidng(false);
+    if (currentFunctionIndex < NIST_FUNCTIONS.length - 1) {
+      setCurrentFunctionIndex((prev) => prev + 1);
+      setIsSubmitted(false);
+    }
+  };
 
-  if (currentFunctionIndex > 0) {
-    setCurrentFunctionIndex((prev) => prev - 1);
-    setIsSubmitted(false);
-  }
-};
+  const goToPreviousFunction = async () => {
+    setSubmitLoadidng(true);
+    await calculateAndSubmitScore(false);
+    setSubmitLoadidng(false);
 
-const handleSubmit = async () => {
-  setSubmitLoadidng(true);
-  await calculateAndSubmitScore(true);
-  setSubmitLoadidng(false);
-  setIsSubmitted(true);
-};
+    if (currentFunctionIndex > 0) {
+      setCurrentFunctionIndex((prev) => prev - 1);
+      setIsSubmitted(false);
+    }
+  };
 
-  const calculateAndSubmitScore = async (submitting=false) => {
+  const handleSubmit = async () => {
+    setSubmitLoadidng(true);
+    await calculateAndSubmitScore(true);
+    setSubmitLoadidng(false);
+    setIsSubmitted(true);
+  };
+
+  const calculateAndSubmitScore = async (submitting = false) => {
     console.log("evaluation id is ", evaluationId)
     const transformedAnswers = Object.entries(answers).map(([questionId, data]) => ({
       questionId,
@@ -222,7 +240,7 @@ const handleSubmit = async () => {
             currentFunctionIndex={currentFunctionIndex}
             calculateAndSubmitScore={calculateAndSubmitScore}
             setIsSubmitted={setIsSubmitted}
-            
+
           />
         )}
       </div>

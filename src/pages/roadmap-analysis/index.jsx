@@ -79,7 +79,7 @@ export default function RoadmapAnalysis() {
               <button
                 key={option.label}
                 onClick={() => setChosenOption(option.label)}
-                className={`flex-1 px-6 py-5 rounded-2xl text-md font-medium transition-all duration-300 border text-white text-center
+                className={`cursor-pointer flex-1 px-6 py-5 rounded-2xl text-md font-medium transition-all duration-300 border text-white text-center
                   ${
                     chosenOption === option.label
                       ? "bg-sky-600 border-sky-500 shadow-xl scale-105"

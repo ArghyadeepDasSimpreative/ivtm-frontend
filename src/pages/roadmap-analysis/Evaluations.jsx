@@ -6,23 +6,23 @@ import { FaEdit, FaEye } from "react-icons/fa";
 import Button from "../../components/Button";
 import { useNavigate } from "react-router-dom";
 
-// Skeleton Loader Component
 const SkeletonRow = () => (
-  <div className="animate-pulse flex flex-row justify-between gap-4 py-4 border-b border-white/10">
-    <div className="h-6 w-6 bg-slate-700 rounded" />
-    <div className="h-6 w-40 bg-slate-700 rounded" />
-    <div className="h-6 w-24 bg-slate-700 rounded-full" />
-    <div className="h-8 w-8 bg-slate-700 rounded-full" />
+  <div className="animate-pulse flex items-center justify-between gap-6 py-4 px-4 border-b border-white/10">
+    <div className="h-6 w-6 rounded-full bg-gradient-to-r from-slate-700 via-slate-600 to-slate-700" />
+    <div className="flex-1 h-6 rounded bg-gradient-to-r from-slate-700 via-slate-600 to-slate-700 max-w-[40%]" />
+    <div className="h-6 rounded-full bg-gradient-to-r from-slate-700 via-slate-600 to-slate-700 max-w-[20%]" />
+    <div className="h-8 w-8 rounded-full bg-gradient-to-r from-slate-700 via-slate-600 to-slate-700" />
   </div>
 );
 
 const SkeletonTable = () => (
-  <div className="divide-y divide-white/10">
+  <div className="divide-y divide-white/10 rounded-lg overflow-hidden border border-white/10 shadow-lg bg-[#15202b]">
     {Array.from({ length: 5 }).map((_, i) => (
       <SkeletonRow key={i} />
     ))}
   </div>
 );
+
 
 // Error Component
 const ErrorBanner = ({ message }) => (
@@ -51,8 +51,7 @@ const Evaluations = ({ type = "nist" }) => {
         setLoading(true);
         const res = await privateRequest.get(endpointMap[type]);
         setEvaluations(type == "nist" ? res.data.data : res.data.data);
-        if(res.data.data.some(assessment=>assessment.status != "submitted"))
-        {
+        if (res.data.data.some(assessment => assessment.status != "submitted")) {
           setNewAssessmentDisabled(true);
         }
         else {
@@ -109,9 +108,9 @@ const Evaluations = ({ type = "nist" }) => {
                 <FaEdit />
               </button>
               :
-               <button className="text-blue-500 hover:text-blue-600 bg-blue-200 hover:bg-blue-300 transition-all duration-300 p-2 rounded-full cursor-pointer" onClick={()=>navigate(`/roadmap-analysis/analysis-preview/nist/?evaluation-id=${row._id}`)}><FaEye /></button>
+              <button className="text-blue-500 hover:text-blue-600 bg-blue-200 hover:bg-blue-300 transition-all duration-300 p-2 rounded-full cursor-pointer" onClick={() => navigate(`/roadmap-analysis/analysis-preview/nist/?evaluation-id=${row._id}`)}><FaEye /></button>
           }
-         
+
         </div>)
 
       }
@@ -149,9 +148,9 @@ const Evaluations = ({ type = "nist" }) => {
       label: "Actions",
       render: (_, row) => {
         return (<div className="flex gap-2">
-          
-               <button className="text-blue-500 hover:text-blue-600 bg-blue-200 hover:bg-blue-300 transition-all duration-300 p-2 rounded-full cursor-pointer" onClick={()=>navigate(`/roadmap-analysis/analysis-preview/hipaa/?evaluation-id=${row._id}`)}><FaEye /></button>
-         
+
+          <button className="text-blue-500 hover:text-blue-600 bg-blue-200 hover:bg-blue-300 transition-all duration-300 p-2 rounded-full cursor-pointer" onClick={() => navigate(`/roadmap-analysis/analysis-preview/hipaa/?evaluation-id=${row._id}`)}><FaEye /></button>
+
         </div>)
 
       }
@@ -197,9 +196,9 @@ const Evaluations = ({ type = "nist" }) => {
                 <FaEdit />
               </button>
               :
-               <button className="text-blue-500 hover:text-blue-600 bg-blue-200 hover:bg-blue-300 transition-all duration-300 p-2 rounded-full cursor-pointer" onClick={()=>navigate(`/roadmap-analysis/analysis-preview/c2m2/?evaluation-id=${row._id}`)}><FaEye /></button>
+              <button className="text-blue-500 hover:text-blue-600 bg-blue-200 hover:bg-blue-300 transition-all duration-300 p-2 rounded-full cursor-pointer" onClick={() => navigate(`/roadmap-analysis/analysis-preview/c2m2/?evaluation-id=${row._id}`)}><FaEye /></button>
           }
-         
+
         </div>)
 
       }
@@ -207,19 +206,28 @@ const Evaluations = ({ type = "nist" }) => {
   ];
 
   // Pick config dynamically
-  const config = type === "nist" ? nistConfig : type == "hipaa" ?  hipaaConfig : c2m2Config;
+  const config = type === "nist" ? nistConfig : type == "hipaa" ? hipaaConfig : c2m2Config;
 
   return (
     <div className="bg-[#0f172a] py-10 px-6 w-screen min-h-screen text-white">
-      <div className="flex flex-row w-full justify-end mb-6">
+      <div className="flex flex-row w-full justify-end mb-6 gap-3">
         <Button
           variant="tertiary"
           onClick={() =>
-            navigate(type === "nist" ? "/roadmap-analysis/questionnaire/nist" : type == "hipaa" ? "/roadmap-analysis/questionnaire/hipaa" : "/roadmap-analysis/questionnaire/c2m2")
+            navigate(`/roadmap-analysis/questionnaire/${type}`)
           }
           disabled={newAssessmentDisabled}
         >
           <span>Launch New Assessment</span>
+        </Button>
+        <Button
+          variant="primary"
+          onClick={() =>
+            navigate(`/roadmap-analysis/analysis-preview/${type}`)
+          }
+          
+        >
+          <span>View Analysis</span>
         </Button>
       </div>
 

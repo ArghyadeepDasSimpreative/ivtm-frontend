@@ -3,6 +3,7 @@ import { privateRequest } from "../../../api/config";
 import Table from "../../../components/Table";
 import { capitalizeFirstLetter } from "../../../lib/text";
 import { IoMdAdd } from "react-icons/io";
+import { getUserRole } from "../../../lib/auth";
 
 
 const UserManagement = ({ openUserAddModal }) => {
@@ -10,21 +11,21 @@ const UserManagement = ({ openUserAddModal }) => {
     const [usersList, setUsersList] = useState([]);
     const [error, setError] = useState(null);
 
-    const fetchAllUsers = async() => {
-         try {
-               setError(null);
-               const response = await privateRequest.get("/organisation-user/all-users");
-               console.log(response.data);
-               setUsersList(response.data.users || []);
-         }
-         catch(err) {
-               console.error("Error fetching users:", err);
-               setError("Failed to fetch users. Please try again.");
-               setUsersList([]);
-         }
-         finally {
-               setUsersLoading(false);
-         }
+    const fetchAllUsers = async () => {
+        try {
+            setError(null);
+            const response = await privateRequest.get("/organisation-user/all-users");
+            console.log(response.data);
+            setUsersList(response.data.users || []);
+        }
+        catch (err) {
+            console.error("Error fetching users:", err);
+            setError("Failed to fetch users. Please try again.");
+            setUsersList([]);
+        }
+        finally {
+            setUsersLoading(false);
+        }
     }
 
     useEffect(() => {
@@ -34,13 +35,13 @@ const UserManagement = ({ openUserAddModal }) => {
     const getRoleBadge = (role) => {
         const roleStyles = {
             admin: "bg-red-100 text-red-800 border-red-200",
-            editor: "bg-blue-100 text-blue-800 border-blue-200", 
+            editor: "bg-blue-100 text-blue-800 border-blue-200",
             viewer: "bg-green-100 text-green-800 border-green-200"
         };
-        
+
         const defaultStyle = "bg-gray-100 text-gray-800 border-gray-200";
         const badgeStyle = roleStyles[role?.toLowerCase()] || defaultStyle;
-        
+
         return (
             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${badgeStyle}`}>
                 {capitalizeFirstLetter(role) || 'Unknown'}
@@ -64,8 +65,8 @@ const UserManagement = ({ openUserAddModal }) => {
             render: (value, user) => (
                 <div className="flex items-center">
                     {value ? (
-                        <img 
-                            src={value} 
+                        <img
+                            src={value}
                             alt={user.username}
                             className="w-8 h-8 rounded-full object-cover"
                         />
@@ -123,7 +124,7 @@ const UserManagement = ({ openUserAddModal }) => {
             <div className="w-full h-[40vh] flex items-center justify-center">
                 <div className="text-center">
                     <p className="text-red-500 text-sm mb-2">{error}</p>
-                    <button 
+                    <button
                         onClick={fetchAllUsers}
                         className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
                     >
@@ -137,19 +138,23 @@ const UserManagement = ({ openUserAddModal }) => {
     return (
         <div className="w-full">
             {/* Add User Button */}
+
             <div className="flex justify-between items-center mb-1">
                 <h1 className="text-lg font-semibold text-gray-800"></h1>
-                <button 
-                    onClick={openUserAddModal}
-                    className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center gap-2 cursor-pointer"
-                >
-                    <IoMdAdd />
-                    Add New User
-                </button>
+                {
+                    getUserRole == "admin" && <button
+                        onClick={openUserAddModal}
+                        className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center gap-2 cursor-pointer"
+                    >
+                        <IoMdAdd />
+                        Add New User
+                    </button>
+                }
+
             </div>
 
             {/* Users Table */}
-            <Table 
+            <Table
                 label="All Users"
                 data={usersList}
                 config={tableConfig}
