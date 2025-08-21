@@ -17,11 +17,9 @@ export default function QuestionCard({
   const current = questions[currentQuestionIndex];
   const currentAnswer = answersParent[current?._id] || {};
 
-  console.log("pageloading is ", pageLoading)
-
   function ShimmerLoader() {
     return (
-      <div className="max-w-3xl mx-auto w-full space-y-4 animate-pulse bg-slate-800 p-4 rounded">
+      <div className="max-w-3xl mx-auto w-full space-y-4 animate-pulse bg-[#0f172a] p-4 rounded">
         <div className="h-8 bg-slate-700 rounded w-1/2 mt-10"></div>
         <div className="h-6 bg-slate-700 rounded w-full"></div>
         <div className="h-12 bg-slate-700 rounded w-full mt-4"></div>
@@ -80,27 +78,22 @@ export default function QuestionCard({
 
   const goPrev = async () => {
     if (currentQuestionIndex === 0 || submitLoading) {
-      console.log('goPrev returned early due to index or submitLoading');
+      
       return;
     }
-    console.log('goPrev: setting pageLoading true');
     setPageLoading(true);
     await onAutoSave();
     setCurrentQuestionIndex((i) => i - 1);
-    console.log('goPrev: setting pageLoading false');
     setPageLoading(false);
   };
 
   const goNext = async () => {
     if (currentQuestionIndex === questions.length - 1 || submitLoading) {
-      console.log('goNext returned early due to index or submitLoading');
       return;
     }
-    console.log('goNext: setting pageLoading true');
     setPageLoading(true);
     await onAutoSave();
     setCurrentQuestionIndex((i) => i + 1);
-    console.log('goNext: setting pageLoading false');
     setPageLoading(false);
   };
 

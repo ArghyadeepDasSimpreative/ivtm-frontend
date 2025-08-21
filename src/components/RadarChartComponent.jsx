@@ -5,7 +5,7 @@ import {
 
 const colors = [
   "#38bdf8", // sky-400
-  "#f97316", // green-400
+  "#f9522a", // green-400
   "#facc15", // yellow-400
   "#f472b6", // pink-400
   "#a78bfa", // purple-400

@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { IoStatsChart } from "react-icons/io5";
 
 export default function SidebarInfo({
   current,
@@ -6,11 +8,11 @@ export default function SidebarInfo({
   total,
   onPrev,
   onNext,
-  onSelectDomain, // new prop to select domain by index
+  onSelectDomain,
   isSubmitted,
   submitLoading,
   navigationLoading,
-  Button
+  Button,
 }) {
   return (
     <div className="w-full md:w-2/5 lg:w-1/3 bg-slate-900 border-r border-white/10 p-6 flex flex-col justify-between">
@@ -21,7 +23,20 @@ export default function SidebarInfo({
         </p>
       </motion.div>
 
-      {!isSubmitted && (
+      {isSubmitted ? (
+        <div className="mt-10 flex flex-col items-center justify-center text-center gap-3">
+          <p className="text-green-400 font-semibold text-lg">
+            Thank you for taking this assessment!
+          </p>
+          <p className="text-emerald-700 mb-4 text-sm">Your assessment reaasult is ready to be viewed</p>
+          <Link to="/roadmap-analysis/analysis-preview/c2m2" className="w-full max-w-xs">
+            <Button type="button">
+              <IoStatsChart size={20} />
+              View Analysis
+            </Button>
+          </Link>
+        </div>
+      ) : (
         <div className="flex flex-col gap-1">
           <div className="flex items-center justify-between mt-10">
             <Button

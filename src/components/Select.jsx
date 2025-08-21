@@ -26,9 +26,9 @@ const CustomSelect = ({
   const isDark = style === "dark";
 
   return (
-    <div className="w-full !max-w-[600px]"> {/* Updated to match InputField container */}
+    <div className="w-full !max-w-[600px]">
       {label && (
-        <label className="block text-md text-gray-600 mb-2"> {/* Updated to match InputField label styling */}
+        <label className="block text-md text-gray-600 mb-2">
           {label}
         </label>
       )}
@@ -38,7 +38,7 @@ const CustomSelect = ({
         options={options}
         onChange={onSelect}
         menuPortalTarget={document.body}
-        className="!text-md"
+        className="!text-sm"
         styles={{
           control: (base, state) => ({
             ...base,
@@ -124,7 +124,7 @@ const CustomSelect = ({
           }),
         }}
       />
-      {error && <p className="text-red-500 text-md mt-1">{error}</p>} {/* Added error display to match InputField */}
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   );
 };

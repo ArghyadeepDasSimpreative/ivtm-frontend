@@ -8,7 +8,7 @@ import Button from "../../../components/Button";
 import { showToast } from "../../../lib/toast";
 
 export default function C2m2Questionnaire() {
-    
+
     function useQuery() {
         return new URLSearchParams(useLocation().search);
     }
@@ -30,10 +30,9 @@ export default function C2m2Questionnaire() {
     const [questionNavigationLoading, setQuestionNavigationLoading] = useState(false)
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [evaluationSubmitted, setEvaluationSubmitted] = useState(false);
 
     const currentDomain = domains[currentDomainIndex];
-
-    console.log("from parent questionLaoding is ", questionNavigationLoading)
 
     useEffect(() => {
         async function loadData() {
@@ -101,6 +100,7 @@ export default function C2m2Questionnaire() {
     }, [currentDomain, evaluationId]);
 
     const saveEvaluation = useCallback(async (submitting = false) => {
+
         if (Object.keys(answers).length === 0) return;
         const transformedAnswers = Object.entries(answers).map(([questionId, data]) => ({
             questionId,
@@ -108,6 +108,7 @@ export default function C2m2Questionnaire() {
         }));
         const payload = { answers: transformedAnswers, status: submitting };
         try {
+            console.log("trying to save c2m2")
             let res;
             if (evaluationId) {
                 res = await privateRequest.put(`/c2m2-evaluations/${evaluationId}`, payload);
@@ -115,12 +116,10 @@ export default function C2m2Questionnaire() {
                 res = await privateRequest.post(`/c2m2-evaluations`, payload);
             }
             if (res.status === 200) {
-                // Only store returned _id if missing before
                 if (!evaluationId && res.data.data?._id) {
                     query.set("evaluation-id", res.data.data._id);
                     navigate({ search: query.toString() }, { replace: true });
                 }
-
                 if (res.data.averageScore !== undefined) {
                     setMarksResponse(res.data.averageScore);
                 } else if (res.data.data?.averageScore) {
@@ -130,9 +129,8 @@ export default function C2m2Questionnaire() {
             }
         } catch (err) {
             if (submitting) showToast.error("Failed to submit responses");
-            console.error("Error saving evaluation:", err);
         }
-        
+
     }, [answers, evaluationId, query]);
 
 
@@ -158,6 +156,7 @@ export default function C2m2Questionnaire() {
     };
 
     const goToQuestion = async (targetIndex) => {
+        console.log("target index is ", targetIndex)
         setSubmitLoading(true);
         setQuestionNavigationLoading(true);
         await saveEvaluation(false);
@@ -171,6 +170,7 @@ export default function C2m2Questionnaire() {
         await saveEvaluation(true);
         setIsSubmitted(true);
         setSubmitLoading(false);
+        setEvaluationSubmitted(true);
     };
 
     const selectDomain = async (targetIndex) => {
@@ -179,7 +179,6 @@ export default function C2m2Questionnaire() {
         setCurrentDomainIndex(targetIndex);
         setSubmitLoading(false);
     };
-
 
     return (
         <div className="min-h-screen w-full bg-[#0f172a] text-white flex">
@@ -213,7 +212,10 @@ export default function C2m2Questionnaire() {
                             <h2 className="text-xl font-bold text-green-400 mb-2">Submitted!</h2>
                             <p className="text-gray-300 mb-4">Your responses have been recorded.</p>
                             {marksResponse !== null && (
-                                <p className="text-blue-400 text-md mt-1">Average Score: {marksResponse}</p>
+                                <p className="text-blue-400 text-md mt-1">
+                                    Average Score: {marksResponse != null ? marksResponse.toFixed(2) : 'N/A'}
+                                </p>
+
                             )}
                         </div>
                     </div>
@@ -230,12 +232,7 @@ export default function C2m2Questionnaire() {
                             Button={Button}
                             submitLoading={submitLoading}
                             pageLoading={questionNavigationLoading}
-                            setPageLoading={(param)=>
-                            {
-                                console.log("guyana");
-                                 setQuestionNavigationLoading(param)
-                            }
-                               }
+                            setPageLoading={setQuestionNavigationLoading}
                         />
                         <div className="rounded-lg border border-blue-500 bg-slate-900 px-6 py-4 shadow-md w-[80%] mx-auto mt-10">
                             {/* <h2 className="text-blue-400 font-semibold text-md mb-1">

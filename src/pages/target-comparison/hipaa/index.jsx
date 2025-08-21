@@ -167,7 +167,7 @@ const TargetComparisonHipaa = () => {
                 <div className="flex flex-col gap-10" ref={exportRef}>
                     <p className="w-full text-center text-2xl font-semibold text-blue-200">Assessment result based on <strong className="text-blue-400">HIPAA</strong> compliance</p>
 
-                    <div className="flex justify-between items-center px-4">
+                    <div className="flex justify-between items-end px-4">
                         <CustomSelect
                             label="Select HIPAA Assessment"
                             data={assessmentsList}
@@ -222,8 +222,8 @@ const TargetComparisonHipaa = () => {
                                     {categoryWiseScore.length > 0 && (
                                         <div className="flex-1 bg-slate-900 p-4 rounded-md">
                                             <MultiLineChart
-                                                dataSets={[{ label: "", data: categoryWiseScore },
-                                                { label: "Target score", data: categoryWiseTargetScore }
+                                                dataSets={[{ label: "Score", data: categoryWiseScore },
+                                                { label: "Target", data: categoryWiseTargetScore }
                                                 ]}
                                                 title="Function-wise analysis"
                                             />
@@ -232,8 +232,8 @@ const TargetComparisonHipaa = () => {
 
                                     <div className="flex-1 bg-slate-900 p-4 rounded-md">
                                         <RadarChartComponent
-                                            dataSets={[{ name: "", data: categoryWiseScore },
-                                            { name: "Target score", data: categoryWiseTargetScore }
+                                            dataSets={[{ name: "Score", data: categoryWiseScore },
+                                            { name: "Target", data: categoryWiseTargetScore }
                                             ]}
                                             label="Domain wise distribution"
                                         // notation="Each axis shows a function's average score (Max: 5)"
@@ -244,11 +244,11 @@ const TargetComparisonHipaa = () => {
                                         <CategorisedBarChart
                                             datasets={[
                                                 {
-                                                    name: "",
+                                                    name: "Score",
                                                     color: "#22d3ee",
                                                     data: categoryWiseScore,
                                                 },
-                                                { name: "Target score", data: categoryWiseTargetScore, color: "orange" }
+                                                { name: "Target", data: categoryWiseTargetScore, color: "orange" }
                                             ]}
                                             title="Number of elements wise analysis"
                                             note="Average score per function (range 0 to 5)"

@@ -230,6 +230,7 @@ const C2m2AnalysisPreview = () => {
                     title="Domain-Wise Scores"
                     note="Average scores per domain (0 to 5)"
                     handleClick={handleBarClick}
+                    maxscore={3}
                   />
                 </div>
               </div>

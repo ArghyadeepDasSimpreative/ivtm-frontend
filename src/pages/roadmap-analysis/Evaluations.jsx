@@ -5,6 +5,8 @@ import { capitalizeFirstLetter } from "../../lib/text";
 import { FaEdit, FaEye } from "react-icons/fa";
 import Button from "../../components/Button";
 import { useNavigate } from "react-router-dom";
+import { IoStatsChart } from "react-icons/io5";
+import { LuFileSpreadsheet } from "react-icons/lu";
 
 const SkeletonRow = () => (
   <div className="animate-pulse flex items-center justify-between gap-6 py-4 px-4 border-b border-white/10">
@@ -17,6 +19,8 @@ const SkeletonRow = () => (
 
 const SkeletonTable = () => (
   <div className="divide-y divide-white/10 rounded-lg overflow-hidden border border-white/10 shadow-lg bg-[#15202b]">
+    <SkeletonRow />
+    <SkeletonRow />
     {Array.from({ length: 5 }).map((_, i) => (
       <SkeletonRow key={i} />
     ))}
@@ -210,33 +214,40 @@ const Evaluations = ({ type = "nist" }) => {
 
   return (
     <div className="bg-[#0f172a] py-10 px-6 w-screen min-h-screen text-white">
-      <div className="flex flex-row w-full justify-end mb-6 gap-3">
-        <Button
-          variant="tertiary"
-          onClick={() =>
-            navigate(`/roadmap-analysis/questionnaire/${type}`)
-          }
-          disabled={newAssessmentDisabled}
-        >
-          <span>Launch New Assessment</span>
-        </Button>
-        <Button
-          variant="primary"
-          onClick={() =>
-            navigate(`/roadmap-analysis/analysis-preview/${type}`)
-          }
-          
-        >
-          <span>View Analysis</span>
-        </Button>
-      </div>
+
+
 
       {error && <ErrorBanner message={error} />}
 
       {loading ? (
         <SkeletonTable />
       ) : (
-        <Table config={config} data={evaluations} dark />
+        <>
+          <div className="flex flex-row w-full justify-end mb-6 gap-3">
+            <Button
+              variant="tertiary"
+              onClick={() =>
+                navigate(`/roadmap-analysis/questionnaire/${type}`)
+              }
+              disabled={newAssessmentDisabled}
+            >
+              <LuFileSpreadsheet size={20} />
+              <span>Launch New Assessment</span>
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() =>
+                navigate(`/roadmap-analysis/analysis-preview/${type}`)
+              }
+            >
+              <IoStatsChart size={20 } />
+              <span>View Analysis</span>
+            </Button>
+          </div>
+          <p className="text-red-400 w-full text-center text-sm font-semibold !m-1">You can't launch a new assessment untill all are all of them are submitted.</p>
+          <Table config={config} data={evaluations} dark />
+        </>
+
       )}
     </div>
   );

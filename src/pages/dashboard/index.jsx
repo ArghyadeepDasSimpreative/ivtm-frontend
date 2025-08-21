@@ -221,12 +221,12 @@ const VulnerabilityDashboard = () => {
                     fetchReportsByBatch(selectedBatch.value);
                 }
                 else {
-                    showToast.error("Failed to save severity updates.");
+                    throw new Error()
                 }
             }
         }
         catch (err) {
-            showToast.error("Failed to save severity updates.");
+            showToast.error(err?.response?.data?.message || "Failed to save severity updates.");
         }
         finally {
             setSeverityUpdateLoading(false);
@@ -236,163 +236,167 @@ const VulnerabilityDashboard = () => {
 
     return (
         <div className="w-full min-h-screen">
-            <div className="w-full flex justify-between items-end mb-6">
-                <CustomSelect
-                    data={batchReports}
-                    config={{ key: "value", label: "label" }}
-                    label="Select Batch"
-                    onSelect={(val) => setSelectedBatch(val)}
-                    defaultValue={selectedBatch}
-                    width="300px"
-                    style="light"
-                />
+            {
+                pageLoading ? (
+                    <p className="text-gray-500 text-center">Loading batches...</p>
+                ) :
+                    <>
+                        <div className="w-full flex justify-between items-end mb-6">
+                            <CustomSelect
+                                data={batchReports}
+                                config={{ key: "value", label: "label" }}
+                                label="Select Batch"
+                                onSelect={(val) => setSelectedBatch(val)}
+                                defaultValue={selectedBatch}
+                                width="300px"
+                                style="light"
+                            />
 
-                <div>
-                    <button
-                        onClick={handleUploadClick}
-                        className="flex justify-center items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition disabled:opacity-60 w-[170px] cursor-pointer"
-                        disabled={uploadLoading}
-                    >
-                        {uploadLoading ? (
-                            <ClipLoader size={20} color="#fff" />
-                        ) : (
-                            <>
-                                <FiUpload size={20} />
-                                Upload Report
-                            </>
-                        )}
-                    </button>
-                    <input
-                        type="file"
-                        accept=".pdf, .xlsx, .xls"
-                        className="hidden"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                    />
-                </div>
-            </div>
-
-            {pageLoading ? (
-                <p className="text-gray-500 text-center">Loading batches...</p>
-            ) : selectedBatch ? (
-                <>{
-                    reportLoading ? <ReportLoading /> :
-                        <div className="flex justify-between gap-3 mb-6 max-h-[80vh] overflow-y-auto">
-                            <div className="flex flex-col w-[72%] border border-zinc-200 shadow-md h-full rounded-xl p-4">
-                                <div className="text-gray-800 bg-white">
-                                    <h2 className="text-md font-semibold m-4">Vulnerability summary</h2>
-
-                                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
-                                        <div className="bg-white p-4 rounded-xl shadow">
-                                            <h3 className="font-bold mb-2 text-black text-sm">Ageing Analysis</h3>
-                                            <ResponsiveContainer width="100%" height={250}>
-                                                <AreaChart data={ageingData}>
-                                                    <CartesianGrid strokeDasharray="3 3" />
-                                                    <XAxis dataKey="date" />
-                                                    <YAxis />
-                                                    <Tooltip />
-                                                    <Area
-                                                        type="monotone"
-                                                        dataKey="count"
-                                                        stroke="#8884d8"
-                                                        fill="#8884d8"
-                                                        strokeWidth={2}
-                                                        dot={({ cx, cy, payload }) => (
-                                                            <circle
-                                                                cx={cx}
-                                                                cy={cy}
-                                                                r={5}
-                                                                fill="#8884d8"
-                                                                stroke="#fff"
-                                                                strokeWidth={2}
-                                                                onClick={() => areaChartClickHandler(payload)}
-                                                                style={{ cursor: "pointer" }}
-                                                            />
-                                                        )}
-                                                    />
-                                                </AreaChart>
-                                            </ResponsiveContainer>
-
-                                        </div>
-
-                                        <div className="bg-white p-4 rounded-xl shadow">
-                                            <h3 className="font-bold mb-2 text-black text-sm">Severity Analysis</h3>
-                                            <ResponsiveContainer width="100%" height={250}>
-                                                <PieChart>
-                                                    <Pie
-                                                        data={severityData}
-                                                        cx="50%"
-                                                        cy="50%"
-                                                        innerRadius={60}
-                                                        outerRadius={80}
-                                                        fill="#8884d8"
-                                                        dataKey="value"
-                                                        onClick={(entry) => pieChartClickHandler(entry)}
-                                                    >
-                                                        {severityData.map((entry, index) => (
-                                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                                        ))}
-                                                    </Pie>
-                                                    <Tooltip />
-                                                    <Legend />
-                                                </PieChart>
-                                            </ResponsiveContainer>
-                                        </div>
-
-                                        <div className="bg-white p-4 rounded-xl shadow">
-                                            <h3 className="font-bold mb-2 text-black text-sm">Assessment Area wise</h3>
-                                            <ResponsiveContainer width="100%" height={250}>
-                                                <BarChart data={areaData}>
-                                                    <CartesianGrid strokeDasharray="3 3" />
-                                                    <XAxis dataKey="name" />
-                                                    <YAxis />
-                                                    <Tooltip />
-                                                    <Legend />
-                                                    <Bar dataKey="count" fill="#184ea3" onClick={data => barChartClickHandler(data)} />
-                                                </BarChart>
-                                            </ResponsiveContainer>
-                                        </div>
-
-                                        {
-                                            filteredData.length > 0 ? (
-                                                <div className="bg-white p-4 rounded-xl shadow col-span-3">
-                                                    <h3 className="font-bold mb-2 text-purple-600">Selected Dataset</h3>
-                                                    <FilteredTable data={filteredData} setUpdates={setSeverityUpdates} />
-                                                </div>
-                                            ) : (
-                                                <p className="col-span-3 text-gray-500">No reports match the selected criteria.</p>
-                                            )
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="w-[25%] h-full flex flex-col gap-3 justify-start">
-                                <PriorityRadarChart data={filteredData} />
-                                <SeverityIndex />
-                                <div className="flex w-full items-center justify-end">
-                                    <button
-                                        onClick={updateSeverity}
-                                        className="flex justify-center items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition disabled:opacity-60 w-[170px] cursor-pointer mt-10"
-                                        disabled={severityUpdateLaoding}
-                                    >
-                                        {severityUpdateLaoding ? (
-                                            <ClipLoader size={20} color="#fff" />
-                                        ) : (
-                                            <>
-                                                <MdSystemUpdateAlt size={20} />
-                                                Update Report
-                                            </>
-                                        )}
-                                    </button>
-                                </div>
+                            <div>
+                                <button
+                                    onClick={handleUploadClick}
+                                    className="flex justify-center items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition disabled:opacity-60 w-[170px] cursor-pointer"
+                                    disabled={uploadLoading}
+                                >
+                                    {uploadLoading ? (
+                                        <ClipLoader size={20} color="#fff" />
+                                    ) : (
+                                        <>
+                                            <FiUpload size={20} />
+                                            Upload Report
+                                        </>
+                                    )}
+                                </button>
+                                <input
+                                    type="file"
+                                    accept=".pdf, .xlsx, .xls"
+                                    className="hidden"
+                                    ref={fileInputRef}
+                                    onChange={handleFileChange}
+                                />
                             </div>
                         </div>
-                }</>
 
+                        {selectedBatch ? (
+                            <>{
+                                reportLoading ? <ReportLoading /> :
+                                    <div className="flex justify-between gap-3 mb-6 max-h-[80vh] overflow-y-auto">
+                                        <div className="flex flex-col w-[72%] border border-zinc-200 shadow-md h-full rounded-xl p-4">
+                                            <div className="text-gray-800">
+                                                <h2 className="text-md font-semibold m-4">Vulnerability summary</h2>
 
-            ) : (
-                <p>Please select a batch to view reports.</p>
-            )}
+                                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+                                                    <div className="bg-white p-4 rounded-xl shadow">
+                                                        <h3 className="font-bold mb-2 text-black text-sm">Ageing Analysis</h3>
+                                                        <ResponsiveContainer width="100%" height={250}>
+                                                            <AreaChart data={ageingData}>
+                                                                <CartesianGrid strokeDasharray="3 3" />
+                                                                <XAxis dataKey="date" />
+                                                                <YAxis />
+                                                                <Tooltip />
+                                                                <Area
+                                                                    type="monotone"
+                                                                    dataKey="count"
+                                                                    stroke="#8884d8"
+                                                                    fill="#8884d8"
+                                                                    strokeWidth={2}
+                                                                    dot={({ cx, cy, payload }) => (
+                                                                        <circle
+                                                                            cx={cx}
+                                                                            cy={cy}
+                                                                            r={5}
+                                                                            fill="#8884d8"
+                                                                            stroke="#fff"
+                                                                            strokeWidth={2}
+                                                                            onClick={() => areaChartClickHandler(payload)}
+                                                                            style={{ cursor: "pointer" }}
+                                                                        />
+                                                                    )}
+                                                                />
+                                                            </AreaChart>
+                                                        </ResponsiveContainer>
+
+                                                    </div>
+
+                                                    <div className="bg-white p-4 rounded-xl shadow">
+                                                        <h3 className="font-bold mb-2 text-black text-sm">Severity Analysis</h3>
+                                                        <ResponsiveContainer width="100%" height={250}>
+                                                            <PieChart>
+                                                                <Pie
+                                                                    data={severityData}
+                                                                    cx="50%"
+                                                                    cy="50%"
+                                                                    innerRadius={60}
+                                                                    outerRadius={80}
+                                                                    fill="#8884d8"
+                                                                    dataKey="value"
+                                                                    onClick={(entry) => pieChartClickHandler(entry)}
+                                                                >
+                                                                    {severityData.map((entry, index) => (
+                                                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                                    ))}
+                                                                </Pie>
+                                                                <Tooltip />
+                                                                <Legend />
+                                                            </PieChart>
+                                                        </ResponsiveContainer>
+                                                    </div>
+
+                                                    <div className="bg-white p-4 rounded-xl shadow">
+                                                        <h3 className="font-bold mb-2 text-black text-sm">Assessment Area wise</h3>
+                                                        <ResponsiveContainer width="100%" height={250}>
+                                                            <BarChart data={areaData}>
+                                                                <CartesianGrid strokeDasharray="3 3" />
+                                                                <XAxis dataKey="name" />
+                                                                <YAxis />
+                                                                <Tooltip />
+                                                                <Legend />
+                                                                <Bar dataKey="count" fill="#184ea3" onClick={data => barChartClickHandler(data)} />
+                                                            </BarChart>
+                                                        </ResponsiveContainer>
+                                                    </div>
+
+                                                    {
+                                                        filteredData.length > 0 ? (
+                                                            <div className="bg-white p-4 rounded-xl shadow col-span-3">
+                                                                <h3 className="font-bold mb-2 text-purple-600">Selected Dataset</h3>
+                                                                <FilteredTable data={filteredData} setUpdates={setSeverityUpdates} />
+                                                            </div>
+                                                        ) : (
+                                                            <p className="col-span-3 text-gray-500">No reports match the selected criteria.</p>
+                                                        )
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="w-[25%] h-full flex flex-col gap-3 justify-start">
+                                            <PriorityRadarChart data={filteredData} />
+                                            <SeverityIndex />
+                                            <div className="flex w-full items-center justify-end">
+                                                <button
+                                                    onClick={updateSeverity}
+                                                    className="flex justify-center items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition disabled:opacity-60 w-[170px] cursor-pointer mt-10"
+                                                    disabled={severityUpdateLaoding}
+                                                >
+                                                    {severityUpdateLaoding ? (
+                                                        <ClipLoader size={20} color="#fff" />
+                                                    ) : (
+                                                        <>
+                                                            <MdSystemUpdateAlt size={20} />
+                                                            Update Report
+                                                        </>
+                                                    )}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                            }</>
+                        ) : (
+                            <p>Please select a batch to view reports.</p>
+                        )}
+                    </>
+            }
+
         </div>
     );
 };

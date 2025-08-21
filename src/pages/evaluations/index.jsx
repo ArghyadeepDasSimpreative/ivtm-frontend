@@ -5,6 +5,7 @@ import { capitalizeFirstLetter } from "../../lib/text";
 import { FaEdit } from "react-icons/fa";
 import Button from "../../components/Button";
 import { useNavigate } from "react-router-dom";
+import { LuFileSpreadsheet } from "react-icons/lu";
 
 // Skeleton Loader Component
 const SkeletonRow = () => (
@@ -102,6 +103,7 @@ const EvaluationsPage = () => {
       <div className="flex flex-row w-full justify-between mb-6">
         <h1 className="text-xl font-bold">Evaluations</h1>
         <Button variant="tertiary" onClick={() => navigate("/roadmap-analysis/questionnaire/nist")}>
+           <LuFileSpreadsheet size={20} />
           <span>Launch New Assessment</span>
         </Button>
        

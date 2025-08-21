@@ -9,7 +9,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
-const lineColors = ['#3b82f6', '#f97316']; // Blue and Orange
+const lineColors = ['#3b82f6', '#f9522a']; // Blue and Orange
 
 const MultiLineChart = ({ dataSets, title = "Function-wise Score Trend" }) => {
   

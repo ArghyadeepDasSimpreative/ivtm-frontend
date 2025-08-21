@@ -5,6 +5,7 @@ import TreeDisplay from "../../../components/TreeDisplay";
 import { ClipLoader } from "react-spinners";
 import Button from "../../../components/Button";
 import { Link, useNavigate } from "react-router-dom";
+import { IoStatsChart } from "react-icons/io5";
 
 const descriptions = {
   Identify: "Helps understand the organizational environment to manage risk.",
@@ -60,7 +61,9 @@ export default function SidebarInfo({ current, index, total, onPrev, onNext, isS
               <p>✅ Questionnaire completed !</p>
               <p className="mt-1 mb-4">You can now review or export the results.</p>
               <Link to="/roadmap-analysis/analysis-preview/nist" className="mx-auto mt-4">
-                  <Button>View Analysis</Button>
+                  <Button>
+                    <IoStatsChart size={20 } />
+                    View Analysis</Button>
                 </Link>
             </div>
           )}

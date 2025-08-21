@@ -206,7 +206,7 @@ const CreateUser = ({ showUsers }) => {
             )}
 
             {
-                getUserRole != "admin" ? <p className=" p-4 bg-zinc-200 rounded-md">Sorry, you don't have access to this section</p>
+                getUserRole() != "admin" ? <p className=" p-4 bg-zinc-200 rounded-md">Sorry, you don't have access to this section</p>
                     :
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* First Row - Email and Phone */}

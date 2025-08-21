@@ -12,7 +12,7 @@ import {
 
 const MAX_LABEL_LENGTH = 4;
 
-const CategorisedBarChart = ({ datasets, title, note, handleClick }) => {
+const CategorisedBarChart = ({ datasets, title, note, handleClick, maxscore=5 }) => {
   // Merge all datasets by functionName
   const mergedData = [];
 
@@ -50,7 +50,7 @@ const CategorisedBarChart = ({ datasets, title, note, handleClick }) => {
               label.length > MAX_LABEL_LENGTH ? label.slice(0, MAX_LABEL_LENGTH) + ".." : label
             }
           />
-          <YAxis stroke="#cbd5e1" domain={[0, 5]} />
+          <YAxis stroke="#cbd5e1" domain={[0, maxscore]} />
           <Tooltip contentStyle={{ backgroundColor: "#1e293b", border: "none" }} itemStyle={{ color: "#93c5fd" }} />
           <Legend />
           {datasets.map((dataset, i) => (

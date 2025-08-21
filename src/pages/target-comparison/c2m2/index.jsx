@@ -255,10 +255,11 @@ const TargetComparissonC2m2 = () => {
 
                                 <div className="flex-1 bg-slate-900 p-4 rounded-md">
                                     <CategorisedBarChart
-                                        datasets={[{ name: "Score", data: domainWiseData, color: "#22d3ee" }, { name: "Target", data: targetData, color: "#f97316" }]}
+                                        datasets={[{ name: "Score", data: domainWiseData, color: "#22d3ee" }, { name: "Target", data: targetData, color: "#f9522a" }]}
                                         title="Domain-Wise Scores"
                                         note="Average scores per domain (0 to 5)"
                                         handleClick={handleBarClick}
+                                        maxscore={3}
                                     />
                                 </div>
                             </div>

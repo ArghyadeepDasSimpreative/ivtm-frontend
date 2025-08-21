@@ -3,6 +3,7 @@ import Button from "./Button";
 import { FaRegFileExcel } from "react-icons/fa";
 
 const C2m2AnswerTable = ({ answers = [], target = null }) => {
+  console.log("answers are ", answers[0])
   if (!answers.length) return <div className="text-white">No answers found.</div>;
 
   const exportToExcel = () => {
@@ -21,7 +22,7 @@ const C2m2AnswerTable = ({ answers = [], target = null }) => {
         "Score": q.marks || 0,
         ...(target !== null && {
           "Target Value": target,
-          "Target Solution": targetSolution || "N/A",
+          "Target Solution": q.marksArray[1] ? q.marksArray[1] < targetSolution ? "N/A" : targetSolution : "N/A",
         }),
       };
     });
@@ -48,43 +49,46 @@ const C2m2AnswerTable = ({ answers = [], target = null }) => {
       <table className="w-full table-auto border-collapse !text-md">
         <thead>
           <tr className="bg-slate-700 text-left !text-md">
-            <th className="p-2" style={{fontSize: "14px"}}>#</th>
-            <th className="p-2" style={{fontSize: "14px"}}>Domain</th>
-            <th className="p-2" style={{fontSize: "14px"}}>Practice Code</th>
-            <th className="p-2" style={{fontSize: "14px"}}>Practice Description</th>
-            <th className="p-2" style={{fontSize: "14px"}}>Response</th>
-            <th className="p-2" style={{fontSize: "14px"}}>Score</th>
+            <th className="p-2" style={{ fontSize: "14px" }}>#</th>
+            <th className="p-2" style={{ fontSize: "14px" }}>Domain</th>
+            <th className="p-2" style={{ fontSize: "14px" }}>Practice Code</th>
+            <th className="p-2" style={{ fontSize: "14px" }}>Practice Description</th>
+            <th className="p-2" style={{ fontSize: "14px" }}>Response</th>
+            <th className="p-2" style={{ fontSize: "14px" }}>Score</th>
             {target !== null && (
               <>
-                <th className="p-2" style={{fontSize: "14px"}}>Target Value</th>
-                <th className="p-2" style={{fontSize: "14px"}}>Target Solution</th>
+                <th className="p-2" style={{ fontSize: "14px" }}>Target Value</th>
+                <th className="p-2" style={{ fontSize: "14px" }}>Target Solution</th>
               </>
             )}
           </tr>
         </thead>
         <tbody>
           {answers.map((q, index) => {
-            console.log("answer is ", q)
             const targetSolution =
               target !== null && Array.isArray(q.options)
                 ? q.options[target - 1] || q.options[q.options.length - 1]
                 : null;
+
+            const actualSolution =
+              !q.marksArray[1] || q.marksArray[1] < target ? "N/A" : targetSolution;
+
 
             return (
               <tr
                 key={q.questionId}
                 className={index % 2 === 0 ? "bg-slate-800" : "bg-slate-700"}
               >
-                <td className="p-2" style={{fontSize: "14px"}}>{index + 1}</td>
-                <td className="p-2" style={{fontSize: "14px"}}>{q.domain}</td>
-                <td className="p-2" style={{fontSize: "14px"}}>{q.practice}</td>
-                <td className="p-2" style={{fontSize: "14px"}}>{q.practiceText}</td>
-                <td className="p-2" style={{fontSize: "14px"}}>{q.answer || "No"}</td>
-                <td className="p-2" style={{fontSize: "14px"}}>{q.marks || 0}</td>
+                <td className="p-2" style={{ fontSize: "14px" }}>{index + 1}</td>
+                <td className="p-2" style={{ fontSize: "14px" }}>{q.domain}</td>
+                <td className="p-2" style={{ fontSize: "14px" }}>{q.practice}</td>
+                <td className="p-2" style={{ fontSize: "14px" }}>{q.practiceText}</td>
+                <td className="p-2" style={{ fontSize: "14px" }}>{q.answer || "No"}</td>
+                <td className="p-2" style={{ fontSize: "14px" }}>{q.marks || 0}</td>
                 {target !== null && (
                   <>
-                    <td className="p-2" style={{fontSize: "14px"}}>{target}</td>
-                    <td className="p-2" style={{fontSize: "14px"}}>{targetSolution || "N/A"}</td>
+                    <td className="p-2" style={{ fontSize: "14px" }}>{target}</td>
+                    <td className="p-2" style={{ fontSize: "14px" }}>{actualSolution || "N/A"}</td>
                   </>
                 )}
               </tr>

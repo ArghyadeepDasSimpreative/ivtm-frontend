@@ -201,7 +201,7 @@ const HipaaAnalysisPreview = () => {
                                     {functionWiseMarks.length > 0 && (
                                         <div className="flex-1 bg-slate-900 p-4 rounded-md">
                                             <MultiLineChart
-                                                dataSets={[{ label: "", data: functionWiseMarks }]}
+                                                dataSets={[{ label: "Score", data: functionWiseMarks }]}
                                                 title="Function-wise analysis"
                                             />
                                         </div>
@@ -209,7 +209,7 @@ const HipaaAnalysisPreview = () => {
 
                                     <div className="flex-1 bg-slate-900 p-4 rounded-md">
                                         <RadarChartComponent
-                                            dataSets={[{ name: "", data: functionWiseMarks }]}
+                                            dataSets={[{ name: "Score", data: functionWiseMarks }]}
                                             label="Domain wise distribution"
                                             // notation="Each axis shows a function's average score (Max: 5)"
                                         />
@@ -219,7 +219,7 @@ const HipaaAnalysisPreview = () => {
                                         <CategorisedBarChart
                                             datasets={[
                                                 {
-                                                    name: "",
+                                                    name: "Score",
                                                     color: "#22d3ee",
                                                     data: functionWiseMarks,
                                                 },

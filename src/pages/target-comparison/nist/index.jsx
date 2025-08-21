@@ -173,7 +173,7 @@ const TargetComparisonNist = () => {
             ) : (
                 <div className="flex flex-col gap-10" ref={exportRef}>
                     <p className="w-full text-center text-2xl font-semibold text-blue-200">Assessment result based on <strong className="text-blue-400">NIST CSF</strong></p>
-                    <div className="flex justify-between items-center px-4">
+                    <div className="flex justify-between items-end px-4">
                         <CustomSelect
                             label="Select Assessment"
                             data={assessmentsList}
@@ -251,7 +251,7 @@ const TargetComparisonNist = () => {
                                         <CategorisedBarChart
                                             datasets={[
                                                 { name: "Actual", data: functionWiseMarks, color: "#3b82f6" },
-                                                { name: "Target", data: targetData, color: "#f97316" }
+                                                { name: "Target", data: targetData, color: "#f9522a" }
                                             ]}
                                             title="Function-Wise Scores"
                                             note="Average scores per function (0 to 5)"

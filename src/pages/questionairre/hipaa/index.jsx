@@ -5,6 +5,7 @@ import Button from "../../../components/Button";
 import { showToast } from "../../../lib/toast";
 import { Link } from "react-router-dom";
 import hipaaImage from "../../../assets/hipaa-cyber-security.png"
+import { IoStatsChart } from "react-icons/io5"
 
 export default function HipaaQuestionsPage() {
   const [questions, setQuestions] = useState([]);
@@ -72,7 +73,9 @@ export default function HipaaQuestionsPage() {
                   Your answers have been recorded. You can now view your analysis.
                 </p>
                 <Link to="/roadmap-analysis/analysis-preview/hipaa">
-                  <Button>View Analysis</Button>
+                  <Button>
+                    <IoStatsChart size={20 } />
+                    View Analysis</Button>
                 </Link>
               </div>
             </div>
