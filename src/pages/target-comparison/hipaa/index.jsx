@@ -13,7 +13,7 @@ import jsPDF from "jspdf";
 import Button from "../../../components/Button";
 import HipaaAnswerTable from "../../../components/HipaaAnswerTable";
 import { useTargetMaturity } from "../../../context/TargetMaturityContext";
-import MaturityLevelLegendHipaa from "../../../components/MAturityLevelLegendHipaa";
+import MaturityLevelLegendHipaa from "../../../components/MaturityLevelLegendHipaa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoDownloadOutline } from "react-icons/io5";
 

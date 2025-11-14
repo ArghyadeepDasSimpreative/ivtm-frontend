@@ -14,7 +14,7 @@ import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 import Button from "../../../components/Button";
 import HipaaAnswerTable from "../../../components/HipaaAnswerTable";
-import MaturityLevelLegendHipaa from "../../../components/MAturityLevelLegendHipaa";
+import MaturityLevelLegendHipaa from "../../../components/MaturityLevelLegendHipaa";
 import { BiGitCompare } from "react-icons/bi";
 import { IoDownloadOutline } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
