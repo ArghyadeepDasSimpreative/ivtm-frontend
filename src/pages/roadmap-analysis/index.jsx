@@ -55,7 +55,10 @@ export default function RoadmapAnalysis() {
     setProceeded(true);
     if (chosenOption === "Maturity Assessment and Roadmap Analysis") {
       return;
-    } else {
+    } else if (chosenOption === "AI based Incident Management") {
+      navigate("/incident-management");
+    }
+    else {
       navigate("/vulnerability-management");
     }
   };

@@ -29,6 +29,9 @@ import C2m2Questionnaire from "./pages/questionairre/c2m2";
 import C2m2AnalysisPreview from "./pages/analysis-preview/c2m2";
 import TargetMaturityPageC2m2 from "./pages/target-maturity/c2m2";
 import TargetComparisonC2m2 from "./pages/target-comparison/c2m2";
+import IncidentManagementLayout from "./layout/IncidentManagementLayout";
+import IncidentManagement from "./pages/incident-management";
+import AdminLogin from "./pages/incident-management/admin-login";
 
 function AppRoutes() {
   const location = useLocation();
@@ -79,7 +82,7 @@ function AppRoutes() {
         <Route path="/roadmap-analysis" element={<RoadmapAnalysisLayout />}>
           <Route index element={<RoadmapAnalysis />} />
           <Route path="evaluations" element={<EvaluationsPage />} />
-          
+
           {/* Protected questionnaire routes */}
           <Route
             path="questionnaire/nist"
@@ -127,6 +130,10 @@ function AppRoutes() {
           <Route path="profile" element={<ProfilePage />} />
         </Route>
 
+        <Route path="/incident-management" element={<IncidentManagementLayout />}>
+          <Route index element={<IncidentManagement />} />
+          <Route path="admin-login" element={<AdminLogin />} />
+        </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
