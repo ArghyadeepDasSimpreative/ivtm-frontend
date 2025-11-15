@@ -3,7 +3,7 @@ export default function AdminLogin() {
         <div className="min-h-screen w-full bg-gray-50">
             <div className="w-full h-screen">
                 <iframe
-                    src="https://82.112.231.181:8443/"
+                    src="/wazuh/app/login"
                     className="w-full h-full border-0"
                     title="Wazuh Dashboard"
                 />
